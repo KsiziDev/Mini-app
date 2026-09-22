@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Свиньи</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; font-family: -apple-system, sans-serif;
+    background: var(--tg-theme-bg-color, #1a1a2e); color: var(--tg-theme-text-color, #fff);
+    user-select: none; }
+  #counter {
+    position: fixed; top: 0; left: 0; right: 0; padding: 20px;
+    text-align: center; font-size: 42px; font-weight: 800; pointer-events: none;
+    z-index: 10; text-shadow: 0 2px 8px rgba(0,0,0,.5);
+  }
+  #tapHint {
+    position: fixed; bottom: 40px; left: 0; right: 0; text-align: center;
+    font-size: 16px; opacity: .5; pointer-events: none;
+  }
+  #stage { position: fixed; inset: 0; }
+  .pig {
+    position: absolute; font-size: 48px; pointer-events: none;
+    will-change: transform, opacity;
+    transform: translate(-50%, -50%);
+  }
+  .boom {
+    position: absolute; font-size: 56px; pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: boom .5s ease-out forwards;
+  }
+  @keyframes boom {
+    0%   { transform: translate(-50%, -50%) scale(.3); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <div id="counter">0</div>
+  <div id="tapHint">тапай по экрану</div>
+  <div id="stage"></div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  const stage   = document.getElementById('stage');
+  const counter = document.getElementById('counter');
+  const hint    = document.getElementById('tapHint');
+
+  const PIGS  = ['🐷','🐖','🐽'];
+  const BOOMS = ['💥','💫','🔥','✨'];
+
+  let count = 0;
+  let hintHidden = false;
+
+  function spawnPig(x, y) {
+    const el = document.createElement('div');
+    el.className = 'pig';
+    el.textContent = PIGS[Math.floor(Math.random() * PIGS.length)];
+
+    // стартовая точка — там, где тапнули
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 80 + Math.random() * 160;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    const rot = (Math.random() - 0.5) * 720;
+
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+
+    stage.appendChild(el);
+
+    // разлёт через rAF (без CSS-transition, чтобы работало везде одинаково)
+    const start = performance.now();
+    const dur = 260;
+    function fly(now) {
+      const t = Math.min((now - start) / dur, 1);
+      const e = 1 - Math.pow(1 - t, 3); // ease-out-cubic
+      el.style.transform =
+        `translate(-50%,-50%) translate(${dx*e}px, ${dy*e}px) rotate(${rot*e}deg) scale(${1+0.2*e})`;
+      el.style.opacity = String(1 - 0.1*t);
+      if (t < 1) requestAnimationFrame(fly);
+      else explode(el);
+    }
+    requestAnimationFrame(fly);
+  }
+
+  function explode(pigEl) {
+    const rect = pigEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    pigEl.remove();
+
+    // сам взрыв
+    const boom = document.createElement('div');
+    boom.className = 'boom';
+    boom.textContent = BOOMS[Math.floor(Math.random() * BOOMS.length)];
+    boom.style.left = cx + 'px';
+    boom.style.top  = cy + 'px';
+    stage.appendChild(boom);
+    setTimeout(() => boom.remove(), 500);
+
+    // искры
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement('div');
+      s.className = 'boom';
+      s.textContent = '·';
+      s.style.fontSize = '24px';
+      const a = Math.random() * Math.PI * 2;
+      const d = 20 + Math.random() * 50;
+      s.style.left = cx + 'px';
+      s.style.top  = cy + 'px';
+      s.style.transform = `translate(-50%,-50%) translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px)`;
+      stage.appendChild(s);
+      setTimeout(() => s.remove(), 500);
+    }
+  }
+
+  function onTap(x, y) {
+    count++;
+    counter.textContent = count;
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+    if (!hintHidden) { hintHidden = true; hint.style.display = 'none'; }
+
+    // спавним 3–5 свиней вокруг точки тапа
+    const n = 3 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n; i++) {
+      setTimeout(() => spawnPig(x, y), i * 30);
+    }
+  }
+
+  stage.addEventListener('pointerdown', (e) => {
+    onTap(e.clientX, e.clientY);
+  });
+
+  // убираем зум двойным тапом на iOS
+  document.addEventListener('gesturestart', e => e.preventDefault());
+</script>
+</body>
+</html>
