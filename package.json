@@ -1,0 +1,12 @@
+{
+  "name": "stardrop-mini-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "StarDrop Telegram Mini App demo",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
