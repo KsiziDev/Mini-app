@@ -193,9 +193,17 @@
   function playNavSound(){
     const ctx=getSoundContext();if(!ctx)return;
     const t=ctx.currentTime;
-    softTone(660,t,.085,.018,'sine');
-    softTone(880,t+.035,.11,.012,'sine');
+    // Короткий мягкий pop вместо двойного музыкального сигнала.
+    softTone(520,t,.075,.045,'sine',230);
+    softTone(760,t+.012,.055,.012,'sine',420);
   }
+  // Разблокируем Web Audio первым реальным касанием/кликом пользователя.
+  function unlockAudio(){
+    const ctx=getSoundContext();
+    if(ctx && ctx.state==='suspended')ctx.resume().catch(()=>{});
+  }
+  document.addEventListener('pointerdown',unlockAudio,{once:true,passive:true});
+  document.addEventListener('touchstart',unlockAudio,{once:true,passive:true});
   function playRouletteSound(){
     const ctx=getSoundContext();if(!ctx)return;
     const start=ctx.currentTime+.025,duration=4.15;
