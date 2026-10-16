@@ -169,6 +169,50 @@
     const list=cases.filter(c=>filter==='all'||(filter==='free'?c.price===0:filter==='low'?c.price>0&&c.price<=100:c.tag==='premium'));
     $('#caseGrid').innerHTML=list.map(c=>'<button class="case-card" data-open-case="'+c.name+'"><div class="case-visual">'+c.emoji+'</div><div class="case-title">'+c.name+'</div><div class="case-foot"><span>'+c.desc+'</span><span class="price">'+(c.price===0?'Бесплатно':c.price+' ★')+'</span></div></button>').join('');
   }
+  let soundContext=null;
+  function getSoundContext(){
+    try{
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx)return null;
+      if(!soundContext)soundContext=new Ctx();
+      if(soundContext.state==='suspended')soundContext.resume();
+      return soundContext;
+    }catch{return null;}
+  }
+  function softTone(freq,when,duration,volume=.025,type='sine',endFreq=null){
+    const ctx=getSoundContext();if(!ctx)return;
+    const osc=ctx.createOscillator(),gain=ctx.createGain();
+    osc.type=type;osc.frequency.setValueAtTime(freq,when);
+    if(endFreq)osc.frequency.exponentialRampToValueAtTime(Math.max(1,endFreq),when+duration);
+    gain.gain.setValueAtTime(.0001,when);
+    gain.gain.exponentialRampToValueAtTime(volume,when+.012);
+    gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.start(when);osc.stop(when+duration+.02);
+  }
+  function playNavSound(){
+    const ctx=getSoundContext();if(!ctx)return;
+    const t=ctx.currentTime;
+    softTone(660,t,.085,.018,'sine');
+    softTone(880,t+.035,.11,.012,'sine');
+  }
+  function playRouletteSound(){
+    const ctx=getSoundContext();if(!ctx)return;
+    const start=ctx.currentTime+.025,duration=4.15;
+    let elapsed=.04,index=0;
+    while(elapsed<duration){
+      const progress=elapsed/duration;
+      const interval=.055+progress*.105;
+      const freq=progress>.78?760+Math.random()*100:460+Math.random()*100;
+      softTone(freq,start+elapsed,.045,.012*(1-progress*.45),'sine');
+      elapsed+=interval;index++;
+    }
+  }
+  function playPrizeSound(){
+    const ctx=getSoundContext();if(!ctx)return;
+    const t=ctx.currentTime+.015;
+    [659.25,783.99,987.77,1318.51].forEach((f,i)=>softTone(f,t+i*.085,.34,.035,'sine'));
+  }
   function openCase(name){
     currentCase=cases.find(c=>c.name===name)||{name,emoji:name==='Кейс-баттл'?'⚔️':'🎁',price:50,desc:'Демо-игра'};
     spinning=false;$('#modalTitle').textContent=currentCase.name;$('#rouletteTrack').innerHTML=Array.from({length:40},(_,i)=>'<div class="roulette-item" data-index="'+i+'"><span>'+[currentCase.emoji,'🎁','💎','🌟','🧸'][i%5]+'</span></div>').join('');$('#rouletteTrack').style.transition='none';$('#rouletteTrack').style.transform='translateX(0)';$('#roulette').classList.remove('spinning');
@@ -180,7 +224,7 @@
     if(!currentCase||spinning)return;
     const price=Number(currentCase.price)||0;
     if(state.balance<price){$('#modalResult').innerHTML='Недостаточно звёзд<small>Попробуй бесплатный кейс или добавь демо-звёзды в разделе «Баланс».</small>';return;}
-    spinning=true;state.balance-=price;$('#roulette').classList.add('spinning');$('#modalAction').disabled=true;$('#modalAction').textContent='Рулетка крутится…';
+    spinning=true;state.balance-=price;playRouletteSound();$('#roulette').classList.add('spinning');$('#modalAction').disabled=true;$('#modalAction').textContent='Рулетка крутится…';
     const prizes=[{e:'💎',n:'Кристалл',v:125},{e:'🪙',n:'Монеты',v:25},{e:'🎁',n:'Подарок',v:50},{e:'🌟',n:'Звезда',v:75},{e:'👑',n:'Корона',v:200},{e:'🧸',n:'Плюш',v:40},{e:'🎀',n:'Сюрприз',v:60},{e:'🚀',n:'Ракета',v:90}];
     const prize=prizes[Math.floor(Math.random()*prizes.length)];
     const track=$('#rouletteTrack'), roulette=$('#roulette');
@@ -194,7 +238,7 @@
       track.style.transform='translateX(-'+Math.max(0,offset)+'px)';
     }));
     window.setTimeout(()=>{
-      $('#roulette').classList.remove('spinning');
+      $('#roulette').classList.remove('spinning');playPrizeSound();
       state.balance+=prize.v;state.opened++;addHistory('Кейс «'+currentCase.name+'» · '+prize.n,prize.v-price,prize.e);save();spinning=false;
       $('#modalResult').innerHTML='Твой приз: '+prize.n+'<small>Демо-награда: +'+prize.v+' ★ · списано '+price+' ★</small>';
       $('#modalAction').disabled=false;$('#modalAction').textContent='Открыть ещё раз';
@@ -206,6 +250,7 @@
     const c=e.target.closest('[data-open-case]');if(c){openCase(c.dataset.openCase);return;}
     const g=e.target.closest('[data-game]');if(g){openCase(g.dataset.game);return;}
   });
+  $('.nav-item').forEach(b=>b.addEventListener('click',playNavSound));
   $('#caseFilters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;$$('.filter').forEach(x=>x.classList.toggle('active',x===b));renderCases(b.dataset.filter);});
   $('#modalClose').addEventListener('click',()=>$('#modalWrap').classList.remove('open'));
   $('#modalWrap').addEventListener('click',e=>{if(e.target===$('#modalWrap'))$('#modalWrap').classList.remove('open');});
