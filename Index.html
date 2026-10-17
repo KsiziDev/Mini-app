@@ -325,25 +325,51 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('rocketOnlineCount',87,87,199);
   setupOnlineCounter('fishOnlineCount',12,12,34);
 
-  // Animate game artwork only while its card is near/inside the viewport.
-  const animatedCardArt=document.querySelectorAll('.game-tile-art img, .game-hero-rocket, .fish-hero-art');
+  // Rocket animation runs continuously. Other game animations take turns,
+  // and are loaded only while their cards are near the viewport.
+  const rocketArt=document.querySelector('.game-hero-rocket');
+  const sequentialArt=[
+    document.querySelector('.game-tile-art img[src*="cherry-redo-pepe-chicken"]'),
+    document.querySelector('.game-tile-art img[src*="redo-craft"]'),
+    document.querySelector('.fish-hero-art')
+  ].filter(Boolean);
+
+  sequentialArt.forEach(image=>{
+    image.dataset.animatedSrc=image.getAttribute('src')||'';
+    image.removeAttribute('src');
+    image.dataset.cardVisible='false';
+  });
+
   if('IntersectionObserver' in window){
     const cardArtObserver=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         const image=entry.target;
-        if(entry.isIntersecting){
-          if(!image.getAttribute('src')&&image.dataset.animatedSrc)image.src=image.dataset.animatedSrc;
-        }else if(image.getAttribute('src')){
-          image.dataset.animatedSrc=image.getAttribute('src');
-          image.removeAttribute('src');
-        }
+        image.dataset.cardVisible=entry.isIntersecting?'true':'false';
       });
     },{rootMargin:'80px 0px',threshold:0.01});
-    animatedCardArt.forEach(image=>{
-      image.dataset.animatedSrc=image.getAttribute('src')||'';
-      image.removeAttribute('src');
-      cardArtObserver.observe(image);
+    sequentialArt.forEach(image=>cardArtObserver.observe(image));
+  }else{
+    sequentialArt.forEach(image=>image.dataset.cardVisible='true');
+  }
+
+  let sequentialArtIndex=0;
+  function playNextCardAnimation(){
+    sequentialArt.forEach(image=>{
+      if(image.getAttribute('src'))image.removeAttribute('src');
     });
+    for(let i=0;i<sequentialArt.length;i++){
+      const index=(sequentialArtIndex+i)%sequentialArt.length;
+      const image=sequentialArt[index];
+      if(image.dataset.cardVisible==='true'){
+        image.src=image.dataset.animatedSrc;
+        sequentialArtIndex=(index+1)%sequentialArt.length;
+        break;
+      }
+    }
+  }
+  if(sequentialArt.length){
+    playNextCardAnimation();
+    window.setInterval(playNextCardAnimation,3000);
   }
 
   const giftsTrack=document.getElementById('giftsLiveTrack');
