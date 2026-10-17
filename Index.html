@@ -215,21 +215,23 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       <span class="game-tile-art"><img src="./assets/videos/redo-craft.webp" alt="" loading="lazy"></span>
       <span class="game-tile-title">Крафты</span>
     </button>
-    <button class="game-tile pvp-tile" type="button" aria-label="Открыть ПвП с игроками">
-      <span class="upgrader-online" aria-label="34 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="pvpOnlineCount" aria-live="polite">34</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/mamont.webm" alt="" loading="lazy"></span>
-      <span class="game-tile-title">ПвП с игроками</span>
-    </button>
-    <button class="game-tile mines-tile" type="button" aria-label="Открыть Мины">
-      <span class="upgrader-online" aria-label="46 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesGameOnlineCount" aria-live="polite">46</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/pink-heart.webm" alt="" loading="lazy"></span>
-      <span class="game-tile-title">Мины</span>
-    </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
     <span class="upgrader-online fish-online" aria-label="12 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="fishOnlineCount" aria-live="polite">12</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
     <div class="fish-hero-copy"><h2 class="fish-hero-title">РЫБА</h2></div>
     <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="lazy">
+  </section>
+  <section class="game-tiles extra-game-tiles" aria-label="ПвП и Мины">
+    <button class="game-tile pvp-tile" type="button" aria-label="Открыть ПвП с игроками">
+      <span class="upgrader-online" aria-label="34 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="pvpOnlineCount" aria-live="polite">34</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
+      <span class="game-tile-art"><img src="./assets/videos/mamont.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-title">ПвП с игроками</span>
+    </button>
+    <button class="game-tile mines-tile" type="button" aria-label="Открыть Мины">
+      <span class="upgrader-online" aria-label="46 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesGameOnlineCount" aria-live="polite">46</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
+      <span class="game-tile-art"><img src="./assets/videos/heart-pink.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-title">Мины</span>
+    </button>
   </section>
 </main>
 <nav class="bottom-nav" aria-label="Основная навигация">
@@ -412,6 +414,8 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   }
 
   // PvP and Mines use their own independent animation queue.
+  // Animated WebP cannot be paused natively: preserve its current frame as PNG,
+  // then restore the original WebP only when that card's turn begins.
   const pvpMinesArt=[
     document.querySelector('.pvp-tile .game-tile-art img'),
     document.querySelector('.mines-tile .game-tile-art img')
@@ -420,17 +424,21 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   let pvpMinesArtIndex=0;
 
   function freezePvpMinesAnimation(image){
-    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return;
+    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return false;
     try{
       const canvas=document.createElement('canvas');
       canvas.width=image.naturalWidth;
       canvas.height=image.naturalHeight;
       const context=canvas.getContext('2d');
-      if(!context)return;
+      if(!context)return false;
       context.drawImage(image,0,0,canvas.width,canvas.height);
-      image.dataset.frozenSrc=canvas.toDataURL('image/png');
-      image.src=image.dataset.frozenSrc;
-    }catch(error){}
+      const frozenFrame=canvas.toDataURL('image/png');
+      image.dataset.frozenSrc=frozenFrame;
+      image.src=frozenFrame;
+      return true;
+    }catch(error){
+      return false;
+    }
   }
 
   pvpMinesArt.forEach(image=>{
@@ -466,6 +474,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       if(image.dataset.cardVisible==='true' && image.dataset.animatedSrc){
         pvpMinesArtIndex=(index+1)%pvpMinesArt.length;
         activePvpMinesArt=image;
+        image.removeAttribute('src');
         image.src=image.dataset.animatedSrc;
         return;
       }
