@@ -147,10 +147,10 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes giftAppear{from{opacity:0}to{opacity:1}}
 
 /* Initial branded loading screen */
-#app-loading-screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;background:#07111f;opacity:1;visibility:visible;transition:opacity .22s ease,visibility .22s ease}
+#app-loading-screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;background:#07111f;opacity:1;visibility:visible;transition:opacity .22s ease,visibility .22s ease}
 #app-loading-screen.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-#app-loading-screen .loading-logo{display:block;width:min(210px,62vw);max-height:220px;object-fit:contain}
-#app-loading-screen .loading-progress{width:min(150px,42vw);height:4px;border-radius:99px;overflow:hidden;background:#424a55;box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
+#app-loading-screen .loading-logo{display:block;width:min(300px,78vw);height:auto;aspect-ratio:1/1;max-height:none;object-fit:contain}
+#app-loading-screen .loading-progress{flex:0 0 auto;width:min(180px,48vw);height:4px;border-radius:99px;overflow:hidden;background:#424a55;box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
 #app-loading-screen .loading-progress-fill{display:block;width:100%;height:100%;border-radius:inherit;background:#35dc83;transform:scaleX(0);transform-origin:left center;animation:appLoadingFill .82s cubic-bezier(.22,.75,.25,1) forwards;box-shadow:0 0 8px rgba(53,220,131,.3)}
 @keyframes appLoadingFill{to{transform:scaleX(1)}}
 @media(prefers-reduced-motion:reduce){#app-loading-screen .loading-progress-fill{animation-duration:.25s}#app-loading-screen{transition:none}}
