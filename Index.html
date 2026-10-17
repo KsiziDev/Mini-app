@@ -136,11 +136,15 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(prefers-reduced-motion:reduce){.gift-live-item,.gifts-live-wifi{animation:none}}
 
 
-/* Layout fixes: keep Rocket online badge anchored to the full game card, away from the HIT badge. */
+/* Anchor Rocket online badge to the full hero card, slightly outside its top-right corner. */
+.game-hero-copy{position:static!important}
 .game-hero-badges{position:static!important}
-.upgrader-online.rocket-online{right:8px!important;left:auto!important;top:8px!important;z-index:30}
-/* Keep the LIVE accent stripe visibly beneath the vertical LIVE label. */
-.gifts-live-label>.gifts-live-underline{left:50%;bottom:-1px;transform:translateX(-50%);width:25px;height:2px}
+.upgrader-online.rocket-online{position:absolute!important;top:-9px!important;right:-7px!important;left:auto!important;z-index:30!important}
+/* LIVE text is vertical, so its underline must be vertical too. */
+.gifts-live-label>.gifts-live-underline{left:50%;bottom:-1px;transform:translateX(-50%) rotate(-90deg);width:25px;height:2px}
+/* Keep gift tiles in separate, stable slots as new ones arrive. */
+.gift-live-item{flex-shrink:0;transform-origin:center;animation:giftAppear .32s ease-out both}
+@keyframes giftAppear{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
