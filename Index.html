@@ -86,6 +86,19 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(max-width:370px){.game-hero{width:100%;margin-left:0;height:120px;border-radius:20px}.game-hero:after{clip-path:inset(0 round 20px)}.game-hero-copy{padding:10px 11px 12px;max-width:68%}.game-hero-title{font-size:18px}.game-hero-caption{font-size:10px}.game-hero-rocket{right:0;width:40%;top:-12px;height:calc(100% + 18px)}}
 @media(prefers-reduced-motion:reduce){.game-hero:after{animation:none;opacity:.12;background-position:50% 0}.game-hero-title,.game-hero-eyebrow .flame-icon,.game-hero-eyebrow .flame-core,.multiplier-card{animation:none}}
 
+
+.game-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 22px}
+.game-tile{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;aspect-ratio:1/1;min-width:0;overflow:hidden;padding:0;border:1px solid rgba(255,255,255,.22);border-radius:22px;background-color:#10243a;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 10px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.22);text-align:left;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s ease,border-color .2s ease}
+.game-tile:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(4,12,23,.02) 25%,rgba(4,12,23,.12) 52%,rgba(4,12,23,.78) 100%);border-radius:inherit}
+.game-tile:active{transform:scale(.975);border-color:rgba(255,255,255,.42)}
+.game-tile.upgrader{background-image:url('./assets/images/background-two.png')}
+.game-tile.mines{background-image:url('./assets/images/background-tree.png')}
+.game-tile-art{position:absolute;z-index:1;inset:5% 4% 19%;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.game-tile-art img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}
+.game-tile-title{position:relative;z-index:2;display:block;margin:0;padding:0 13px 13px;font-size:17px;line-height:1.1;font-weight:850;letter-spacing:-.35px;text-shadow:0 2px 8px rgba(0,0,0,.48)}
+@media(max-width:370px){.game-tiles{gap:9px}.game-tile{border-radius:18px}.game-tile-title{font-size:15px;padding:0 10px 11px}.game-tile-art{inset:5% 3% 20%}}
+@media(prefers-reduced-motion:reduce){.game-tile{transition:none}}
+
 </style>
 </head>
 <body>
@@ -125,6 +138,16 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     <div class="multiplier-card one" data-start="12.1" data-target="89.34" aria-label="Множитель">x12.1</div>
     <div class="multiplier-card two" data-start="27.82" data-target="54.77" aria-label="Множитель">x27.82</div>
     <div class="multiplier-card three" data-start="1.12" data-target="67.93" aria-label="Множитель">x1.12</div>
+  </section>
+  <section class="game-tiles" aria-label="Другие игры">
+    <button class="game-tile upgrader" type="button" aria-label="Открыть Апгрейдер">
+      <span class="game-tile-art"><img src="./assets/videos/cherry-redo-pepe-chicken.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-title">Апгрейдер</span>
+    </button>
+    <button class="game-tile mines" type="button" aria-label="Открыть Мины">
+      <span class="game-tile-art"><img src="./assets/videos/love-button.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-title">Мины</span>
+    </button>
   </section>
 </main>
 <nav class="bottom-nav" aria-label="Основная навигация">
