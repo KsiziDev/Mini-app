@@ -85,7 +85,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes titleBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
 .fish-hero{position:relative;isolation:isolate;width:100%;margin:0 0 18px;height:126px;border:1px solid rgba(255,255,255,.24);border-radius:25px;overflow:visible;background:linear-gradient(115deg,rgba(7,17,31,.26),rgba(7,17,31,.04)),url('./assets/images/background-fish-more.png') center/cover no-repeat;box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(255,255,255,.08);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%)}
 .fish-hero:before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(255,255,255,.025) 36%,rgba(20,91,171,.12) 100%);border:1px solid rgba(255,255,255,.09)}
-.fish-hero-copy{position:absolute;z-index:3;left:13px;bottom:13px;display:block;padding:0;max-width:60%;text-shadow:0 2px 12px rgba(0,0,0,.28);pointer-events:none}
+.fish-new-badge{position:absolute;z-index:5;top:10px;left:11px;display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:8px;background:#dcfce7;color:#166534;font-size:11px;font-weight:900;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none}.fish-new-badge svg{display:block;width:14px;height:14px;flex:0 0 14px;fill:none;stroke:#16a34a;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}.fish-hero-copy{position:absolute;z-index:3;left:13px;bottom:13px;display:block;padding:0;max-width:60%;text-shadow:0 2px 12px rgba(0,0,0,.28);pointer-events:none}
 .fish-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;text-transform:uppercase;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
  .upgrader-online.fish-online{position:absolute;top:-9px;right:-7px;left:auto;z-index:20;background:linear-gradient(135deg,rgba(255,255,255,.27),rgba(255,255,255,.09) 48%,rgba(132,190,255,.12));border-color:rgba(255,255,255,.34);box-shadow:0 5px 14px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(255,255,255,.08);color:#e9fff1;backdrop-filter:blur(14px) saturate(155%);-webkit-backdrop-filter:blur(14px) saturate(155%)}
 .fish-hero-art{position:absolute;z-index:1;right:1%;top:-8%;width:54%;height:116%;object-fit:contain;object-position:right center;filter:drop-shadow(0 9px 13px rgba(0,0,0,.28));pointer-events:none}
@@ -197,7 +197,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   <section class="game-hero" aria-label="Игры">
     <div class="game-hero-copy">
       <div class="game-hero-badges"><span class="game-hero-eyebrow"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.2 2.7-1.2 4.1-2.4 5.8C8.4 10.2 7.2 11.6 7.2 14a4.8 4.8 0 0 0 9.6 0c0-3.1-2-6.9-4.8-11.2Z"/><path class="flame-core" d="M12 12.2c-.1 1.1-1.5 2.1-1.5 3.5a1.5 1.5 0 0 0 3 0c0-1.1-.6-2.2-1.5-3.5Z"/></svg><span>ХИТ</span></span><span class="upgrader-online rocket-online" aria-label="87 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="rocketOnlineCount" aria-live="polite">87</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span></div>
-      <h1 class="game-hero-title">ИГРА-РАКЕТА</h1>
+      <h1 class="game-hero-title">ИГРА-РАКЕТА &gt;</h1>
     </div>
     <img class="game-hero-rocket" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="" fetchpriority="high">
     <div class="multiplier-card one" data-start="12.1" data-target="89.34" aria-label="Множитель">x12.1</div>
@@ -208,29 +208,29 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     <button class="game-tile upgrader" type="button" aria-label="Открыть Апгрейдер">
       <span class="upgrader-online" aria-label="52 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="upgraderOnlineCount" aria-live="polite">52</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/cherry-redo-pepe-chicken.webp" alt="" loading="lazy"></span>
-      <span class="game-tile-title">Апгрейдер</span>
+      <span class="game-tile-title">Апгрейдер &gt;</span>
     </button>
     <button class="game-tile mines" type="button" aria-label="Открыть Крафты">
       <span class="upgrader-online" aria-label="61 игрок онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesOnlineCount" aria-live="polite">61</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/redo-craft.webp" alt="" loading="lazy"></span>
-      <span class="game-tile-title">Крафты</span>
+      <span class="game-tile-title">Крафты &gt;</span>
     </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
     <span class="upgrader-online fish-online" aria-label="12 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="fishOnlineCount" aria-live="polite">12</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-    <div class="fish-hero-copy"><h2 class="fish-hero-title">РЫБА</h2></div>
+    <span class="fish-new-badge" aria-label="Новинка"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10"/><path d="M12 18h.01"/></svg><span>НОВИНКА</span></span><div class="fish-hero-copy"><h2 class="fish-hero-title">РЫБА &gt;</h2></div>
     <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="lazy">
   </section>
   <section class="game-tiles extra-game-tiles" aria-label="ПвП и Мины">
     <button class="game-tile pvp-tile" type="button" aria-label="Открыть ПвП с игроками">
       <span class="upgrader-online" aria-label="34 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="pvpOnlineCount" aria-live="polite">34</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/mamont.webp" alt="" loading="lazy"></span>
-      <span class="game-tile-title">ПвП с игроками</span>
+      <span class="game-tile-title">ПвП с игроками &gt;</span>
     </button>
     <button class="game-tile mines-tile" type="button" aria-label="Открыть Мины">
       <span class="upgrader-online" aria-label="46 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesGameOnlineCount" aria-live="polite">46</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/heart-pink.webp" alt="" loading="lazy"></span>
-      <span class="game-tile-title">Мины</span>
+      <span class="game-tile-title">Мины &gt;</span>
     </button>
   </section>
 </main>
