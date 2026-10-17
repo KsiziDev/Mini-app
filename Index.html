@@ -16,6 +16,10 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .profile-area{position:relative;display:flex;align-items:center;gap:9px;min-width:0;order:1;flex:0 1 auto;margin-left:0}
 .profile-trigger{order:1;display:grid;grid-template-columns:42px minmax(0,auto) 12px;grid-template-rows:auto auto;align-items:center;column-gap:8px;row-gap:3px;min-width:0;padding:0;border:0;background:transparent;color:var(--text);text-align:left;cursor:pointer}
 .profile-trigger .avatar{grid-column:1;grid-row:1 / span 2;width:42px;height:42px}
+.profile-trigger .avatar{position:relative;overflow:visible}
+.profile-trigger .avatar::after{content:"";position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--panel, #151a22);box-shadow:0 0 0 0 rgba(34,197,94,.55);animation:onlinePulse 1.8s ease-out infinite;pointer-events:none}
+@keyframes onlinePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55);transform:scale(.96)}65%{box-shadow:0 0 0 5px rgba(34,197,94,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);transform:scale(.96)}}
+@media(prefers-reduced-motion:reduce){.profile-trigger .avatar::after{animation:none}}
 .profile-trigger .profile-copy{grid-column:2;grid-row:1 / span 2;align-self:center}
 .profile-trigger .chevron{grid-column:3;grid-row:1 / span 2;align-self:center}
 @media(max-width:370px){.profile-trigger{grid-template-columns:38px minmax(0,auto) 12px;column-gap:6px}.profile-trigger .avatar{width:38px;height:38px}}
