@@ -104,6 +104,8 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .game-tile:active{transform:scale(.975);border-color:rgba(255,255,255,.42)}
 .game-tile.upgrader{background-image:url('./assets/images/background-two.png')}
 .game-tile.mines{background-image:url('./assets/images/background-tree.png')}
+.game-tile.pvp-tile{background-image:url('./assets/images/background-two.png')}
+.game-tile.mines-tile{background-image:url('./assets/images/background-tree.png')}
 .game-tile-art{position:absolute;z-index:1;inset:5% 4% 19%;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .game-tile-art img{display:block;width:100%;height:100%;object-fit:contain;filter:none;transform:translate3d(0,0,0);backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform}
 .game-tile-title{position:relative;z-index:2;display:block;margin:0;padding:0 13px 13px;font-size:17px;line-height:1.1;font-weight:850;letter-spacing:-.35px;text-shadow:0 2px 8px rgba(0,0,0,.48)}
@@ -212,6 +214,16 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       <span class="upgrader-online" aria-label="61 игрок онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesOnlineCount" aria-live="polite">61</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/redo-craft.webp" alt="" loading="lazy"></span>
       <span class="game-tile-title">Крафты</span>
+    </button>
+    <button class="game-tile pvp-tile" type="button" aria-label="Открыть ПвП с игроками">
+      <span class="upgrader-online" aria-label="34 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="pvpOnlineCount" aria-live="polite">34</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
+      <span class="game-tile-art"><img src="./assets/videos/mamont.webm" alt="" loading="lazy"></span>
+      <span class="game-tile-title">ПвП с игроками</span>
+    </button>
+    <button class="game-tile mines-tile" type="button" aria-label="Открыть Мины">
+      <span class="upgrader-online" aria-label="46 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesGameOnlineCount" aria-live="polite">46</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
+      <span class="game-tile-art"><img src="./assets/videos/pink-heart.webm" alt="" loading="lazy"></span>
+      <span class="game-tile-title">Мины</span>
     </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
@@ -324,6 +336,8 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('minesOnlineCount',61,52,73);
   setupOnlineCounter('rocketOnlineCount',87,87,199);
   setupOnlineCounter('fishOnlineCount',12,12,34);
+  setupOnlineCounter('pvpOnlineCount',34,25,48);
+  setupOnlineCounter('minesGameOnlineCount',46,32,59);
 
   // Rocket animation runs continuously. Other artwork keeps its last frame
   // visible as a still image while the next card animates.
@@ -395,6 +409,74 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     });
     window.setTimeout(playNextCardAnimation,100);
     window.setInterval(playNextCardAnimation,3000);
+  }
+
+  // PvP and Mines use their own independent animation queue.
+  const pvpMinesArt=[
+    document.querySelector('.pvp-tile .game-tile-art img'),
+    document.querySelector('.mines-tile .game-tile-art img')
+  ].filter(Boolean);
+  let activePvpMinesArt=null;
+  let pvpMinesArtIndex=0;
+
+  function freezePvpMinesAnimation(image){
+    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return;
+    try{
+      const canvas=document.createElement('canvas');
+      canvas.width=image.naturalWidth;
+      canvas.height=image.naturalHeight;
+      const context=canvas.getContext('2d');
+      if(!context)return;
+      context.drawImage(image,0,0,canvas.width,canvas.height);
+      image.dataset.frozenSrc=canvas.toDataURL('image/png');
+      image.src=image.dataset.frozenSrc;
+    }catch(error){}
+  }
+
+  pvpMinesArt.forEach(image=>{
+    image.dataset.animatedSrc=image.getAttribute('src')||'';
+    image.dataset.cardVisible='true';
+    image.addEventListener('load',()=>{
+      if(image!==activePvpMinesArt && !image.dataset.frozenSrc)freezePvpMinesAnimation(image);
+    });
+  });
+
+  if('IntersectionObserver' in window){
+    const pvpMinesObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        const image=entry.target;
+        image.dataset.cardVisible=entry.isIntersecting?'true':'false';
+        if(!entry.isIntersecting && image===activePvpMinesArt){
+          freezePvpMinesAnimation(image);
+          activePvpMinesArt=null;
+        }
+      });
+    },{rootMargin:'80px 0px',threshold:0.01});
+    pvpMinesArt.forEach(image=>pvpMinesObserver.observe(image));
+  }
+
+  function playNextPvpMinesAnimation(){
+    if(activePvpMinesArt){
+      freezePvpMinesAnimation(activePvpMinesArt);
+      activePvpMinesArt=null;
+    }
+    for(let i=0;i<pvpMinesArt.length;i++){
+      const index=(pvpMinesArtIndex+i)%pvpMinesArt.length;
+      const image=pvpMinesArt[index];
+      if(image.dataset.cardVisible==='true' && image.dataset.animatedSrc){
+        pvpMinesArtIndex=(index+1)%pvpMinesArt.length;
+        activePvpMinesArt=image;
+        image.src=image.dataset.animatedSrc;
+        return;
+      }
+    }
+  }
+  if(pvpMinesArt.length){
+    pvpMinesArt.forEach(image=>{
+      if(image.complete && image.naturalWidth)freezePvpMinesAnimation(image);
+    });
+    window.setTimeout(playNextPvpMinesAnimation,250);
+    window.setInterval(playNextPvpMinesAnimation,3000);
   }
 
   const giftsTrack=document.getElementById('giftsLiveTrack');
