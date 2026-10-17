@@ -341,152 +341,129 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('pvpOnlineCount',34,25,48);
   setupOnlineCounter('minesGameOnlineCount',46,32,59);
 
-  // Rocket animation runs continuously. Other artwork keeps its last frame
-  // visible as a still image while the next card animates.
-  const sequentialArt=[
+  // Rocket plays continuously. Other animated WebP cards run in two independent,
+  // sequential queues. Each queue waits for a frame to load before switching cards.
+  function createSequentialAnimationQueue(images, delay){
+    images=images.filter(Boolean);
+    let active=null;
+    let nextIndex=0;
+    let timer=null;
+
+    function freezeFrame(image){
+      if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight) return false;
+      try{
+        const canvas=document.createElement('canvas');
+        canvas.width=image.naturalWidth;
+        canvas.height=image.naturalHeight;
+        const context=canvas.getContext('2d');
+        if(!context) return false;
+        context.drawImage(image,0,0,canvas.width,canvas.height);
+        const still=canvas.toDataURL('image/png');
+        image.dataset.frozenSrc=still;
+        image.src=still;
+        return true;
+      }catch(error){
+        // Keep the current source and retry; never blank the image on capture errors.
+        return false;
+      }
+    }
+
+    images.forEach(image=>{
+      image.dataset.animatedSrc=image.getAttribute('src')||'';
+      image.dataset.cardVisible='true';
+      image.addEventListener('load',()=>{
+        // If an animation finished loading while it wasn't selected, freeze it
+        // once, but don't touch the currently active animation.
+        if(image!==active && !image.dataset.frozenSrc) freezeFrame(image);
+      });
+    });
+
+    let observer=null;
+    if('IntersectionObserver' in window){
+      observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          const image=entry.target;
+          image.dataset.cardVisible=entry.isIntersecting?'true':'false';
+          if(!entry.isIntersecting && image===active){
+            // Only release the slot after a still frame was captured successfully.
+            if(freezeFrame(image)) active=null;
+          }
+        });
+        schedule(0);
+      },{rootMargin:'80px 0px',threshold:0.01});
+      images.forEach(image=>observer.observe(image));
+    }
+
+    function schedule(wait){
+      if(timer!==null) window.clearTimeout(timer);
+      timer=window.setTimeout(tick,wait);
+    }
+
+    function tick(){
+      timer=null;
+      if(active){
+        if(!freezeFrame(active)){
+          // Image may still be loading; retain ownership and retry instead of
+          // letting two WebP animations run or making the active image disappear.
+          schedule(150);
+          return;
+        }
+        active=null;
+      }
+      for(let i=0;i<images.length;i++){
+        const index=(nextIndex+i)%images.length;
+        const image=images[index];
+        if(image.dataset.cardVisible!=='true' || !image.dataset.animatedSrc) continue;
+        nextIndex=(index+1)%images.length;
+        active=image;
+        // Assign directly: removing src first causes a visible blank/flicker.
+        if(image.getAttribute('src')!==image.dataset.animatedSrc){
+          image.src=image.dataset.animatedSrc;
+        }
+        // Wait for the selected image to finish loading, then give it a full turn.
+        if(image.complete && image.naturalWidth){
+          schedule(delay);
+        }else{
+          const onLoaded=()=>{
+            image.removeEventListener('load',onLoaded);
+            image.removeEventListener('error',onError);
+            if(active===image) schedule(delay);
+          };
+          const onError=()=>{
+            image.removeEventListener('load',onLoaded);
+            image.removeEventListener('error',onError);
+            if(active===image){
+              active=null;
+              schedule(150);
+            }
+          };
+          image.addEventListener('load',onLoaded);
+          image.addEventListener('error',onError);
+          schedule(150);
+        }
+        return;
+      }
+      // Nothing visible right now; check again soon without advancing the turn.
+      schedule(500);
+    }
+
+    // Let the initial WebP frame render before freezing inactive cards.
+    images.forEach(image=>{
+      if(image.complete && image.naturalWidth) freezeFrame(image);
+    });
+    schedule(100);
+  }
+
+  createSequentialAnimationQueue([
     document.querySelector('.game-tile-art img[src*="cherry-redo-pepe-chicken"]'),
     document.querySelector('.game-tile-art img[src*="redo-craft"]'),
     document.querySelector('.fish-hero-art')
-  ].filter(Boolean);
+  ],3000);
 
-  let activeSequentialArt=null;
-  let sequentialArtIndex=0;
-
-  function freezeAnimation(image){
-    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return;
-    try{
-      const canvas=document.createElement('canvas');
-      canvas.width=image.naturalWidth;
-      canvas.height=image.naturalHeight;
-      canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
-      image.dataset.frozenSrc=canvas.toDataURL('image/png');
-      image.src=image.dataset.frozenSrc;
-    }catch(error){
-      // If a frame cannot be captured, keep the image visible rather than blanking it.
-    }
-  }
-
-  sequentialArt.forEach(image=>{
-    image.dataset.animatedSrc=image.getAttribute('src')||'';
-    image.dataset.cardVisible='true';
-    image.addEventListener('load',()=>{
-      if(image!==activeSequentialArt && !image.dataset.frozenSrc)freezeAnimation(image);
-    });
-  });
-
-  if('IntersectionObserver' in window){
-    const cardArtObserver=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        const image=entry.target;
-        image.dataset.cardVisible=entry.isIntersecting?'true':'false';
-        if(!entry.isIntersecting && image===activeSequentialArt){
-          freezeAnimation(image);
-          activeSequentialArt=null;
-        }
-      });
-    },{rootMargin:'80px 0px',threshold:0.01});
-    sequentialArt.forEach(image=>cardArtObserver.observe(image));
-  }
-
-  function playNextCardAnimation(){
-    if(activeSequentialArt){
-      freezeAnimation(activeSequentialArt);
-      activeSequentialArt=null;
-    }
-    for(let i=0;i<sequentialArt.length;i++){
-      const index=(sequentialArtIndex+i)%sequentialArt.length;
-      const image=sequentialArt[index];
-      if(image.dataset.cardVisible==='true' && image.dataset.animatedSrc){
-        sequentialArtIndex=(index+1)%sequentialArt.length;
-        activeSequentialArt=image;
-        image.src=image.dataset.animatedSrc;
-        return;
-      }
-    }
-  }
-  if(sequentialArt.length){
-    // Allow initial frames to load before taking static snapshots.
-    sequentialArt.forEach(image=>{
-      if(image.complete && image.naturalWidth)freezeAnimation(image);
-    });
-    window.setTimeout(playNextCardAnimation,100);
-    window.setInterval(playNextCardAnimation,3000);
-  }
-
-  // PvP and Mines use their own independent animation queue.
-  // Animated WebP cannot be paused natively: preserve its current frame as PNG,
-  // then restore the original WebP only when that card's turn begins.
-  const pvpMinesArt=[
+  createSequentialAnimationQueue([
     document.querySelector('.pvp-tile .game-tile-art img'),
     document.querySelector('.mines-tile .game-tile-art img')
-  ].filter(Boolean);
-  let activePvpMinesArt=null;
-  let pvpMinesArtIndex=0;
-
-  function freezePvpMinesAnimation(image){
-    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return false;
-    try{
-      const canvas=document.createElement('canvas');
-      canvas.width=image.naturalWidth;
-      canvas.height=image.naturalHeight;
-      const context=canvas.getContext('2d');
-      if(!context)return false;
-      context.drawImage(image,0,0,canvas.width,canvas.height);
-      const frozenFrame=canvas.toDataURL('image/png');
-      image.dataset.frozenSrc=frozenFrame;
-      image.src=frozenFrame;
-      return true;
-    }catch(error){
-      return false;
-    }
-  }
-
-  pvpMinesArt.forEach(image=>{
-    image.dataset.animatedSrc=image.getAttribute('src')||'';
-    image.dataset.cardVisible='true';
-    image.addEventListener('load',()=>{
-      if(image!==activePvpMinesArt && !image.dataset.frozenSrc)freezePvpMinesAnimation(image);
-    });
-  });
-
-  if('IntersectionObserver' in window){
-    const pvpMinesObserver=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        const image=entry.target;
-        image.dataset.cardVisible=entry.isIntersecting?'true':'false';
-        if(!entry.isIntersecting && image===activePvpMinesArt){
-          freezePvpMinesAnimation(image);
-          activePvpMinesArt=null;
-        }
-      });
-    },{rootMargin:'80px 0px',threshold:0.01});
-    pvpMinesArt.forEach(image=>pvpMinesObserver.observe(image));
-  }
-
-  function playNextPvpMinesAnimation(){
-    if(activePvpMinesArt){
-      freezePvpMinesAnimation(activePvpMinesArt);
-      activePvpMinesArt=null;
-    }
-    for(let i=0;i<pvpMinesArt.length;i++){
-      const index=(pvpMinesArtIndex+i)%pvpMinesArt.length;
-      const image=pvpMinesArt[index];
-      if(image.dataset.cardVisible==='true' && image.dataset.animatedSrc){
-        pvpMinesArtIndex=(index+1)%pvpMinesArt.length;
-        activePvpMinesArt=image;
-        image.removeAttribute('src');
-        image.src=image.dataset.animatedSrc;
-        return;
-      }
-    }
-  }
-  if(pvpMinesArt.length){
-    pvpMinesArt.forEach(image=>{
-      if(image.complete && image.naturalWidth)freezePvpMinesAnimation(image);
-    });
-    window.setTimeout(playNextPvpMinesAnimation,250);
-    window.setInterval(playNextPvpMinesAnimation,3000);
-  }
+  ],3000);
 
   const giftsTrack=document.getElementById('giftsLiveTrack');
   if(giftsTrack){
