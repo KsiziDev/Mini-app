@@ -128,7 +128,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .gifts-live-wifi path{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .gifts-live-underline{width:25px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(66,229,139,.18),#42e58b,rgba(66,229,139,.18));box-shadow:0 0 7px rgba(66,229,139,.22)}
 @keyframes liveWifiPulse{0%,100%{opacity:.65;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
-.gifts-live-track{height:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;overflow:hidden}
+.gifts-live-track{height:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;scrollbar-width:none;scroll-behavior:smooth}.gifts-live-track::-webkit-scrollbar{display:none}
 .gift-live-item{position:relative;isolation:isolate;flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.25);border-radius:9px;background:#737984;box-shadow:0 2px 6px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.22);animation:giftAppear .32s cubic-bezier(.2,.8,.2,1) both}
 .gift-live-item img{display:block;width:100%;height:100%;padding:2px;object-fit:contain;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 @keyframes giftAppear{from{opacity:0;transform:translateX(-8px) scale(.88)}to{opacity:1;transform:translateX(0) scale(1)}}
