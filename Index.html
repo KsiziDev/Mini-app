@@ -78,6 +78,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes heroShimmer{0%,12%{background-position:150% 0;opacity:0}28%{opacity:.8}62%{background-position:-50% 0;opacity:.55}78%,100%{background-position:-50% 0;opacity:0}}
 .game-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;height:100%;padding:12px 13px 9px;max-width:66%;text-shadow:0 2px 12px rgba(0,0,0,.28)}
 .game-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:#fff;color:#171717;font-size:12px;font-weight:900;letter-spacing:0;text-transform:none;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none;overflow:visible}
+.game-tile.mines{position:relative}.game-tile.mines .crafts-hit-badge{position:absolute;top:8px;left:8px;z-index:6;padding:4px 7px;border-radius:7px;font-size:10px;gap:4px}.game-tile.mines .crafts-hit-badge svg{width:13px;height:13px;flex-basis:13px}
 .game-hero-badges{position:relative;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:nowrap}.upgrader-online.rocket-online{position:absolute;z-index:20;top:-9px;right:-7px;left:auto;min-height:27px;padding:5px 9px;gap:6px;white-space:nowrap;background:linear-gradient(135deg,rgba(255,255,255,.27),rgba(255,255,255,.09) 48%,rgba(132,190,255,.12));border-color:rgba(255,255,255,.34);box-shadow:0 5px 14px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(255,255,255,.08);color:#e9fff1;backdrop-filter:blur(14px) saturate(155%);-webkit-backdrop-filter:blur(14px) saturate(155%)}.game-hero-eyebrow svg{display:block;width:16px;height:16px;flex:0 0 16px;color:#ff7a1a;overflow:visible}.game-hero-eyebrow .flame-icon{fill:currentColor;stroke:currentColor;stroke-width:.35;animation:flameFlicker 1.05s ease-in-out infinite alternate;transform-origin:50% 85%;filter:drop-shadow(0 0 2px rgba(255,122,26,.3))}.game-hero-eyebrow .flame-core{fill:#ffbd54;stroke:none;animation:flameCore 1.05s ease-in-out infinite alternate}.game-hero-eyebrow .flame-icon path:first-child{fill:#ff7a1a;stroke:#ff7a1a}
 @keyframes flameFlicker{0%{transform:rotate(-5deg) scale(.96);filter:drop-shadow(0 0 1px rgba(255,122,26,.25))}100%{transform:rotate(5deg) scale(1.06);filter:drop-shadow(0 0 4px rgba(255,122,26,.65))}}@keyframes flameCore{0%{opacity:.75;transform:scale(.92)}100%{opacity:1;transform:scale(1.08)}}
 .game-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
@@ -207,10 +208,11 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       <span class="game-tile-art"><img src="./assets/videos/cherry-redo-pepe-chicken.webp" alt="" loading="lazy"></span>
       <span class="game-tile-title">Апгрейдер</span>
     </button>
-    <button class="game-tile mines" type="button" aria-label="Открыть Мины">
+    <button class="game-tile mines" type="button" aria-label="Открыть Крафты">
+      <span class="game-hero-eyebrow crafts-hit-badge"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.2 2.7-1.2 4.1-2.4 5.8C8.4 10.2 7.2 11.6 7.2 14a4.8 4.8 0 0 0 9.6 0c0-3.1-2-6.9-4.8-11.2Z"/><path class="flame-core" d="M12 12.2c-.1 1.1-1.5 2.1-1.5 3.5a1.5 1.5 0 0 0 3 0c0-1.1-.6-2.2-1.5-3.5Z"/></svg><span>ХИТ</span></span>
       <span class="upgrader-online" aria-label="61 игрок онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesOnlineCount" aria-live="polite">61</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
       <span class="game-tile-art"><img src="./assets/videos/heart-pink.webp" alt="" loading="lazy"></span>
-      <span class="game-tile-title">Мины</span>
+      <span class="game-tile-title">Крафты</span>
     </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
