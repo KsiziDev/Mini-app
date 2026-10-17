@@ -165,15 +165,25 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   }catch(e){}
   const multiplierCards=Array.from(document.querySelectorAll('.multiplier-card'));
   const runDuration=15000;
-  const resetDuration=420;
+  const resetDuration=1000;
   function animateMultiplier(card){
     const target=Number(card.dataset.target);
     const startValue=Number(card.dataset.start||1.12);
     const started=performance.now();
     function frame(now){
       const elapsed=(now-started)%(runDuration+resetDuration);
-      if(elapsed>=runDuration){card.textContent='x'+startValue.toFixed(2);card.classList.remove('gold','red');}
-      else{const progress=elapsed/runDuration;const value=startValue+(target-startValue)*Math.pow(progress,1.18);card.textContent='x'+value.toFixed(2);card.classList.toggle('gold',value>=35.12);card.classList.toggle('red',value>=70);if(value>=70)card.classList.remove('gold');}
+      let value;
+      if(elapsed<runDuration){
+        const progress=elapsed/runDuration;
+        value=startValue+(target-startValue)*Math.pow(progress,1.18);
+      }else{
+        const resetProgress=(elapsed-runDuration)/resetDuration;
+        const eased=resetProgress*resetProgress*(3-2*resetProgress);
+        value=target-(target-startValue)*eased;
+      }
+      card.textContent='x'+value.toFixed(2);
+      card.classList.toggle('red',value>=70);
+      card.classList.toggle('gold',value>=35.12&&value<70);
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
