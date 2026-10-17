@@ -122,17 +122,18 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 
 /* Recent gifts live ticker */
 .gifts-live{height:43px;width:100%;display:flex;align-items:center;gap:7px;margin:0 0 9px;padding:0 3px;overflow:hidden}
-.gifts-live-label{position:relative;z-index:2;flex:0 0 19px;height:38px;display:flex;align-items:center;justify-content:center;color:#42e58b;font-size:10px;font-weight:950;letter-spacing:1.1px;line-height:1;text-shadow:0 0 9px rgba(52,230,139,.18);transform:rotate(-90deg);white-space:nowrap}
+.gifts-live-label{position:relative;z-index:2;flex:0 0 49px;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#a7f5c8;font-size:10px;font-weight:950;letter-spacing:1.15px;line-height:1;text-shadow:0 0 9px rgba(52,230,139,.12);white-space:nowrap}
+.gifts-live-heading{display:flex;align-items:center;justify-content:center;gap:3px}
+.gifts-live-wifi{width:13px;height:13px;flex:0 0 13px;overflow:visible;color:#42e58b;filter:drop-shadow(0 0 4px rgba(66,229,139,.35));animation:liveWifiPulse 1.7s ease-in-out infinite}
+.gifts-live-wifi path{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.gifts-live-underline{width:25px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(66,229,139,.18),#42e58b,rgba(66,229,139,.18));box-shadow:0 0 7px rgba(66,229,139,.22)}
+@keyframes liveWifiPulse{0%,100%{opacity:.65;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
 .gifts-live-track{height:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;overflow:hidden}
-.gift-live-item{position:relative;isolation:isolate;flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:#f6d85b;box-shadow:0 2px 6px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.45);animation:giftAppear .32s cubic-bezier(.2,.8,.2,1) both}
-.gift-live-item:nth-child(4n+2){background:#f7d85c}
-.gift-live-item:nth-child(5n+3){background:#67d9f2}
-.gift-live-item:nth-child(7n+4){background:#b99aff}
-.gift-live-item:nth-child(9n+5){background:#59e2c0}
+.gift-live-item{position:relative;isolation:isolate;flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.25);border-radius:9px;background:#737984;box-shadow:0 2px 6px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.22);animation:giftAppear .32s cubic-bezier(.2,.8,.2,1) both}
 .gift-live-item img{display:block;width:100%;height:100%;padding:2px;object-fit:contain;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
 @keyframes giftAppear{from{opacity:0;transform:translateX(-8px) scale(.88)}to{opacity:1;transform:translateX(0) scale(1)}}
-@media(max-width:370px){.gifts-live{height:40px;gap:5px;margin-bottom:8px;padding:0 1px}.gifts-live-label{flex-basis:17px;font-size:9px}.gifts-live-track{gap:4px}.gift-live-item{flex-basis:33px;width:33px;height:33px;border-radius:8px}}
-@media(prefers-reduced-motion:reduce){.gift-live-item{animation:none}}
+@media(max-width:370px){.gifts-live{height:40px;gap:5px;margin-bottom:8px;padding:0 1px}.gifts-live-label{flex-basis:46px;font-size:9px}.gifts-live-wifi{width:12px;height:12px;flex-basis:12px}.gifts-live-track{gap:4px}.gift-live-item{flex-basis:33px;width:33px;height:33px;border-radius:8px}}
+@media(prefers-reduced-motion:reduce){.gift-live-item,.gifts-live-wifi{animation:none}}
 
 </style>
 </head>
@@ -165,7 +166,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 </header>
 
 <section class="gifts-live" aria-label="Недавно выбитые подарки">
-  <span class="gifts-live-label">LIVE</span>
+  <span class="gifts-live-label"><span class="gifts-live-heading"><svg class="gifts-live-wifi" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 8.8a14.2 14.2 0 0 1 19 0"/><path d="M5.8 12.1a9.2 9.2 0 0 1 12.4 0"/><path d="M9.2 15.4a4.5 4.5 0 0 1 5.6 0"/><path d="M12 19.1h.01"/></svg><span>LIVE</span></span><span class="gifts-live-underline"></span></span>
   <div class="gifts-live-track" id="giftsLiveTrack" aria-live="off"></div>
 </section>
 <main aria-label="Главная область">
@@ -310,12 +311,12 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       './assets/videos/heart-pink.webp',
       './assets/videos/fish-pink.webp'
     ];
-    const giftColors=['gold','gold','blue','violet','teal','gold','gold','blue','gold','teal','violet','gold'];
+    const giftColors=['gray','gray','gold','gray','blue','gray','violet','gray','teal','gray','red','black','gray','gold','gray','cyan','gray','violet','gray','teal'];
     let giftSequence=0;
     function addLiveGift(){
       const item=document.createElement('span');
       item.className='gift-live-item';
-      item.style.backgroundColor=giftColors[giftSequence%giftColors.length]==='blue'?'#67d9f2':giftColors[giftSequence%giftColors.length]==='violet'?'#b99aff':giftColors[giftSequence%giftColors.length]==='teal'?'#59e2c0':'#f6d85b';
+      const giftColor=giftColors[giftSequence%giftColors.length];const giftBackgrounds={gray:'#737984',gold:'#f6d85b',blue:'#67d9f2',cyan:'#58d7e8',violet:'#b99aff',teal:'#59e2c0',red:'#ed6474',black:'#20242b'};item.style.backgroundColor=giftBackgrounds[giftColor]||giftBackgrounds.gray;
       const image=document.createElement('img');
       image.src=giftAssets[Math.floor(Math.random()*giftAssets.length)];
       image.alt='';
