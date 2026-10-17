@@ -271,7 +271,12 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
         counter.classList.remove('changing');
       },220);
     }
-    window.setInterval(updateOnlineCount,7000);
+    // Give each card its own update schedule so the counters do not change together.
+    const initialDelay=1500+Math.random()*10500;
+    window.setTimeout(function(){
+      updateOnlineCount();
+      window.setInterval(updateOnlineCount,9000+Math.random()*9000);
+    },initialDelay);
   }
   setupOnlineCounter('upgraderOnlineCount',52,52,73);
   setupOnlineCounter('minesOnlineCount',61,52,73);
