@@ -77,13 +77,14 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .game-hero:after{content:"";position:absolute;z-index:4;inset:0;border-radius:inherit;clip-path:inset(0 round 25px);pointer-events:none;background:linear-gradient(112deg,transparent 0%,rgba(255,255,255,0) 27%,rgba(255,255,255,.48) 43%,rgba(151,218,255,.2) 49%,rgba(255,255,255,0) 58%,transparent 76%);background-size:250% 100%;background-position:150% 0;animation:heroShimmer 5.6s ease-in-out infinite;mix-blend-mode:screen}
 @keyframes heroShimmer{0%,12%{background-position:150% 0;opacity:0}28%{opacity:.8}62%{background-position:-50% 0;opacity:.55}78%,100%{background-position:-50% 0;opacity:0}}
 .game-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;height:100%;padding:12px 13px 9px;max-width:66%;text-shadow:0 2px 12px rgba(0,0,0,.28)}
-.game-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:#fff;color:#171717;font-size:12px;font-weight:900;letter-spacing:0;text-transform:none;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none;overflow:visible}.game-hero-eyebrow svg{display:block;width:16px;height:16px;flex:0 0 16px;color:#ff7a1a;overflow:visible}.game-hero-eyebrow .flame-icon{fill:currentColor;stroke:currentColor;stroke-width:.35;animation:flameFlicker 1.05s ease-in-out infinite alternate;transform-origin:50% 85%;filter:drop-shadow(0 0 2px rgba(255,122,26,.3))}.game-hero-eyebrow .flame-core{fill:#ffbd54;stroke:none;animation:flameCore 1.05s ease-in-out infinite alternate}.game-hero-eyebrow .flame-icon path:first-child{fill:#ff7a1a;stroke:#ff7a1a}
+.game-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:#fff;color:#171717;font-size:12px;font-weight:900;letter-spacing:0;text-transform:none;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none;overflow:visible}
+.game-hero-badges{position:relative;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:nowrap}.upgrader-online.rocket-online{position:relative;top:auto;left:auto;min-height:27px;padding:5px 9px;gap:6px;white-space:nowrap}.game-hero-eyebrow svg{display:block;width:16px;height:16px;flex:0 0 16px;color:#ff7a1a;overflow:visible}.game-hero-eyebrow .flame-icon{fill:currentColor;stroke:currentColor;stroke-width:.35;animation:flameFlicker 1.05s ease-in-out infinite alternate;transform-origin:50% 85%;filter:drop-shadow(0 0 2px rgba(255,122,26,.3))}.game-hero-eyebrow .flame-core{fill:#ffbd54;stroke:none;animation:flameCore 1.05s ease-in-out infinite alternate}.game-hero-eyebrow .flame-icon path:first-child{fill:#ff7a1a;stroke:#ff7a1a}
 @keyframes flameFlicker{0%{transform:rotate(-5deg) scale(.96);filter:drop-shadow(0 0 1px rgba(255,122,26,.25))}100%{transform:rotate(5deg) scale(1.06);filter:drop-shadow(0 0 4px rgba(255,122,26,.65))}}@keyframes flameCore{0%{opacity:.75;transform:scale(.92)}100%{opacity:1;transform:scale(1.08)}}
 .game-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
 @keyframes titleBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
 .game-hero-caption{font-size:8px;line-height:1.25;color:rgba(255,255,255,.88);white-space:nowrap}.game-hero-caption .crazy{color:#ff4545;font-weight:900}
 .game-hero-rocket{position:absolute;z-index:3;right:-8px;top:-14px;width:calc(100% + 16px);max-width:none;height:calc(100% + 28px);object-fit:contain;object-position:right bottom;filter:drop-shadow(0 9px 13px rgba(0,0,0,.28));pointer-events:none}
-@media(max-width:370px){.game-hero{width:100%;margin-left:0;height:120px;border-radius:20px}.game-hero:after{clip-path:inset(0 round 20px)}.game-hero-copy{padding:10px 11px 12px;max-width:68%}.game-hero-title{font-size:18px}.game-hero-caption{font-size:10px}.game-hero-rocket{right:0;width:40%;top:-12px;height:calc(100% + 18px)}}
+@media(max-width:370px){.game-hero{width:100%;margin-left:0;height:120px;border-radius:20px}.game-hero:after{clip-path:inset(0 round 20px)}.game-hero-copy{padding:10px 11px 12px;max-width:78%}.game-hero-title{font-size:18px}.game-hero-caption{font-size:10px}.game-hero-rocket{right:0;width:40%;top:-12px;height:calc(100% + 18px)}.game-hero-badges{gap:6px}.upgrader-online.rocket-online{min-height:25px;padding:4px 7px;gap:5px;font-size:10px}.upgrader-online.rocket-online .online-people-icon{width:12px;height:12px;flex-basis:12px}}
 @media(prefers-reduced-motion:reduce){.game-hero:after{animation:none;opacity:.12;background-position:50% 0}.game-hero-title,.game-hero-eyebrow .flame-icon,.game-hero-eyebrow .flame-core,.multiplier-card{animation:none}}
 
 
@@ -141,7 +142,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 <main aria-label="Главная область">
   <section class="game-hero" aria-label="Игры">
     <div class="game-hero-copy">
-      <span class="game-hero-eyebrow"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.2 2.7-1.2 4.1-2.4 5.8C8.4 10.2 7.2 11.6 7.2 14a4.8 4.8 0 0 0 9.6 0c0-3.1-2-6.9-4.8-11.2Z"/><path class="flame-core" d="M12 12.2c-.1 1.1-1.5 2.1-1.5 3.5a1.5 1.5 0 0 0 3 0c0-1.1-.6-2.2-1.5-3.5Z"/></svg><span>ХИТ</span></span>
+      <div class="game-hero-badges"><span class="game-hero-eyebrow"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.2 2.7-1.2 4.1-2.4 5.8C8.4 10.2 7.2 11.6 7.2 14a4.8 4.8 0 0 0 9.6 0c0-3.1-2-6.9-4.8-11.2Z"/><path class="flame-core" d="M12 12.2c-.1 1.1-1.5 2.1-1.5 3.5a1.5 1.5 0 0 0 3 0c0-1.1-.6-2.2-1.5-3.5Z"/></svg><span>ХИТ</span></span><span class="upgrader-online rocket-online" aria-label="87 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="rocketOnlineCount" aria-live="polite">87</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span></div>
       <h1 class="game-hero-title">ИГРА-РАКЕТА</h1>
     </div>
     <img class="game-hero-rocket" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="" fetchpriority="high">
@@ -209,7 +210,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       applyTelegramUser(tg.initDataUnsafe&&tg.initDataUnsafe.user);
     }
   }catch(e){}
-  function setupOnlineCounter(elementId,initialValue){
+  function setupOnlineCounter(elementId,initialValue,minValue,maxValue){
     const counter=document.getElementById(elementId);
     if(!counter)return;
     const storageKey='ripiup.online.'+elementId;
@@ -217,8 +218,8 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     const now=Date.now();
     let saved=null;
     try{saved=JSON.parse(localStorage.getItem(storageKey)||'null');}catch(e){}
-    let currentOnline=saved&&Number.isFinite(saved.value)&&saved.value>=52&&saved.value<=73?saved.value:initialValue;
-    let history=saved&&Array.isArray(saved.history)?saved.history.filter(function(item){return item&&Number.isFinite(item.time)&&Number.isFinite(item.value)&&item.time>=now-historyWindowMs&&item.value>=52&&item.value<=73;}):[];
+    let currentOnline=saved&&Number.isFinite(saved.value)&&saved.value>=minValue&&saved.value<=maxValue?saved.value:initialValue;
+    let history=saved&&Array.isArray(saved.history)?saved.history.filter(function(item){return item&&Number.isFinite(item.time)&&Number.isFinite(item.value)&&item.time>=now-historyWindowMs&&item.value>=minValue&&item.value<=maxValue;}):[];
     history.push({time:now,value:currentOnline});
     function persist(){
       const cutoff=Date.now()-historyWindowMs;
@@ -235,16 +236,16 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     function updateOnlineCount(){
       try{
         const latest=JSON.parse(localStorage.getItem(storageKey)||'null');
-        if(latest&&Number.isFinite(latest.value)&&latest.value>=52&&latest.value<=73&&latest.updatedAt>Date.now()-8000){
+        if(latest&&Number.isFinite(latest.value)&&latest.value>=minValue&&latest.value<=maxValue&&latest.updatedAt>Date.now()-8000){
           currentOnline=latest.value;
-          if(Array.isArray(latest.history))history=latest.history.filter(function(item){return item&&Number.isFinite(item.time)&&item.time>=Date.now()-historyWindowMs&&Number.isFinite(item.value)&&item.value>=52&&item.value<=73;});
+          if(Array.isArray(latest.history))history=latest.history.filter(function(item){return item&&Number.isFinite(item.time)&&item.time>=Date.now()-historyWindowMs&&Number.isFinite(item.value)&&item.value>=minValue&&item.value<=maxValue;});
         }
       }catch(e){}
       const roll=Math.random();
       let change=roll<0.68?(Math.random()<0.5?-1:1):roll<0.9?(Math.random()<0.5?-2:2):0;
-      if(currentOnline+change>73)change=-Math.abs(change);
-      if(currentOnline+change<52)change=Math.abs(change);
-      const nextOnline=Math.max(52,Math.min(73,currentOnline+change));
+      if(currentOnline+change>maxValue)change=-Math.abs(change);
+      if(currentOnline+change<minValue)change=Math.abs(change);
+      const nextOnline=Math.max(minValue,Math.min(maxValue,currentOnline+change));
       if(nextOnline===currentOnline){persist();return;}
       counter.classList.add('changing');
       window.setTimeout(function(){
@@ -257,8 +258,9 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     }
     window.setInterval(updateOnlineCount,7000);
   }
-  setupOnlineCounter('upgraderOnlineCount',52);
-  setupOnlineCounter('minesOnlineCount',61);
+  setupOnlineCounter('upgraderOnlineCount',52,52,73);
+  setupOnlineCounter('minesOnlineCount',61,52,73);
+  setupOnlineCounter('rocketOnlineCount',87,87,199);
   const multiplierCards=Array.from(document.querySelectorAll('.multiplier-card'));
   const runDuration=15000;
   const resetDuration=1000;
