@@ -12,8 +12,8 @@
 html,body{margin:0;min-height:100%;background:var(--bg)}
 body{min-height:100vh;min-height:100dvh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
 main{min-height:100vh;min-height:100dvh;padding:0 14px calc(110px + var(--safe-bottom))}
-.top-header{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(var(--safe-top) + var(--tg-top) + 20px) 7px 12px}
-.profile-area{position:relative;display:flex;align-items:center;gap:9px;min-width:0;order:0;flex:0 1 auto}
+.top-header{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(var(--safe-top) + var(--tg-top) + 30px) 7px 12px}
+.profile-area{position:relative;display:flex;align-items:center;gap:9px;min-width:0;order:1;flex:0 1 auto;margin-left:auto}
 .profile-trigger{display:flex;align-items:center;gap:8px;min-width:0;padding:0;border:0;background:transparent;color:var(--text);text-align:left;cursor:pointer}
 .avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#318bff,#1558a8);border:1px solid rgba(255,255,255,.42);box-shadow:0 3px 12px #0004,inset 0 1px 0 #ffffff55;color:#fff;font-size:16px;font-weight:800}
 .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -22,9 +22,9 @@ main{min-height:100vh;min-height:100dvh;padding:0 14px calc(110px + var(--safe-b
 .profile-hint{font-size:10px;color:var(--muted)}
 .chevron{width:12px;height:12px;flex:0 0 12px;stroke:#8bbcff;fill:none;stroke-width:2;transition:transform .2s}
 .profile-trigger[aria-expanded="true"] .chevron{transform:rotate(180deg)}
-.deposit-button{flex:0 0 auto;display:flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:10px 12px;background:#1677f8;box-shadow:none;color:#fff;font:650 11px/1 inherit;white-space:nowrap;cursor:pointer}
+.deposit-button{flex:0 0 auto;display:flex;align-items:center;gap:5px;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:10px 12px;background:#1677f8;box-shadow:none;color:#fff;font-family:inherit;font-size:11px;font-weight:800;line-height:1;white-space:nowrap;cursor:pointer}
 .deposit-button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.balance-area{order:1;margin-left:auto;display:flex;align-items:center;gap:7px;min-width:0;padding:9px 10px;border:1px solid #ffffff17;border-radius:15px;background:linear-gradient(145deg,#ffffff0d,#ffffff04);box-shadow:inset 0 1px 0 #ffffff0d}
+.balance-area{order:0;margin-left:0;display:flex;align-items:center;gap:7px;min-width:0;padding:9px 10px;border:1px solid #ffffff17;border-radius:15px;background:linear-gradient(145deg,#ffffff0d,#ffffff04);box-shadow:inset 0 1px 0 #ffffff0d}
 .star-token{position:relative;isolation:isolate;overflow:hidden;width:29px;height:29px;flex:0 0 29px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#7fc4ff,#2479ee);box-shadow:0 2px 8px #1677f822,inset 0 1px 0 #ffffff55}
 .star-token:after{content:"";position:absolute;z-index:0;inset:-45% -70%;pointer-events:none;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,0) 44%,rgba(255,255,255,.82) 50%,rgba(210,237,255,.28) 54%,transparent 62%);transform:translateX(-75%) rotate(8deg);animation:starSheen 2.8s ease-in-out infinite alternate}
 .star-token svg{position:relative;z-index:1;filter:drop-shadow(0 0 2px rgba(255,255,255,.3))}
@@ -70,7 +70,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 14px calc(110px + var(--safe-b
       <svg class="chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
     </button>
     <button class="deposit-button" type="button" aria-label="Пополнить баланс">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Пополнить
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H20v14H6.5A2.5 2.5 0 0 1 4 16.5z"/><path d="M4 8h16M16 12h4"/><circle cx="16" cy="12" r=".6" fill="currentColor" stroke="none"/></svg>Пополнить
     </button>
     <div class="profile-menu" id="profileMenu" role="menu" aria-label="Меню профиля">
       <div class="menu-user">
