@@ -74,12 +74,14 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .game-hero:after{content:"";position:absolute;z-index:4;inset:-45% -70%;border-radius:inherit;pointer-events:none;background:linear-gradient(112deg,transparent 35%,rgba(255,255,255,0) 42%,rgba(255,255,255,.48) 49%,rgba(151,218,255,.2) 52%,rgba(255,255,255,0) 59%,transparent 66%);transform:translateX(-70%) rotate(8deg);animation:heroShimmer 4.8s ease-in-out infinite;mix-blend-mode:screen}
 @keyframes heroShimmer{0%,12%{transform:translateX(-70%) rotate(8deg);opacity:0}28%{opacity:.8}62%{transform:translateX(70%) rotate(8deg);opacity:.55}78%,100%{transform:translateX(70%) rotate(8deg);opacity:0}}
 .game-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;height:100%;padding:12px 13px 13px;max-width:66%;text-shadow:0 2px 12px rgba(0,0,0,.28)}
-.game-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:#fff;color:#171717;font-size:12px;font-weight:900;letter-spacing:0;text-transform:none;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none}.game-hero-eyebrow svg{display:block;width:15px;height:15px;flex:0 0 15px;color:#ff7a1a}
-.game-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff}
+.game-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;background:#fff;color:#171717;font-size:12px;font-weight:900;letter-spacing:0;text-transform:none;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.14);text-shadow:none}.game-hero-eyebrow svg{display:block;width:16px;height:16px;flex:0 0 16px;color:#ff7a1a}.game-hero-eyebrow .flame-icon{fill:currentColor;stroke:currentColor;stroke-width:.35;animation:flameFlicker 1.05s ease-in-out infinite alternate;transform-origin:50% 85%;filter:drop-shadow(0 0 2px rgba(255,122,26,.3))}.game-hero-eyebrow .flame-core{fill:#ffbd54;stroke:none;animation:flameCore 1.05s ease-in-out infinite alternate}.game-hero-eyebrow .flame-icon path:first-child{fill:#ff7a1a;stroke:#ff7a1a}
+@keyframes flameFlicker{0%{transform:rotate(-5deg) scale(.96);filter:drop-shadow(0 0 1px rgba(255,122,26,.25))}100%{transform:rotate(5deg) scale(1.06);filter:drop-shadow(0 0 4px rgba(255,122,26,.65))}}@keyframes flameCore{0%{opacity:.75;transform:scale(.92)}100%{opacity:1;transform:scale(1.08)}}
+.game-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
+@keyframes titleBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
 .game-hero-caption{font-size:8px;line-height:1.25;color:rgba(255,255,255,.88);white-space:nowrap}.game-hero-caption .crazy{color:#ff4545;font-weight:900}
 .game-hero-rocket{position:absolute;z-index:3;right:3px;top:-14px;width:39%;max-width:170px;height:calc(100% + 20px);object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 13px rgba(0,0,0,.28));pointer-events:none}
 @media(max-width:370px){.game-hero{width:100%;margin-left:0;height:120px;border-radius:20px}.game-hero-copy{padding:10px 11px 12px;max-width:68%}.game-hero-title{font-size:18px}.game-hero-caption{font-size:10px}.game-hero-rocket{right:0;width:40%;top:-12px;height:calc(100% + 18px)}}
-@media(prefers-reduced-motion:reduce){.game-hero:after{animation:none;opacity:.12;transform:translateX(0) rotate(8deg)}}
+@media(prefers-reduced-motion:reduce){.game-hero:after{animation:none;opacity:.12;transform:translateX(0) rotate(8deg)}.game-hero-title,.game-hero-eyebrow .flame-icon,.game-hero-eyebrow .flame-core{animation:none}}
 
 </style>
 </head>
@@ -113,7 +115,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 <main aria-label="Главная область">
   <section class="game-hero" aria-label="Игры">
     <div class="game-hero-copy">
-      <span class="game-hero-eyebrow"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.2 2.2c.5 3.1-1.1 4.8-2.8 6.5-1.5 1.5-2.9 3-2.9 5.6 0 1.6.8 2.9 2 3.7-.1-2.1 1-3.5 2.4-4.8.2 2.1 2.6 3.1 2.6 5.5 0 1.1-.5 2.1-1.3 2.8 3.9-.5 6.8-3.7 6.8-7.7 0-4.6-3.1-8.6-6.8-11.6ZM8.1 12.5c-1.1 1.3-1.8 2.7-1.8 4.5 0 1.3.5 2.4 1.3 3.3C4.8 19.5 3 17 3 14.2c0-2.2 1.1-4.1 3.4-6.2-.1 1.8.4 3.2 1.7 4.5Z"/></svg><span>Hit</span></span>
+      <span class="game-hero-eyebrow"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.8 2.5c.4 3-1 4.5-2.5 6.2-1.4 1.5-2.6 2.8-2.6 5.2a5.2 5.2 0 0 0 10.4 0c0-3.6-2.5-7.8-5.3-11.4Z"/><path class="flame-core" d="M12.1 11.2c.1 1.5-1.6 2.5-1.6 4.2a2 2 0 0 0 4 0c0-1.4-1-2.8-2.4-4.2Z"/></svg><span>Хит</span></span>
       <h1 class="game-hero-title">ИГРА-РАКЕТА</h1>
     </div>
     <img class="game-hero-rocket" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="" fetchpriority="high">
