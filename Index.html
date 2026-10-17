@@ -326,6 +326,27 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('rocketOnlineCount',87,87,199);
   setupOnlineCounter('fishOnlineCount',12,12,34);
 
+  // Animate game artwork only while its card is near/inside the viewport.
+  const animatedCardArt=document.querySelectorAll('.game-tile-art img, .game-hero-rocket, .fish-hero-art');
+  if('IntersectionObserver' in window){
+    const cardArtObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        const image=entry.target;
+        if(entry.isIntersecting){
+          if(!image.getAttribute('src')&&image.dataset.animatedSrc)image.src=image.dataset.animatedSrc;
+        }else if(image.getAttribute('src')){
+          image.dataset.animatedSrc=image.getAttribute('src');
+          image.removeAttribute('src');
+        }
+      });
+    },{rootMargin:'80px 0px',threshold:0.01});
+    animatedCardArt.forEach(image=>{
+      image.dataset.animatedSrc=image.getAttribute('src')||'';
+      image.removeAttribute('src');
+      cardArtObserver.observe(image);
+    });
+  }
+
   const giftsTrack=document.getElementById('giftsLiveTrack');
   if(giftsTrack){
     const giftAssets=[
