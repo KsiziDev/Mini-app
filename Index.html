@@ -346,6 +346,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function createSequentialAnimationQueue(images, delay){
     images=images.filter(Boolean);
     let active=null;
+    let activeUntil=0;
     let nextIndex=0;
     let timer=null;
 
@@ -386,7 +387,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
           image.dataset.cardVisible=entry.isIntersecting?'true':'false';
           if(!entry.isIntersecting && image===active){
             // Only release the slot after a still frame was captured successfully.
-            if(freezeFrame(image)) active=null;
+            if(freezeFrame(image)){ active=null; activeUntil=0; }
           }
         });
         schedule(0);
@@ -402,6 +403,14 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     function tick(){
       timer=null;
       if(active){
+        if(!active.complete || !active.naturalWidth){
+          schedule(150);
+          return;
+        }
+        if(activeUntil && Date.now()<activeUntil){
+          schedule(activeUntil-Date.now());
+          return;
+        }
         if(!freezeFrame(active)){
           // Image may still be loading; retain ownership and retry instead of
           // letting two WebP animations run or making the active image disappear.
@@ -409,6 +418,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
           return;
         }
         active=null;
+        activeUntil=0;
       }
       for(let i=0;i<images.length;i++){
         const index=(nextIndex+i)%images.length;
@@ -416,24 +426,27 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
         if(image.dataset.cardVisible!=='true' || !image.dataset.animatedSrc) continue;
         nextIndex=(index+1)%images.length;
         active=image;
+        activeUntil=0;
         // Assign directly: removing src first causes a visible blank/flicker.
         if(image.getAttribute('src')!==image.dataset.animatedSrc){
           image.src=image.dataset.animatedSrc;
         }
         // Wait for the selected image to finish loading, then give it a full turn.
         if(image.complete && image.naturalWidth){
+          activeUntil=Date.now()+delay;
           schedule(delay);
         }else{
           const onLoaded=()=>{
             image.removeEventListener('load',onLoaded);
             image.removeEventListener('error',onError);
-            if(active===image) schedule(delay);
+            if(active===image){ activeUntil=Date.now()+delay; schedule(delay); }
           };
           const onError=()=>{
             image.removeEventListener('load',onLoaded);
             image.removeEventListener('error',onError);
             if(active===image){
               active=null;
+              activeUntil=0;
               schedule(150);
             }
           };
