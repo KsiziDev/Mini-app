@@ -6,20 +6,24 @@
 <meta name="theme-color" content="#0c0c18">
 <title>RipiUp</title>
 <style>
-:root{color-scheme:dark;--bg:#0c0c18;--text:#f8f7ff;--muted:#8583a4;--purple:#7065ff;--safe:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:dark;--bg:#0c0c18;--text:#f8f7ff;--muted:#a4a3bc;--purple:#a99aff;--safe:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--bg)}
 body{min-height:100vh;min-height:100dvh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
-main{min-height:100vh;min-height:100dvh;padding-bottom:calc(82px + var(--safe))}
-.bottom-nav{position:fixed;z-index:30;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);padding:10px 10px calc(9px + var(--safe));background:rgba(17,17,34,.96);backdrop-filter:blur(22px);border-top:1px solid #ffffff12;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-.nav-item{appearance:none;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:54px;padding:7px 3px;border-radius:13px;font:750 10px/1.2 inherit;cursor:pointer;transition:color .18s ease,background .18s ease,transform .18s ease}
-.nav-item:active{transform:scale(.96)}
-.nav-item.active{color:#fff;background:linear-gradient(145deg,#7065ff30,#a54fff17);box-shadow:inset 0 0 0 1px #9387ff22}
-.nav-icon{width:25px;height:25px;display:grid;place-items:center}
-.nav-icon svg{width:24px;height:24px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.nav-item.active .nav-icon svg{filter:drop-shadow(0 0 7px #8776ff66);stroke:#a99eff}
-@media(min-width:520px){.bottom-nav{border:1px solid #ffffff12;border-bottom:0;border-radius:18px 18px 0 0}}
-@media(prefers-reduced-motion:reduce){.nav-item{transition:none}}
+main{min-height:100vh;min-height:100dvh;padding-bottom:calc(110px + var(--safe))}
+.bottom-nav{position:fixed;z-index:30;bottom:calc(12px + var(--safe));left:50%;transform:translateX(-50%);width:min(490px,calc(100% - 28px));padding:8px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;border-radius:25px;isolation:isolate;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.19),rgba(255,255,255,.055) 42%,rgba(170,158,255,.09));border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 38px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(255,255,255,.07);backdrop-filter:blur(32px) saturate(185%);-webkit-backdrop-filter:blur(32px) saturate(185%)}
+.bottom-nav:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.12),transparent 30%,transparent 70%,rgba(173,157,255,.1));mask-image:linear-gradient(#000,transparent 78%)}
+.nav-item{position:relative;appearance:none;border:1px solid transparent;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:59px;padding:7px 2px;border-radius:18px;font:750 10px/1.2 inherit;cursor:pointer;transition:color .22s ease,background .22s ease,transform .18s ease,border-color .22s ease;outline:none}
+.nav-item:focus-visible{box-shadow:0 0 0 2px rgba(190,177,255,.85)}
+.nav-item:active{transform:scale(.94)}
+.nav-item.active{color:#fff;background:linear-gradient(155deg,rgba(255,255,255,.22),rgba(255,255,255,.075) 55%,rgba(163,145,255,.13));border-color:rgba(255,255,255,.17);box-shadow:inset 0 1px 0 rgba(255,255,255,.27),inset 0 -1px 0 rgba(255,255,255,.05),0 3px 10px rgba(0,0,0,.08)}
+.nav-icon{width:26px;height:26px;display:grid;place-items:center}
+.nav-icon svg{width:24px;height:24px;display:block;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;transition:filter .22s ease,transform .22s ease}
+.nav-item.active .nav-icon svg{filter:drop-shadow(0 0 7px rgba(174,158,255,.52));stroke:#c8bdff;transform:translateY(-1px)}
+.nav-item span:last-child{white-space:nowrap}
+@media(min-width:520px){.bottom-nav{bottom:18px}}
+@media(prefers-reduced-motion:reduce){.nav-item,.nav-icon svg{transition:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.bottom-nav{background:rgba(27,25,46,.97)}}
 </style>
 </head>
 <body>
