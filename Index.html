@@ -345,12 +345,6 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       const item=document.createElement('span');
       item.className='gift-live-item';
       const giftColor=giftColors[giftSequence%giftColors.length];const giftBackgrounds={gray:'#737984',gold:'#f6d85b',blue:'#67d9f2',cyan:'#58d7e8',violet:'#b99aff',teal:'#59e2c0',red:'#ed6474',black:'#20242b'};item.style.backgroundColor=giftBackgrounds[giftColor]||giftBackgrounds.gray;
-      const image=document.createElement('img');
-      image.src=giftAssets[Math.floor(Math.random()*giftAssets.length)];
-      image.alt='';
-      image.loading='eager';
-      image.decoding='async';
-      item.appendChild(image);
       giftsTrack.prepend(item);
       giftSequence++;
       trimLiveGifts();
