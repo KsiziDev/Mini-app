@@ -135,6 +135,12 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(max-width:370px){.gifts-live{height:40px;gap:5px;margin-bottom:8px;padding:0 1px}.gifts-live-label{flex-basis:17px;font-size:9px}.gifts-live-wifi{width:12px;height:12px;flex-basis:12px}.gifts-live-track{gap:4px}.gift-live-item{flex-basis:33px;width:33px;height:33px;border-radius:8px}}
 @media(prefers-reduced-motion:reduce){.gift-live-item,.gifts-live-wifi{animation:none}}
 
+
+/* Layout fixes: keep Rocket online badge anchored to the full game card, away from the HIT badge. */
+.game-hero-badges{position:static!important}
+.upgrader-online.rocket-online{right:8px!important;left:auto!important;top:8px!important;z-index:30}
+/* Keep the LIVE accent stripe visibly beneath the vertical LIVE label. */
+.gifts-live-label>.gifts-live-underline{left:50%;bottom:-1px;transform:translateX(-50%);width:25px;height:2px}
 </style>
 </head>
 <body>
