@@ -171,7 +171,10 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
-    <div class="fish-hero-copy"><h2 class="fish-hero-title">РЫБА</h2></div>
+    <div class="fish-hero-copy">
+      <div class="fish-hero-badges"><span class="upgrader-online fish-online" aria-label="12 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="fishOnlineCount" aria-live="polite">12</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span></div>
+      <h2 class="fish-hero-title">РЫБА</h2>
+    </div>
     <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="lazy">
   </section>
 </main>
@@ -273,6 +276,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('upgraderOnlineCount',52,52,73);
   setupOnlineCounter('minesOnlineCount',61,52,73);
   setupOnlineCounter('rocketOnlineCount',87,87,199);
+  setupOnlineCounter('fishOnlineCount',12,12,34);
   const multiplierCards=Array.from(document.querySelectorAll('.multiplier-card'));
   const runDuration=15000;
   const resetDuration=1000;
