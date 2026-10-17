@@ -484,29 +484,108 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       './assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp',
       './assets/videos/cherry-redo-pepe-chicken.webp',
       './assets/videos/heart-pink.webp',
-      './assets/videos/fish-pink.webp'
+      './assets/videos/fish-pink.webp',
+      './assets/videos/redo-craft.webp',
+      './assets/videos/mamont.webp'
     ];
     const giftColors=['gray','gray','gold','gray','blue','gray','violet','gray','teal','gray','red','black','gray','gold','gray','cyan','gray','violet','gray','teal'];
+    const giftBackgrounds={gray:'#737984',gold:'#f6d85b',blue:'#67d9f2',cyan:'#58d7e8',violet:'#b99aff',teal:'#59e2c0',red:'#ed6474',black:'#20242b'};
     let giftSequence=0;
+    let activeGiftImage=null;
+
+    function freezeGiftImage(image){
+      if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight) return false;
+      try{
+        const canvas=document.createElement('canvas');
+        canvas.width=image.naturalWidth;
+        canvas.height=image.naturalHeight;
+        const context=canvas.getContext('2d');
+        if(!context) return false;
+        context.drawImage(image,0,0,canvas.width,canvas.height);
+        const still=canvas.toDataURL('image/png');
+        image.dataset.frozenSrc=still;
+        image.src=still;
+        return true;
+      }catch(error){
+        return false;
+      }
+    }
+
+    function pauseActiveGift(){
+      if(activeGiftImage){
+        freezeGiftImage(activeGiftImage);
+        activeGiftImage=null;
+      }
+    }
+
     function trimLiveGifts(){
       const itemWidth=41;
       const visibleCount=Math.max(1,Math.floor((giftsTrack.clientWidth+5)/itemWidth));
-      while(giftsTrack.children.length>visibleCount)giftsTrack.lastElementChild.remove();
+      while(giftsTrack.children.length>visibleCount){
+        const removed=giftsTrack.lastElementChild;
+        if(removed && removed.contains(activeGiftImage)) activeGiftImage=null;
+        removed.remove();
+      }
     }
-    function addLiveGift(){
+
+    function addLiveGift(shouldAnimate){
       const item=document.createElement('span');
       item.className='gift-live-item';
-      const giftColor=giftColors[giftSequence%giftColors.length];const giftBackgrounds={gray:'#737984',gold:'#f6d85b',blue:'#67d9f2',cyan:'#58d7e8',violet:'#b99aff',teal:'#59e2c0',red:'#ed6474',black:'#20242b'};item.style.backgroundColor=giftBackgrounds[giftColor]||giftBackgrounds.gray;
+      const giftColor=giftColors[giftSequence%giftColors.length];
+      item.style.backgroundColor=giftBackgrounds[giftColor]||giftBackgrounds.gray;
+      const image=document.createElement('img');
+      image.alt='';
+      image.setAttribute('aria-hidden','true');
+      image.decoding='async';
+      image.loading='eager';
+      image.dataset.animatedSrc=giftAssets[giftSequence%giftAssets.length];
+      item.appendChild(image);
       giftsTrack.prepend(item);
       giftSequence++;
+      if(shouldAnimate){
+        pauseActiveGift();
+        activeGiftImage=image;
+        image.addEventListener('load',function onLoad(){
+          image.removeEventListener('load',onLoad);
+          if(activeGiftImage!==image) freezeGiftImage(image);
+        });
+        image.addEventListener('error',function(){
+          if(activeGiftImage===image) activeGiftImage=null;
+        },{once:true});
+        image.src=image.dataset.animatedSrc;
+      }else{
+        image.addEventListener('load',function onLoad(){
+          image.removeEventListener('load',onLoad);
+          if(activeGiftImage!==image) freezeGiftImage(image);
+        });
+        image.src=image.dataset.animatedSrc;
+      }
       trimLiveGifts();
     }
-    // Fill the visible strip on entry, then add a new gift every 2–7 seconds.
-    for(let i=0;i<14;i++)addLiveGift();
-    if(window.ResizeObserver){new ResizeObserver(trimLiveGifts).observe(giftsTrack)}else{window.addEventListener("resize",trimLiveGifts)}
+
+    // Restore the gift videos. Existing gifts stay on a captured still frame;
+    // only the newest gift's animated WebP is allowed to play.
+    for(let i=0;i<14;i++) addLiveGift(false);
+    if(window.ResizeObserver){
+      new ResizeObserver(trimLiveGifts).observe(giftsTrack);
+    }else{
+      window.addEventListener('resize',trimLiveGifts);
+    }
+    // Start animation on the newest visible gift after the initial still frames
+    // have loaded, without briefly animating every gift at once.
+    const firstGift=giftsTrack.firstElementChild&&giftsTrack.firstElementChild.querySelector('img');
+    if(firstGift){
+      firstGift.addEventListener('load',function onLoad(){
+        firstGift.removeEventListener('load',onLoad);
+        if(activeGiftImage!==firstGift){
+          activeGiftImage=firstGift;
+          firstGift.src=firstGift.dataset.animatedSrc;
+        }
+      });
+    }
     function scheduleNextGift(){
       window.setTimeout(function(){
-        addLiveGift();
+        addLiveGift(true);
         scheduleNextGift();
       },2000+Math.random()*5000);
     }
