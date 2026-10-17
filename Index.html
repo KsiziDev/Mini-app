@@ -119,6 +119,21 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(max-width:370px){.upgrader-online{top:-8px;left:-6px;min-height:25px;padding:4px 8px;gap:5px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.upgrader-online-dot{animation:none}.upgrader-online-count{transition:none}}
 
+
+/* Recent gifts live ticker */
+.gifts-live{height:43px;width:100%;display:flex;align-items:center;gap:7px;margin:0 0 9px;padding:0 3px;overflow:hidden}
+.gifts-live-label{position:relative;z-index:2;flex:0 0 19px;height:38px;display:flex;align-items:center;justify-content:center;color:#42e58b;font-size:10px;font-weight:950;letter-spacing:1.1px;line-height:1;text-shadow:0 0 9px rgba(52,230,139,.18);transform:rotate(-90deg);white-space:nowrap}
+.gifts-live-track{height:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;overflow:hidden}
+.gift-live-item{position:relative;isolation:isolate;flex:0 0 36px;width:36px;height:36px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.36);border-radius:9px;background:#f6d85b;box-shadow:0 2px 6px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.45);animation:giftAppear .32s cubic-bezier(.2,.8,.2,1) both}
+.gift-live-item:nth-child(4n+2){background:#f7d85c}
+.gift-live-item:nth-child(5n+3){background:#67d9f2}
+.gift-live-item:nth-child(7n+4){background:#b99aff}
+.gift-live-item:nth-child(9n+5){background:#59e2c0}
+.gift-live-item img{display:block;width:100%;height:100%;padding:2px;object-fit:contain;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18))}
+@keyframes giftAppear{from{opacity:0;transform:translateX(-8px) scale(.88)}to{opacity:1;transform:translateX(0) scale(1)}}
+@media(max-width:370px){.gifts-live{height:40px;gap:5px;margin-bottom:8px;padding:0 1px}.gifts-live-label{flex-basis:17px;font-size:9px}.gifts-live-track{gap:4px}.gift-live-item{flex-basis:33px;width:33px;height:33px;border-radius:8px}}
+@media(prefers-reduced-motion:reduce){.gift-live-item{animation:none}}
+
 </style>
 </head>
 <body>
@@ -148,6 +163,11 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     <span class="balance-copy"><span class="balance-label">Ваш баланс</span><span class="balance-value">0<span class="balance-unit">⭐</span></span></span>
   </div>
 </header>
+
+<section class="gifts-live" aria-label="Недавно выбитые подарки">
+  <span class="gifts-live-label">LIVE</span>
+  <div class="gifts-live-track" id="giftsLiveTrack" aria-live="off"></div>
+</section>
 <main aria-label="Главная область">
   <section class="game-hero" aria-label="Игры">
     <div class="game-hero-copy">
@@ -281,6 +301,42 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('minesOnlineCount',61,52,73);
   setupOnlineCounter('rocketOnlineCount',87,87,199);
   setupOnlineCounter('fishOnlineCount',12,12,34);
+
+  const giftsTrack=document.getElementById('giftsLiveTrack');
+  if(giftsTrack){
+    const giftAssets=[
+      './assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp',
+      './assets/videos/cherry-redo-pepe-chicken.webp',
+      './assets/videos/heart-pink.webp',
+      './assets/videos/fish-pink.webp'
+    ];
+    const giftColors=['gold','gold','blue','violet','teal','gold','gold','blue','gold','teal','violet','gold'];
+    let giftSequence=0;
+    function addLiveGift(){
+      const item=document.createElement('span');
+      item.className='gift-live-item';
+      item.style.backgroundColor=giftColors[giftSequence%giftColors.length]==='blue'?'#67d9f2':giftColors[giftSequence%giftColors.length]==='violet'?'#b99aff':giftColors[giftSequence%giftColors.length]==='teal'?'#59e2c0':'#f6d85b';
+      const image=document.createElement('img');
+      image.src=giftAssets[Math.floor(Math.random()*giftAssets.length)];
+      image.alt='';
+      image.loading='eager';
+      image.decoding='async';
+      item.appendChild(image);
+      giftsTrack.prepend(item);
+      giftSequence++;
+      while(giftsTrack.children.length>14)giftsTrack.lastElementChild.remove();
+    }
+    // Fill the visible strip on entry, then add a new gift every 2–7 seconds.
+    for(let i=0;i<14;i++)addLiveGift();
+    function scheduleNextGift(){
+      window.setTimeout(function(){
+        addLiveGift();
+        scheduleNextGift();
+      },2000+Math.random()*5000);
+    }
+    scheduleNextGift();
+  }
+
   const multiplierCards=Array.from(document.querySelectorAll('.multiplier-card'));
   const runDuration=15000;
   const resetDuration=1000;
