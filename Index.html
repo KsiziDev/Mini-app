@@ -82,6 +82,14 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes flameFlicker{0%{transform:rotate(-5deg) scale(.96);filter:drop-shadow(0 0 1px rgba(255,122,26,.25))}100%{transform:rotate(5deg) scale(1.06);filter:drop-shadow(0 0 4px rgba(255,122,26,.65))}}@keyframes flameCore{0%{opacity:.75;transform:scale(.92)}100%{opacity:1;transform:scale(1.08)}}
 .game-hero-title{margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
 @keyframes titleBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
+.fish-hero{position:relative;isolation:isolate;width:100%;margin:0 0 18px;height:126px;border:1px solid rgba(255,255,255,.24);border-radius:25px;overflow:hidden;background:linear-gradient(115deg,rgba(7,17,31,.26),rgba(7,17,31,.04)),url('./assets/images/background-one.png') center/cover no-repeat;box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(255,255,255,.08);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%)}
+.fish-hero:before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(255,255,255,.025) 36%,rgba(20,91,171,.12) 100%);border:1px solid rgba(255,255,255,.09)}
+.fish-hero-copy{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:center;height:100%;padding:0 13px;max-width:60%;text-shadow:0 2px 12px rgba(0,0,0,.28)}
+.fish-hero-title{align-self:center;margin:0;font-size:20px;line-height:1.08;font-weight:850;letter-spacing:-.6px;color:#fff;text-transform:uppercase;transform-origin:left center;animation:titleBreathe 2.4s ease-in-out infinite}
+.fish-hero-art{position:absolute;z-index:1;right:1%;top:-8%;width:54%;height:116%;object-fit:contain;object-position:right center;filter:drop-shadow(0 9px 13px rgba(0,0,0,.28));pointer-events:none}
+@media(max-width:370px){.fish-hero{height:120px;border-radius:20px}.fish-hero-copy{padding:0 11px;max-width:60%}.fish-hero-title{font-size:18px}.fish-hero-art{right:0;width:52%;top:-5%;height:110%}}
+@media(prefers-reduced-motion:reduce){.fish-hero-title{animation:none}}
+
 .game-hero-caption{font-size:8px;line-height:1.25;color:rgba(255,255,255,.88);white-space:nowrap}.game-hero-caption .crazy{color:#ff4545;font-weight:900}
 .game-hero-rocket{position:absolute;z-index:3;right:-8px;top:-14px;width:calc(100% + 16px);max-width:none;height:calc(100% + 28px);object-fit:contain;object-position:right bottom;filter:drop-shadow(0 9px 13px rgba(0,0,0,.28));pointer-events:none}
 @media(max-width:370px){.game-hero{width:100%;margin-left:0;height:120px;border-radius:20px}.game-hero:after{clip-path:inset(0 round 20px)}.game-hero-copy{padding:10px 11px 12px;max-width:78%}.game-hero-title{font-size:18px}.game-hero-caption{font-size:10px}.game-hero-rocket{right:0;width:40%;top:-12px;height:calc(100% + 18px)}.game-hero-badges{gap:6px}.upgrader-online.rocket-online{min-height:25px;padding:4px 7px;gap:5px;font-size:10px}.upgrader-online.rocket-online .online-people-icon{width:12px;height:12px;flex-basis:12px}}
@@ -149,6 +157,10 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     <div class="multiplier-card one" data-start="12.1" data-target="89.34" aria-label="Множитель">x12.1</div>
     <div class="multiplier-card two" data-start="27.82" data-target="54.77" aria-label="Множитель">x27.82</div>
     <div class="multiplier-card three" data-start="1.12" data-target="67.93" aria-label="Множитель">x1.12</div>
+  </section>
+  <section class="fish-hero" aria-label="Игра Рыба">
+    <div class="fish-hero-copy"><h2 class="fish-hero-title">РЫБА</h2></div>
+    <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="lazy">
   </section>
   <section class="game-tiles" aria-label="Другие игры">
     <button class="game-tile upgrader" type="button" aria-label="Открыть Апгрейдер">
