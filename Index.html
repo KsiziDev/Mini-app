@@ -325,19 +325,37 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   setupOnlineCounter('rocketOnlineCount',87,87,199);
   setupOnlineCounter('fishOnlineCount',12,12,34);
 
-  // Rocket animation runs continuously. Other game animations take turns,
-  // and are loaded only while their cards are near the viewport.
-  const rocketArt=document.querySelector('.game-hero-rocket');
+  // Rocket animation runs continuously. Other artwork keeps its last frame
+  // visible as a still image while the next card animates.
   const sequentialArt=[
     document.querySelector('.game-tile-art img[src*="cherry-redo-pepe-chicken"]'),
     document.querySelector('.game-tile-art img[src*="redo-craft"]'),
     document.querySelector('.fish-hero-art')
   ].filter(Boolean);
 
+  let activeSequentialArt=null;
+  let sequentialArtIndex=0;
+
+  function freezeAnimation(image){
+    if(!image || !image.complete || !image.naturalWidth || !image.naturalHeight)return;
+    try{
+      const canvas=document.createElement('canvas');
+      canvas.width=image.naturalWidth;
+      canvas.height=image.naturalHeight;
+      canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+      image.dataset.frozenSrc=canvas.toDataURL('image/png');
+      image.src=image.dataset.frozenSrc;
+    }catch(error){
+      // If a frame cannot be captured, keep the image visible rather than blanking it.
+    }
+  }
+
   sequentialArt.forEach(image=>{
     image.dataset.animatedSrc=image.getAttribute('src')||'';
-    image.removeAttribute('src');
-    image.dataset.cardVisible='false';
+    image.dataset.cardVisible='true';
+    image.addEventListener('load',()=>{
+      if(image!==activeSequentialArt && !image.dataset.frozenSrc)freezeAnimation(image);
+    });
   });
 
   if('IntersectionObserver' in window){
@@ -345,30 +363,37 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       entries.forEach(entry=>{
         const image=entry.target;
         image.dataset.cardVisible=entry.isIntersecting?'true':'false';
+        if(!entry.isIntersecting && image===activeSequentialArt){
+          freezeAnimation(image);
+          activeSequentialArt=null;
+        }
       });
     },{rootMargin:'80px 0px',threshold:0.01});
     sequentialArt.forEach(image=>cardArtObserver.observe(image));
-  }else{
-    sequentialArt.forEach(image=>image.dataset.cardVisible='true');
   }
 
-  let sequentialArtIndex=0;
   function playNextCardAnimation(){
-    sequentialArt.forEach(image=>{
-      if(image.getAttribute('src'))image.removeAttribute('src');
-    });
+    if(activeSequentialArt){
+      freezeAnimation(activeSequentialArt);
+      activeSequentialArt=null;
+    }
     for(let i=0;i<sequentialArt.length;i++){
       const index=(sequentialArtIndex+i)%sequentialArt.length;
       const image=sequentialArt[index];
-      if(image.dataset.cardVisible==='true'){
-        image.src=image.dataset.animatedSrc;
+      if(image.dataset.cardVisible==='true' && image.dataset.animatedSrc){
         sequentialArtIndex=(index+1)%sequentialArt.length;
-        break;
+        activeSequentialArt=image;
+        image.src=image.dataset.animatedSrc;
+        return;
       }
     }
   }
   if(sequentialArt.length){
-    playNextCardAnimation();
+    // Allow initial frames to load before taking static snapshots.
+    sequentialArt.forEach(image=>{
+      if(image.complete && image.naturalWidth)freezeAnimation(image);
+    });
+    window.setTimeout(playNextCardAnimation,100);
     window.setInterval(playNextCardAnimation,3000);
   }
 
