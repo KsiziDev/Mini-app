@@ -88,7 +88,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 
 
 .game-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 22px}
-.game-tile{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;aspect-ratio:1/1;min-width:0;overflow:hidden;padding:0;border:1px solid rgba(255,255,255,.22);border-radius:22px;background-color:#10243a;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 10px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.22);text-align:left;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s ease,border-color .2s ease}
+.game-tile{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;aspect-ratio:1/1;min-width:0;overflow:visible;padding:0;border:1px solid rgba(255,255,255,.22);border-radius:22px;background-color:#10243a;background-position:center;background-size:cover;background-repeat:no-repeat;box-shadow:0 10px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.22);text-align:left;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s ease,border-color .2s ease}
 .game-tile:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(4,12,23,.02) 25%,rgba(4,12,23,.12) 52%,rgba(4,12,23,.78) 100%);border-radius:inherit}
 .game-tile:active{transform:scale(.975);border-color:rgba(255,255,255,.42)}
 .game-tile.upgrader{background-image:url('./assets/images/background-two.png')}
@@ -100,13 +100,13 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(prefers-reduced-motion:reduce){.game-tile{transition:none}}
 
 
-.upgrader-online{position:absolute;z-index:5;top:9px;left:9px;display:inline-flex;align-items:center;gap:6px;min-height:27px;padding:5px 9px;border:1px solid rgba(255,255,255,.48);border-radius:999px;background:rgba(255,255,255,.84);box-shadow:0 3px 10px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.72);color:#183322;font-size:11px;font-weight:800;line-height:1;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);pointer-events:none}
+.upgrader-online{position:absolute;z-index:10;top:-9px;left:-7px;display:inline-flex;align-items:center;gap:6px;min-height:27px;padding:5px 9px;border:1px solid rgba(255,255,255,.72);border-radius:999px;background:rgba(255,255,255,.96);box-shadow:0 3px 10px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.72);color:#183322;font-size:11px;font-weight:800;line-height:1;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);pointer-events:none}
 .upgrader-online-dot{position:relative;flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:upgraderOnlinePulse 1.8s ease-out infinite}
 @keyframes upgraderOnlinePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);transform:scale(.94)}70%{box-shadow:0 0 0 5px rgba(34,197,94,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);transform:scale(.94)}}
 .upgrader-online-count{display:inline-block;min-width:14px;text-align:right;transition:transform .22s ease,opacity .22s ease}
 .upgrader-online-count.changing{opacity:.35;transform:translateY(-3px)}
 .upgrader-online svg{width:13px;height:13px;flex:0 0 13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.78}.online-people-icon{display:block;width:13px;height:13px;flex:0 0 13px;opacity:.85}
-@media(max-width:370px){.upgrader-online{top:7px;left:7px;min-height:25px;padding:4px 8px;gap:5px;font-size:10px}}
+@media(max-width:370px){.upgrader-online{top:-8px;left:-6px;min-height:25px;padding:4px 8px;gap:5px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.upgrader-online-dot{animation:none}.upgrader-online-count{transition:none}}
 
 </style>
@@ -212,25 +212,50 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function setupOnlineCounter(elementId,initialValue){
     const counter=document.getElementById(elementId);
     if(!counter)return;
-    let currentOnline=initialValue;
+    const storageKey='ripiup.online.'+elementId;
+    const historyWindowMs=5*60*1000;
+    const now=Date.now();
+    let saved=null;
+    try{saved=JSON.parse(localStorage.getItem(storageKey)||'null');}catch(e){}
+    let currentOnline=saved&&Number.isFinite(saved.value)&&saved.value>=52&&saved.value<=73?saved.value:initialValue;
+    let history=saved&&Array.isArray(saved.history)?saved.history.filter(function(item){return item&&Number.isFinite(item.time)&&Number.isFinite(item.value)&&item.time>=now-historyWindowMs&&item.value>=52&&item.value<=73;}):[];
+    history.push({time:now,value:currentOnline});
+    function persist(){
+      const cutoff=Date.now()-historyWindowMs;
+      history=history.filter(function(item){return item.time>=cutoff;});
+      try{localStorage.setItem(storageKey,JSON.stringify({value:currentOnline,updatedAt:Date.now(),history:history}));}catch(e){}
+    }
+    function render(){
+      counter.textContent=String(currentOnline);
+      const badge=counter.closest('.upgrader-online');
+      if(badge)badge.setAttribute('aria-label',currentOnline+' игроков онлайн');
+    }
+    render();
+    persist();
     function updateOnlineCount(){
-      // Small, bounded changes make the displayed activity feel natural.
+      try{
+        const latest=JSON.parse(localStorage.getItem(storageKey)||'null');
+        if(latest&&Number.isFinite(latest.value)&&latest.value>=52&&latest.value<=73&&latest.updatedAt>Date.now()-8000){
+          currentOnline=latest.value;
+          if(Array.isArray(latest.history))history=latest.history.filter(function(item){return item&&Number.isFinite(item.time)&&item.time>=Date.now()-historyWindowMs&&Number.isFinite(item.value)&&item.value>=52&&item.value<=73;});
+        }
+      }catch(e){}
       const roll=Math.random();
       let change=roll<0.68?(Math.random()<0.5?-1:1):roll<0.9?(Math.random()<0.5?-2:2):0;
       if(currentOnline+change>73)change=-Math.abs(change);
       if(currentOnline+change<52)change=Math.abs(change);
       const nextOnline=Math.max(52,Math.min(73,currentOnline+change));
-      if(nextOnline===currentOnline)return;
+      if(nextOnline===currentOnline){persist();return;}
       counter.classList.add('changing');
       window.setTimeout(function(){
         currentOnline=nextOnline;
-        counter.textContent=String(currentOnline);
-        const badge=counter.closest('.upgrader-online');
-        if(badge)badge.setAttribute('aria-label',currentOnline+' игроков онлайн');
+        history.push({time:Date.now(),value:currentOnline});
+        render();
+        persist();
         counter.classList.remove('changing');
       },220);
     }
-    window.setInterval(updateOnlineCount,5000);
+    window.setInterval(updateOnlineCount,7000);
   }
   setupOnlineCounter('upgraderOnlineCount',52);
   setupOnlineCounter('minesOnlineCount',61);
