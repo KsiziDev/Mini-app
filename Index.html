@@ -961,7 +961,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function giftArt(icon){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(giftSvg[icon]||giftSvg.star)+'</svg>';}
   function readDailyLast(){try{return Number(localStorage.getItem(dailyKey)||0)||0;}catch(e){return 0;}}
   function dailyAvailable(){return Date.now()-readDailyLast()>=24000;}
-  function updateDailyGiftTimer(){const el=document.getElementById('dailyGiftTimer');if(!el)return;const remain=Math.max(0,24000-(Date.now()-readDailyLast()));const seconds=Math.ceil(remain/1000);el.textContent='00:00:'+String(seconds).padStart(2,'0');if(activeCase&&activeCase.name==='Ежедневный подарок'){el.hidden=false;}else{el.hidden=true;}}
+  function updateDailyGiftTimer(){const el=document.getElementById('dailyGiftTimer');if(!el)return;const elapsed=Date.now()-readDailyLast();const remain=elapsed>=24000?24000:Math.max(0,24000-elapsed);const seconds=Math.ceil(remain/1000);el.textContent='00:00:'+String(seconds).padStart(2,'0');if(activeCase&&activeCase.name==='Ежедневный подарок'){el.hidden=false;}else{el.hidden=true;}}
   setInterval(updateDailyGiftTimer,250);
   const nftCatalog=[
     ['Candy Cane',15,'common','cake'],['Lol Pop',15,'common','heart'],['Star Notepad',20,'rare','stars'],['Magic Potion',25,'rare','diamond'],
