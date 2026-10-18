@@ -182,7 +182,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 
 /* Case opening page and animated prize roulette */
 .case-detail-screen[hidden]{display:none!important}
-.case-detail-screen{padding:2px 0 22px;animation:caseDetailIn .2s ease-out}.daily-gift-timer{width:max-content;margin:0 auto 12px;padding:7px 14px;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff1c;color:#dce9ff;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:2px}.daily-gift-timer[hidden]{display:none!important}
+.case-detail-screen{padding:2px 0 22px;animation:caseDetailIn .2s ease-out}.daily-gift-timer{width:max-content;margin:0 auto 12px;padding:7px 14px;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff1c;color:#dce9ff;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:2px}.daily-gift-timer[hidden]{display:none!important}.case-detail-topline,.case-detail-subtitle,.case-opening-note{display:none!important}.case-result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 22px}.case-result-actions[hidden]{display:none!important}.case-result-actions button{min-height:48px;border-radius:14px;font:inherit;font-size:13px;font-weight:850;cursor:pointer}.case-result-cancel{border:1px solid #ffffff24;background:#ffffff0d;color:#e4edfa}.case-result-claim{border:1px solid #86efac80;background:linear-gradient(110deg,#22c55e,#128344);color:white}
 @keyframes caseDetailIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .case-detail-topline{display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px}
 .case-back-button{display:inline-flex;align-items:center;gap:5px;padding:7px 11px 7px 7px;border:1px solid #ffffff19;border-radius:12px;background:#ffffff0b;color:#e5f1ff;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
@@ -494,7 +494,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   <div class="case-detail-topline"><button id="caseBackButton" class="case-back-button" type="button" aria-label="Назад к кейсам"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span>Назад</span></button><span class="case-detail-tag">КЕЙС</span></div>
   <h2 id="caseDetailTitle" class="case-detail-title">Ежедневный подарок</h2>
   <div id="dailyGiftTimer" class="daily-gift-timer" hidden>00:00:24</div>
-  <p id="caseDetailSubtitle" class="case-detail-subtitle">Попробуй удачу — подарок может быть твоим</p>
+  <p id="caseDetailSubtitle" class="case-detail-subtitle" hidden></p>
   <div class="roulette-shell">
     <div class="roulette-pointer" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 3 5h18L12 21Z"/></svg></div>
     <div class="roulette-window" id="rouletteWindow"><div class="roulette-track" id="rouletteTrack"></div></div>
@@ -502,7 +502,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   </div>
   <div class="roulette-result" id="rouletteResult" aria-live="polite">Твой подарок ждёт тебя</div>
   <button id="openCaseButton" class="open-case-button" type="button"><span>Открыть кейс</span><span class="open-case-cost" id="openCaseCost">БЕСПЛАТНО</span></button>
-  <p class="case-opening-note" id="caseOpeningNote">Шансы зависят от редкости подарка</p>
+  <p class="case-opening-note" id="caseOpeningNote" hidden></p>
+  <div id="caseResultActions" class="case-result-actions" hidden><button id="caseCancelButton" class="case-result-cancel" type="button">Отмена</button><button id="caseClaimButton" class="case-result-claim" type="button">Забрать</button></div>
   <div class="case-prizes-heading"><div><h3>Что может выпасть</h3><p>Все возможные подарки из кейса</p></div><span id="casePrizeCount">0 предметов</span></div>
   <div id="casePrizesGrid" class="case-prizes-grid"></div>
 </div>
