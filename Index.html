@@ -225,9 +225,27 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @media(max-width:370px){.earn-screen{padding-left:11px;padding-right:11px}.earn-heading{font-size:25px}.earn-task-card{min-height:69px;padding:15px;border-radius:17px}.earn-payout-row{gap:8px}.earn-payout-label,.earn-payout-value{min-height:64px;padding:12px 8px}.earn-payout-label{font-size:13px}.earn-payout-value{font-size:21px}.earn-faq-heading{font-size:20px}}
 @media(prefers-reduced-motion:reduce){.earn-faq-chevron{transition:none}}
 
+
+/* Full-screen page loader: opaque and scroll-proof */
+.page-loader{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;width:100%;height:100vh;height:100dvh;padding:24px;background:#07111f;opacity:1;visibility:visible;pointer-events:auto;touch-action:none;overscroll-behavior:contain}
+.page-loader[hidden]{display:none!important}
+.page-loader-spinner{width:38px;height:38px;border:3px solid rgba(47,226,132,.18);border-top-color:#2fe284;border-right-color:#2fe284;border-radius:50%;animation:page-loader-spin .78s linear infinite;will-change:transform}
+.page-loader-label{color:#9299a5;font-size:14px;font-weight:600;letter-spacing:.15px}
+@keyframes page-loader-spin{to{transform:rotate(360deg)}}
+body.page-loading{position:fixed!important;overflow:hidden!important;overscroll-behavior:none!important;width:100%!important;left:0;right:0;touch-action:none}
+html.page-loading{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}
+.earn-task-icon{display:block;width:39px;height:39px;flex:0 0 39px;object-fit:contain;margin-right:1px;filter:drop-shadow(0 3px 8px rgba(0,0,0,.2))}
+.earn-task-card{justify-content:flex-start}
+.earn-task-name{flex:1}
 </style>
 </head>
 <body>
+
+<div id="pageLoader" class="page-loader" role="status" aria-live="polite" aria-label="Загрузка" hidden>
+  <span class="page-loader-spinner" aria-hidden="true"></span>
+  <span class="page-loader-label">Загрузка</span>
+</div>
+
 
 <div class="brand-logo-wrap" aria-label="Логотип RipiUp"><img class="brand-logo" src="./assets/images/Logo-Ripi-Up.png" alt="RipiUp"></div>
 <header class="top-header" aria-label="Профиль и баланс">
@@ -304,9 +322,9 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 <section id="earnScreen" class="earn-screen" aria-label="Заработок" hidden>
   <h1 class="earn-heading">Заработок</h1>
   <div class="earn-task-list">
-    <article class="earn-task-card tiktok"><span class="earn-task-name">TikTok</span><svg class="earn-task-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></article>
-    <article class="earn-task-card"><span class="earn-task-name">Комментарии</span></article>
-    <article class="earn-task-card"><span class="earn-task-name">Видео</span></article>
+    <article class="earn-task-card tiktok"><img class="earn-task-icon" src="./assets/images/earn-tiktok.svg" alt="" width="39" height="39"><span class="earn-task-name">TikTok</span><svg class="earn-task-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></article>
+    <article class="earn-task-card"><img class="earn-task-icon" src="./assets/images/earn-comments.svg" alt="" width="39" height="39"><span class="earn-task-name">Комментарии</span></article>
+    <article class="earn-task-card"><img class="earn-task-icon" src="./assets/images/earn-video.svg" alt="" width="39" height="39"><span class="earn-task-name">Видео</span></article>
   </div>
   <div class="earn-payout-row" aria-label="Выплачено">
     <div class="earn-payout-label">Выплачено</div>
@@ -749,7 +767,51 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function showPopup(name){if(popupTimer!==null)clearTimeout(popupTimer);popupTitle.textContent=name;popupList.replaceChildren();(drops[name]||[]).forEach(function(d){const row=document.createElement('div');row.className='case-drop-row '+d[2];const dot=document.createElement('span');dot.className='case-drop-dot';dot.setAttribute('aria-hidden','true');const copy=document.createElement('span');copy.className='case-drop-copy';const title=document.createElement('span');title.className='case-drop-name';title.textContent=d[0];const rarity=document.createElement('span');rarity.className='case-drop-rarity';rarity.textContent=d[1];copy.append(title,rarity);row.append(dot,copy);popupList.append(row);});popup.hidden=false;popupTimer=setTimeout(closePopup,2000);}
   document.querySelector('.case-drop-close').addEventListener('click',closePopup);document.querySelectorAll('[data-case-info]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();showPopup(b.dataset.caseInfo);});});
   document.querySelectorAll('.earn-faq-question').forEach(function(button){button.addEventListener('click',function(){const expanded=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!expanded));const answer=document.getElementById(button.getAttribute('aria-controls'));if(answer)answer.hidden=expanded;});});
-  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();gamesScreen.hidden=tab==='cases'||tab==='earn';casesScreen.hidden=tab!=='cases';document.getElementById('earnScreen').hidden=tab!=='earn';if(tab==='cases'){casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}window.scrollTo({top:0,behavior:'smooth'});});});
+  const pageLoader=document.getElementById('pageLoader');
+  let loaderTouchY=0;
+  pageLoader.addEventListener('touchstart',function(e){if(e.touches&&e.touches[0])loaderTouchY=e.touches[0].clientY;},{passive:true});
+  pageLoader.addEventListener('touchmove',function(e){e.preventDefault();},{passive:false});
+  document.addEventListener('touchmove',function(e){if(!pageLoader.hidden)e.preventDefault();},{passive:false});
+  function waitForSectionImages(section){
+    const images=Array.from(section.querySelectorAll('img'));
+    images.forEach(function(img){img.loading='eager';img.decoding='async';});
+    return Promise.all(images.map(function(img){
+      if(img.complete)return Promise.resolve();
+      return new Promise(function(resolve){let done=false;const finish=function(){if(done)return;done=true;img.removeEventListener('load',finish);img.removeEventListener('error',finish);resolve();};img.addEventListener('load',finish,{once:true});img.addEventListener('error',finish,{once:true});setTimeout(finish,4000);});
+    }));
+  }
+  function showPageLoader(){
+    const y=window.scrollY||window.pageYOffset||0;
+    document.documentElement.classList.add('page-loading');
+    document.body.classList.add('page-loading');
+    document.body.dataset.loaderScrollY=String(y);
+    document.body.style.top=(-y)+'px';
+    pageLoader.hidden=false;
+  }
+  function hidePageLoader(){
+    const y=Number(document.body.dataset.loaderScrollY||0);
+    pageLoader.hidden=true;
+    document.documentElement.classList.remove('page-loading');
+    document.body.classList.remove('page-loading');
+    document.body.style.top='';
+    delete document.body.dataset.loaderScrollY;
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',async function(){
+    const tab=button.dataset.tab;
+    document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});
+    button.classList.add('active');button.setAttribute('aria-current','page');closePopup();
+    const isCases=tab==='cases',isEarn=tab==='earn';
+    gamesScreen.hidden=isCases||isEarn;
+    casesScreen.hidden=!isCases;
+    document.getElementById('earnScreen').hidden=!isEarn;
+    if(isCases){casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}
+    if(!isCases&&!isEarn){window.scrollTo({top:0,behavior:'smooth'});return;}
+    showPageLoader();
+    const target=isCases?casesScreen:document.getElementById('earnScreen');
+    try{await Promise.all([waitForSectionImages(target),new Promise(function(resolve){setTimeout(resolve,480);})]);}
+    finally{hidePageLoader();}
+  });});
 })();
 </script>
 </body>
