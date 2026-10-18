@@ -1375,7 +1375,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
     // Результат не зависит от наличия ставки игрока: в 20% раундов множитель x10–x120.
     const r=Math.random();if(r<.20)rocketCrashAt=rocketRandom(10,120);else if(r<.40)rocketCrashAt=rocketRandom(1.05,1.65);else if(r<.65)rocketCrashAt=rocketRandom(1.65,2.5);else if(r<.83)rocketCrashAt=rocketRandom(2.5,4.2);else if(r<.95)rocketCrashAt=rocketRandom(4.2,8);else rocketCrashAt=rocketRandom(8,10);
-    rocketFlightDuration=Math.max(500,Math.min(18000,Math.log(Math.max(rocketCrashAt,1.001))*3000));
+    rocketFlightDuration=Math.max(1800,Math.min(18000,Math.log(Math.max(rocketCrashAt,1.001))*3000));
     clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketFlightDuration);
     rocketSetActionState();
     function frame(now){
