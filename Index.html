@@ -1014,6 +1014,29 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   let starsBalance=1000,activeCase=null,caseSpinning=false,caseSkipping=false,spinTimeout=null,skipTimeout=null,currentWinner=null,caseSoundContext=null,rouletteSoundFrame=null,lastSoundCardIndex=-1,finishCurrentSpin=null;
   function playCaseSound(type){try{const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;if(!caseSoundContext)caseSoundContext=new AudioCtx();if(caseSoundContext.state==='suspended')caseSoundContext.resume();const ctx=caseSoundContext,now=ctx.currentTime;if(type==='spin'){const osc=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();osc.type='square';osc.frequency.setValueAtTime(1450,now);osc.frequency.exponentialRampToValueAtTime(620,now+.045);filter.type='bandpass';filter.frequency.setValueAtTime(1800,now);filter.Q.value=1.4;gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.035,now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+.055);osc.connect(filter);filter.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+.06);return;}const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(type==='win'?880:640,now);if(type==='win')osc.frequency.exponentialRampToValueAtTime(1180,now+.12);gain.gain.setValueAtTime(.045,now);gain.gain.exponentialRampToValueAtTime(.001,now+.18);osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+.19);}catch(e){}}
   function stopRouletteSound(){if(rouletteSoundFrame!==null){cancelAnimationFrame(rouletteSoundFrame);rouletteSoundFrame=null;}lastSoundCardIndex=-1;}
+  let rocketEngineOsc=null,rocketEngineHarmonic=null,rocketEngineGain=null,rocketEngineFilter=null,rocketMoneyTimer=null,rocketMoneyLastAt=0;
+  function rocketAudioContext(){const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return null;if(!caseSoundContext)caseSoundContext=new AudioCtx();if(caseSoundContext.state==='suspended')caseSoundContext.resume();return caseSoundContext;}
+  function rocketPlayTone(kind){
+    try{const ctx=rocketAudioContext();if(!ctx)return;const now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
+      if(kind==='start'){osc.type='sine';osc.frequency.setValueAtTime(420,now);osc.frequency.exponentialRampToValueAtTime(760,now+.16);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.018);gain.gain.exponentialRampToValueAtTime(.0001,now+.28);filter.type='lowpass';filter.frequency.value=2200;}
+      else if(kind==='cash'){osc.type='sine';osc.frequency.setValueAtTime(760,now);osc.frequency.exponentialRampToValueAtTime(1120,now+.09);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.018,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.16);filter.type='lowpass';filter.frequency.value=1800;}
+      else if(kind==='crash'){osc.type='triangle';osc.frequency.setValueAtTime(240,now);osc.frequency.exponentialRampToValueAtTime(75,now+.22);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.035,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+.3);filter.type='lowpass';filter.frequency.value=900;}
+      else {osc.type='sine';osc.frequency.setValueAtTime(620,now);osc.frequency.exponentialRampToValueAtTime(500,now+.035);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.012,now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+.055);filter.type='lowpass';filter.frequency.value=1500;}
+      osc.connect(filter);filter.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+(kind==='start'?.29:kind==='crash'?.31:kind==='cash'?.17:.06));
+    }catch(e){}
+  }
+  function rocketStartEngine(){
+    try{const ctx=rocketAudioContext();if(!ctx)return;rocketStopEngine();const now=ctx.currentTime;
+      rocketEngineOsc=ctx.createOscillator();rocketEngineHarmonic=ctx.createOscillator();rocketEngineGain=ctx.createGain();rocketEngineFilter=ctx.createBiquadFilter();
+      rocketEngineOsc.type='sawtooth';rocketEngineOsc.frequency.setValueAtTime(68,now);rocketEngineHarmonic.type='triangle';rocketEngineHarmonic.frequency.setValueAtTime(136,now);
+      rocketEngineFilter.type='lowpass';rocketEngineFilter.frequency.setValueAtTime(260,now);rocketEngineGain.gain.setValueAtTime(.0001,now);rocketEngineGain.gain.linearRampToValueAtTime(.025,now+.35);
+      rocketEngineOsc.connect(rocketEngineFilter);rocketEngineHarmonic.connect(rocketEngineFilter);rocketEngineFilter.connect(rocketEngineGain);rocketEngineGain.connect(ctx.destination);rocketEngineOsc.start(now);rocketEngineHarmonic.start(now);
+    }catch(e){}
+  }
+  function rocketUpdateEngine(multiplier){try{if(!rocketEngineOsc||!caseSoundContext)return;const now=caseSoundContext.currentTime;const speed=Math.min(1,Math.log(Math.max(1,multiplier))/Math.log(15));rocketEngineOsc.frequency.setTargetAtTime(68+speed*145,now,.12);rocketEngineHarmonic.frequency.setTargetAtTime(136+speed*290,now,.12);rocketEngineFilter.frequency.setTargetAtTime(260+speed*950,now,.15);if(rocketEngineGain)rocketEngineGain.gain.setTargetAtTime(.018+speed*.018,now,.15);}catch(e){}}
+  function rocketStopEngine(){try{if(rocketEngineGain&&caseSoundContext){const ctx=caseSoundContext,now=ctx.currentTime;rocketEngineGain.gain.cancelScheduledValues(now);rocketEngineGain.gain.setTargetAtTime(.0001,now,.04);const a=rocketEngineOsc,b=rocketEngineHarmonic;setTimeout(function(){try{if(a)a.stop();if(b)b.stop();}catch(e){}},180);}}catch(e){}rocketEngineOsc=null;rocketEngineHarmonic=null;rocketEngineGain=null;rocketEngineFilter=null;clearInterval(rocketMoneyTimer);rocketMoneyTimer=null;}
+  function rocketStartMoneySound(){clearInterval(rocketMoneyTimer);rocketMoneyLastAt=0;rocketMoneyTimer=setInterval(function(){if(rocketPhase!=='flight'||rocketLiveMultiplier<10){clearInterval(rocketMoneyTimer);rocketMoneyTimer=null;return;}const now=Date.now();if(now-rocketMoneyLastAt>680){rocketMoneyLastAt=now;rocketPlayTone('cash');}},680);}
+  document.addEventListener('click',function(event){const button=event.target&&event.target.closest?event.target.closest('button'):null;if(button&&!button.closest('#rocketRapidClickModal'))rocketPlayTone('click');});
   function getRouletteCardIndexAtMarker(){if(!rouletteTrack.children.length)return -1;const markerX=rouletteWindow.getBoundingClientRect().left+rouletteWindow.clientWidth/2;let crossed=-1;for(let i=0;i<rouletteTrack.children.length;i++){const r=rouletteTrack.children[i].getBoundingClientRect();if(r.left+r.width/2<=markerX)crossed=i;else break;}return crossed;}
   function trackRouletteCardSounds(){if(!caseSpinning)return;const current=getRouletteCardIndexAtMarker();if(lastSoundCardIndex<0)lastSoundCardIndex=current;else if(current>lastSoundCardIndex){for(let i=lastSoundCardIndex+1;i<=current;i++)playCaseSound('spin');lastSoundCardIndex=current;}rouletteSoundFrame=requestAnimationFrame(trackRouletteCardSounds);}
   const balanceKey='ripiup_test_stars_v1',dailyKey='ripiup_daily_case_v1';
@@ -1373,7 +1396,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     },1000);
   }
   function rocketBeginFlight(){
-    rocketPhase='flight';rocketRoundStart=performance.now();rocketRoundLabel.textContent='РАКЕТА В ПОЛЁТЕ';rocketStage.classList.add('is-flight');
+    rocketPhase='flight';rocketRoundStart=performance.now();rocketPlayTone('start');rocketStartEngine();rocketRoundLabel.textContent='РАКЕТА В ПОЛЁТЕ';rocketStage.classList.add('is-flight');
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
     // При активной ставке обычный предел — x5: чаще всего краш в диапазоне x1–x3.5, x5 очень редкий.
     const r=Math.random();rocketLongFlightEligible=r<.10;
@@ -1389,7 +1412,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       if(segmentElapsed>=rocketSegmentDuration){rocketCrashRound();return;}
       const progressTime=Math.min(1,segmentElapsed/rocketSegmentDuration);
       const multiplier=rocketSegmentMultiplier*Math.exp(Math.log(rocketCrashAt/Math.max(rocketSegmentMultiplier,1))*progressTime);
-      const shown=Math.min(multiplier,rocketCrashAt);rocketLiveMultiplier=shown;
+      const shown=Math.min(multiplier,rocketCrashAt);rocketLiveMultiplier=shown;rocketUpdateEngine(shown);if(shown>=10&&!rocketMoneyTimer)rocketStartMoneySound();
       rocketMultiplier.textContent=rocketDisplayMultiplier(shown);rocketSetTrail(shown);
       const progress=Math.min(1,Math.log(shown)/Math.max(.01,Math.log(Math.max(rocketCrashAt,1.01))));
       rocketSprite.style.left=(progress*55)+'%';rocketSprite.style.bottom=(progress*43)+'px';
@@ -1405,7 +1428,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   function rocketCrashRound(){
     if(rocketPhase!=='flight')return;
-    clearTimeout(rocketCrashTimer);cancelAnimationFrame(rocketFrame);rocketPhase='crashed';rocketCashoutPending=false;rocketStage.classList.remove('is-flight');rocketStage.classList.add('is-crashed');rocketLiveMultiplier=rocketCrashAt;rocketMultiplier.textContent=rocketDisplayMultiplier(rocketCrashAt);rocketStatus.textContent='КРАШ! Следующий раунд через пару секунд';rocketRoundLabel.textContent='РАУНД ЗАВЕРШЁН';
+    clearTimeout(rocketCrashTimer);cancelAnimationFrame(rocketFrame);rocketStopEngine();rocketPlayTone('crash');rocketPhase='crashed';rocketCashoutPending=false;rocketStage.classList.remove('is-flight');rocketStage.classList.add('is-crashed');rocketLiveMultiplier=rocketCrashAt;rocketMultiplier.textContent=rocketDisplayMultiplier(rocketCrashAt);rocketStatus.textContent='КРАШ! Следующий раунд через пару секунд';rocketRoundLabel.textContent='РАУНД ЗАВЕРШЁН';
     rocketRoundBets.forEach(function(b){if(b.status==='active')b.status='busted';});
     if(rocketUserBet&&rocketUserBet.status==='active'){rocketUserBet.status='busted';rocketBetMessage.textContent='Краш на x'+rocketFormat(rocketCrashAt)+' — ставка сгорела';}
     else if(rocketUserBet&&rocketUserBet.status==='cashed'){rocketBetMessage.textContent='Вы забрали на x'+rocketFormat(rocketUserBet.cashAt)+'!';}
