@@ -364,7 +364,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 .rocket-control-card{margin-top:12px;border-radius:21px;padding:14px}
 .rocket-bet-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:750;margin-bottom:9px}.rocket-bet-label small{font-size:10px;color:#9fb3cc;font-weight:600}
 .rocket-bet-row{display:grid;grid-template-columns:minmax(0,1fr) 42px 42px 48px;gap:6px}
-.rocket-bet-input{width:100%;min-width:0;height:46px;border:1px solid #ffffff25;border-radius:13px;background:#07111f99;color:#fff;padding:0 13px;font:800 16px inherit;outline:none;box-shadow:inset 0 1px 5px #0003}.rocket-bet-input:focus{border-color:#60a5fa}
+.rocket-bet-input{width:100%;min-width:0;height:46px;border:1px solid #ffffff25;border-radius:13px;background:#07111f99;color:#fff;padding:0 13px;font:800 16px system-ui,sans-serif;outline:none;box-shadow:inset 0 1px 5px #0003}.rocket-bet-input:focus{border-color:#60a5fa}
 .rocket-small-btn{border:1px solid #ffffff20;border-radius:12px;background:#ffffff0d;color:#eaf3ff;font-size:12px;font-weight:850}
 .rocket-max-btn{background:#244f86a6;border-color:#5da9ff55}
 .rocket-action-btn{width:100%;min-height:48px;border:0;border-radius:14px;margin-top:9px;color:#061321;background:linear-gradient(100deg,#9be7ff,#70b7ff 55%,#9ba9ff);font-size:14px;font-weight:950;box-shadow:0 7px 20px #3888ff25;transition:transform .15s,filter .15s}
@@ -1196,7 +1196,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     'melanch0ly','Fun','Фхемасiк🗽','wataakae','.','FRYZU','☢️ TORNADO⚪','Fun','coward','Капибара','Цикада','Ꮋᴏᴛᴀция #Welcome','Fun','ᅠ.','FRYZU','¹Стэпчик¹','FRYZU','db','Ziroshka'
   ];
   const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
-  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketFrame=null,rocketRoundStart=0,rocketCrashAt=2.4,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false;
+  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketFrame=null,rocketRoundStart=0,rocketCrashAt=2.4,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false;
   function rocketRandom(min,max){return min+Math.random()*(max-min);}
   function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
   function rocketUpdateBalance(){rocketBalance.textContent=String(starsBalance);if(typeof updateStarsBalance==='function')updateStarsBalance();}
@@ -1238,7 +1238,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketOpenGame(){
     rocketScreenWasOpen=true;rocketGameScreen.hidden=false;gamesScreen.hidden=true;casesScreen.hidden=true;document.getElementById('earnScreen').hidden=true;document.getElementById('bonusesScreen').hidden=true;
     closePopup();if(activeCase)closeCaseDetail(true);window.scrollTo(0,0);
-    rocketPlayersCount.textContent=rocketOnlineValue();rocketUpdateBalance();
+    rocketPlayersCount.textContent=rocketOnlineValue();rocketUpdateBalance();if(!rocketHasStarted){rocketHasStarted=true;rocketStartRound();}
   }
   function rocketCloseGame(){
     rocketScreenWasOpen=false;rocketGameScreen.hidden=true;gamesScreen.hidden=false;window.scrollTo(0,0);
