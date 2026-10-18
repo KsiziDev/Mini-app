@@ -627,8 +627,10 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   menu.addEventListener('click',function(e){e.stopPropagation();});
   document.addEventListener('click',function(){setMenu(false);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')setMenu(false);});
+  let telegramAccountId='guest';
   function applyTelegramUser(user){
     if(!user)return;
+    if(user.id!==undefined&&user.id!==null)telegramAccountId='tg:'+String(user.id);
     const fullName=[user.first_name,user.last_name].filter(Boolean).join(' ').trim();
     const name=fullName|| (user.username?'@'+user.username:'Пользователь');
     const username=user.username?'@'+user.username:'Аккаунт Telegram';
@@ -1039,8 +1041,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   document.addEventListener('click',function(event){const button=event.target&&event.target.closest?event.target.closest('button'):null;if(button&&!button.closest('#rocketRapidClickModal'))rocketPlayTone('click');});
   function getRouletteCardIndexAtMarker(){if(!rouletteTrack.children.length)return -1;const markerX=rouletteWindow.getBoundingClientRect().left+rouletteWindow.clientWidth/2;let crossed=-1;for(let i=0;i<rouletteTrack.children.length;i++){const r=rouletteTrack.children[i].getBoundingClientRect();if(r.left+r.width/2<=markerX)crossed=i;else break;}return crossed;}
   function trackRouletteCardSounds(){if(!caseSpinning)return;const current=getRouletteCardIndexAtMarker();if(lastSoundCardIndex<0)lastSoundCardIndex=current;else if(current>lastSoundCardIndex){for(let i=lastSoundCardIndex+1;i<=current;i++)playCaseSound('spin');lastSoundCardIndex=current;}rouletteSoundFrame=requestAnimationFrame(trackRouletteCardSounds);}
-  const balanceKey='ripiup_test_stars_v1',dailyKey='ripiup_daily_case_v1';
-  try{const balanceResetKey='ripiup_balance_reset_v2';if(localStorage.getItem(balanceResetKey)!=='done'){starsBalance=1000;localStorage.setItem(balanceKey,'1000');localStorage.setItem(balanceResetKey,'done');}else{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.round(Number(saved)*10)/10;else localStorage.setItem(balanceKey,'1000');}}catch(e){}
+  const balanceKey='ripiup_test_stars_v1.'+telegramAccountId,dailyKey='ripiup_daily_case_v1';
+  try{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.round(Number(saved)*10)/10;else{starsBalance=100;localStorage.setItem(balanceKey,'100');}}catch(e){starsBalance=100;}
   function updateStarsBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;starsBalanceValue.textContent=starsBalance.toFixed(1);if(balanceArea)balanceArea.setAttribute('aria-label','Ваш баланс: '+starsBalance.toFixed(1)+' звёзд');try{localStorage.setItem(balanceKey,String(starsBalance));}catch(e){}}
   updateStarsBalance();
   const prizeCatalog=[
