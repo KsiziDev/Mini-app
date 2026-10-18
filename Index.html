@@ -1280,15 +1280,15 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketRoundBets=[];
     const botCount=Math.floor(rocketRandom(65,94));
     rocketRoundPlayers=botCount+(rocketUserBet?1:0);
-    const amounts=[1,10,22,7,5,53,75,52,70,3,8,12,18,25,34,46,6,15,29,41,2,9,20,63,11,17,38,4,57,14];
+    const amounts=[];for(let i=0;i<30;i++)amounts.push(Math.floor(rocketRandom(17,103)));
     for(let index=0;index<botCount;index++){
       const name=rocketBotName(index);
       const amount=amounts[Math.floor(Math.random()*amounts.length)];
       const bot={id:'b'+rocketRoundId+'-'+index,index:index,name:name,amount:amount,status:'active',isUser:false,autoCash:Math.random()<.66?rocketRandom(1.12,Math.random()<.72?3.2:8):null,createdAt:0};
       // Bots enter gradually during the betting countdown and flight instead of appearing all at once.
-      const roundId=rocketRoundId,delay=rocketRandom(250,14500);
+      const roundId=rocketRoundId,delay=rocketRandom(200,9000);
       const timer=setTimeout(function(){
-        if(roundId!==rocketRoundId||(rocketPhase!=='countdown'&&rocketPhase!=='flight'))return;
+        if(roundId!==rocketRoundId||rocketPhase!=='countdown')return;
         bot.createdAt=Date.now();
         if(rocketPhase==='flight'&&bot.autoCash&&rocketLiveMultiplier>=bot.autoCash){
           if(rocketLiveMultiplier<rocketCrashAt){bot.status='cashed';bot.cashAt=bot.autoCash;bot.payout=Math.round(bot.amount*bot.autoCash*10)/10;}
@@ -1402,11 +1402,11 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
     // При активной ставке обычный предел — x5: чаще всего краш в диапазоне x1–x3.5, x5 очень редкий.
     const r=Math.random();rocketLongFlightEligible=r<.10;rocketRoundForcedLoss=!!rocketUserBet&&rocketForcedLossRounds>0;
-    if(rocketRoundForcedLoss){rocketCrashAt=1.01;rocketLongFlightEligible=false;rocketBetMessage.textContent='Серия побед завершена: этот раунд отмечен как обязательный проигрышный ('+rocketForcedLossRounds+' осталось).';}
+    if(rocketRoundForcedLoss){const forcedRoll=Math.random();rocketCrashAt=forcedRoll<.45?1.01:forcedRoll<.8?1.1:1.5;rocketLongFlightEligible=false;rocketBetMessage.textContent='Серия побед завершена: этот раунд завершится быстро около x'+rocketFormat(rocketCrashAt)+' ('+rocketForcedLossRounds+' осталось).';}
     else if(rocketUserBet){if(r<.02)rocketCrashAt=rocketRandom(4.85,5);else if(r<.25)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.60)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     else{if(r<.10)rocketCrashAt=rocketRandom(5,15);else if(r<.25)rocketCrashAt=rocketRandom(3.5,4.8);else if(r<.55)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.80)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     // Длительность не привязана к множителю, поэтому скорость раундов различается.
-    rocketFlightDuration=rocketRoundForcedLoss?1000:rocketRandom(1000,3500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
+    rocketFlightDuration=rocketRoundForcedLoss?rocketRandom(350,850):rocketRandom(1000,3500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
     clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketFlightDuration);
     rocketSetActionState();
     function frame(now){
