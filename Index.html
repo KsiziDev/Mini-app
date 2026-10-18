@@ -469,7 +469,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   <section class="rocket-stage rocket-glass" id="rocketStage" aria-label="Полёт ракеты">
     <div class="rocket-stage-top"><span class="rocket-live-pill"><i class="rocket-live-dot"></i><span id="rocketRoundLabel">НОВЫЙ РАУНД</span></span><span class="rocket-players-pill"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM17 11a4 4 0 0 0 0-8M17 15h1a4 4 0 0 1 4 4v2"/></svg><b id="rocketGameOnline">87</b></span></div>
     <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
-      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#ffd447"/><stop offset="48%" stop-color="#ffd447"/><stop offset="68%" stop-color="#59aaff"/><stop offset="100%" stop-color="#59aaff"/></linearGradient></defs><path id="rocketFlightPath" d="M82 102 Q130 100 175 78 T273 59"/></svg></div>
+      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#ffd447"/><stop offset="100%" stop-color="#ffd447"/></linearGradient></defs><path id="rocketFlightPath" d="M12 150 Q70 145 125 110 T310 12"/></svg></div>
       <img class="rocket-sprite" id="rocketSprite" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="Ракета">
       <div class="rocket-multiplier" id="rocketMultiplier">x1.00</div><div class="rocket-status" id="rocketStatus">Ставки через 10 секунд</div>
     </div>
@@ -1199,7 +1199,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketUpdateBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;rocketBalance.textContent=starsBalance.toFixed(1);if(typeof updateStarsBalance==='function')updateStarsBalance();}
   function rocketSetTrail(multiplier){
     const color=multiplier>=2?'#ffd447':'#59aaff';
-    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background='linear-gradient(90deg,#ffd447 0%,#ffd447 42%,#59aaff 62%,#59aaff 100%)';rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke='url(#rocketTrailGradient)';rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
+    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background='#ffd447';rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke='url(#rocketTrailGradient)';rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
   }
   function rocketFormat(n){return Number(n).toFixed(2).replace(/\.00$/,'');}
   function rocketDisplayMultiplier(n){return 'x'+Number(n).toFixed(2);}
@@ -1290,7 +1290,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketStartRound(){
     clearInterval(rocketRoundTimer);clearTimeout(rocketCrashTimer);cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
     rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent=rocketPreviousHistory.length?'x'+rocketFormat(rocketPreviousHistory[0]):'x1.00';rocketSetTrail(1);
-    rocketSprite.style.left='13%';rocketSprite.style.bottom='8px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
+    rocketSprite.style.left='0%';rocketSprite.style.bottom='0px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
     rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
     rocketBetMessage.textContent='Можно изменить сумму перед ставкой';rocketSetActionState();rocketBuildRoundBets();
     rocketRoundTimer=setInterval(function(){
@@ -1317,7 +1317,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       const shown=Math.min(multiplier,rocketCrashAt);rocketLiveMultiplier=shown;
       rocketMultiplier.textContent=rocketDisplayMultiplier(shown);rocketSetTrail(shown);
       const progress=Math.min(1,Math.log(shown)/Math.max(.01,Math.log(Math.max(rocketCrashAt,1.01))));
-      rocketSprite.style.left=(13+progress*55)+'%';rocketSprite.style.bottom=(8+progress*43)+'px';
+      rocketSprite.style.left=(progress*55)+'%';rocketSprite.style.bottom=(progress*43)+'px';
       const pathLength=rocketFlightPath.getTotalLength();rocketFlightPath.style.strokeDasharray=String(pathLength);rocketFlightPath.style.strokeDashoffset=String(Math.max(0,pathLength*(1-progress)));
       rocketRoundBets.forEach(function(b){
         if(!b.isUser&&b.status==='active'&&b.autoCash&&shown>=b.autoCash&&shown<rocketCrashAt){b.status='cashed';b.payout=Math.round(b.amount*b.autoCash*10)/10;b.cashAt=b.autoCash;}
