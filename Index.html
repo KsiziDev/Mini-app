@@ -332,6 +332,56 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 .earn-task-icon{display:block;width:39px;height:39px;flex:0 0 39px;object-fit:contain;margin-right:1px;filter:drop-shadow(0 3px 8px rgba(0,0,0,.2))}
 .earn-task-card{justify-content:flex-start}
 .earn-task-name{flex:1}
+
+/* Rocket crash game */
+.game-hero{cursor:pointer}.game-hero:active{transform:scale(.995)}
+.rocket-game-screen{max-width:720px;margin:0 auto;padding:12px 10px calc(116px + var(--safe-bottom));min-height:60vh;color:#fff}
+.rocket-game-top{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+.rocket-back{width:39px;height:39px;flex:0 0 39px;border:1px solid #ffffff25;border-radius:14px;background:#ffffff0d;color:#fff;display:grid;place-items:center}
+.rocket-back svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rocket-page-title{font-size:21px;font-weight:850;letter-spacing:-.5px;margin:0}.rocket-page-subtitle{font-size:11px;color:#a8bbd5;margin-top:3px}
+.rocket-glass{border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.035) 55%,rgba(53,126,255,.06));box-shadow:inset 0 1px 0 #ffffff1b,0 12px 30px #0003;backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%)}
+.rocket-stage{position:relative;overflow:hidden;min-height:270px;border-radius:24px;padding:14px 14px 12px;background:radial-gradient(ellipse at 48% 72%,rgba(25,100,180,.2),transparent 56%),linear-gradient(155deg,#101f36,#081323 68%,#10162d)}
+.rocket-stage-top{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:3}
+.rocket-live-pill,.rocket-players-pill{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #ffffff24;background:#ffffff0c;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.rocket-live-dot{width:7px;height:7px;background:#5ef0a0;border-radius:50%;box-shadow:0 0 10px #5ef0a0}
+.rocket-players-pill svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rocket-history{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:13px 0 3px;position:relative;z-index:3}.rocket-history::-webkit-scrollbar{display:none}
+.rocket-history-chip{flex:0 0 auto;padding:6px 9px;border-radius:9px;background:#ffffff0d;border:1px solid #ffffff14;color:#d7e2f1;font-size:11px;font-weight:800}.rocket-history-chip.low{color:#75e6a3}.rocket-history-chip.mid{color:#f5d16e}.rocket-history-chip.high{color:#f7a1ff}
+.rocket-flight-area{height:160px;position:relative;margin-top:4px;overflow:hidden;border-radius:15px}
+.rocket-grid-lines{position:absolute;inset:0;background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to top,#000,transparent)}
+.rocket-trail{position:absolute;left:0;bottom:0;width:100%;height:3px;background:#58aaff;box-shadow:0 0 13px currentColor;transform-origin:left center;transition:background .25s,box-shadow .25s}
+.rocket-trail:before{content:"";position:absolute;left:0;bottom:0;width:100%;height:95px;background:linear-gradient(to top,color-mix(in srgb,var(--trail-color,#53a8ff) 26%,transparent),transparent);clip-path:polygon(0 100%,100% 0,100% 100%)}
+.rocket-flight-line{position:absolute;left:10px;bottom:0;width:calc(100% - 20px);height:100%;pointer-events:none}
+.rocket-flight-line svg{width:100%;height:100%;overflow:visible}.rocket-flight-line path{fill:none;stroke:var(--trail-color,#53a8ff);stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 7px var(--trail-color,#53a8ff));stroke-dasharray:500;stroke-dashoffset:0}
+.rocket-sprite{position:absolute;left:13%;bottom:8px;width:100px;height:100px;object-fit:contain;z-index:2;filter:drop-shadow(0 8px 16px #0008);transform:rotate(-7deg);transition:left .12s linear,bottom .12s linear,filter .2s;will-change:left,bottom}
+.rocket-multiplier{position:absolute;left:0;right:0;top:44px;text-align:center;font-size:clamp(36px,10vw,55px);font-weight:950;letter-spacing:-2px;text-shadow:0 3px 25px #58aaff55;z-index:2;font-variant-numeric:tabular-nums}
+.rocket-status{position:absolute;left:0;right:0;top:101px;text-align:center;font-size:11px;color:#9fb3cc;z-index:2;font-weight:650}
+.rocket-stage.is-crashed .rocket-sprite{filter:grayscale(.8) drop-shadow(0 0 8px #ff4d6d);transform:rotate(32deg) scale(.9)}
+.rocket-stage.is-crashed .rocket-multiplier{color:#ff6680;text-shadow:0 0 20px #ff315c55}
+.rocket-stage.is-flight .rocket-sprite{animation:rocketWobble .7s ease-in-out infinite alternate}
+@keyframes rocketWobble{from{transform:rotate(-9deg) translateY(1px)}to{transform:rotate(-3deg) translateY(-3px)}}
+.rocket-control-card{margin-top:12px;border-radius:21px;padding:14px}
+.rocket-bet-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:750;margin-bottom:9px}.rocket-bet-label small{font-size:10px;color:#9fb3cc;font-weight:600}
+.rocket-bet-row{display:grid;grid-template-columns:minmax(0,1fr) 42px 42px 48px;gap:6px}
+.rocket-bet-input{width:100%;min-width:0;height:46px;border:1px solid #ffffff25;border-radius:13px;background:#07111f99;color:#fff;padding:0 13px;font:800 16px inherit;outline:none;box-shadow:inset 0 1px 5px #0003}.rocket-bet-input:focus{border-color:#60a5fa}
+.rocket-small-btn{border:1px solid #ffffff20;border-radius:12px;background:#ffffff0d;color:#eaf3ff;font-size:12px;font-weight:850}
+.rocket-max-btn{background:#244f86a6;border-color:#5da9ff55}
+.rocket-action-btn{width:100%;min-height:48px;border:0;border-radius:14px;margin-top:9px;color:#061321;background:linear-gradient(100deg,#9be7ff,#70b7ff 55%,#9ba9ff);font-size:14px;font-weight:950;box-shadow:0 7px 20px #3888ff25;transition:transform .15s,filter .15s}
+.rocket-action-btn:active{transform:scale(.985)}.rocket-action-btn.cashout{background:linear-gradient(100deg,#a4ffc7,#47e59a);color:#052718}.rocket-action-btn:disabled{opacity:.45;filter:grayscale(.4)}
+.rocket-bet-message{font-size:11px;color:#9fb3cc;text-align:center;min-height:15px;margin-top:8px}
+.rocket-bets-panel{margin-top:13px;border-radius:21px;padding:13px}
+.rocket-bets-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.rocket-bets-head h2{margin:0;font-size:14px;font-weight:850}.rocket-bets-head span{font-size:10px;color:#a9bad0}
+.rocket-bets-list{display:flex;flex-direction:column;gap:7px}
+.rocket-bet-item{display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 10px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:linear-gradient(110deg,rgba(65,229,154,.13),rgba(255,255,255,.045));transition:background .35s,border-color .35s,transform .42s,opacity .35s;min-height:57px}
+.rocket-bet-item.cashed{background:rgba(255,255,255,.045);border-color:#ffffff0b;opacity:.62}.rocket-bet-item.busted{background:rgba(255,85,111,.07);border-color:#ff65731a;opacity:.57}
+.rocket-bot-avatar{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;border:1px solid #ffffff35;box-shadow:inset 0 1px 0 #ffffff44}
+.rocket-bet-player{min-width:0;display:flex;flex-direction:column;gap:4px}.rocket-bet-name{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rocket-bet-detail{font-size:10px;color:#b7c6d8;white-space:nowrap}
+.rocket-bet-right{display:flex;align-items:center;gap:7px;justify-self:end}.rocket-bet-amount{font-size:12px;font-weight:900;white-space:nowrap}.rocket-pin{width:15px;height:15px;fill:none;stroke:#dbeafe;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.rocket-bet-state{font-size:9px;font-weight:850;letter-spacing:.3px;color:#6ce6a2}.cashed .rocket-bet-state{color:#c0c9d7}.busted .rocket-bet-state{color:#ff8c9d}
+.rocket-section-caption{font-size:10px;color:#8095ae;margin:9px 2px 0;line-height:1.45}
+@media(max-width:380px){.rocket-stage{padding:11px;min-height:258px}.rocket-sprite{width:84px;height:84px}.rocket-bet-row{grid-template-columns:minmax(0,1fr) 37px 37px 43px;gap:5px}.rocket-small-btn{font-size:11px}.rocket-control-card{padding:11px}}
+
 </style>
 </head>
 <body>
@@ -414,6 +464,33 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     </button>
   </section>
 </main>
+
+<section id="rocketGameScreen" class="rocket-game-screen" aria-label="Игра Ракетка" hidden>
+  <div class="rocket-game-top">
+    <button type="button" class="rocket-back" id="rocketBackButton" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6M9 12h11"/></svg></button>
+    <div><h1 class="rocket-page-title">Ракетка 🚀</h1><div class="rocket-page-subtitle">Забери выигрыш до краша</div></div>
+  </div>
+  <section class="rocket-stage rocket-glass" id="rocketStage" aria-label="Полёт ракеты">
+    <div class="rocket-stage-top"><span class="rocket-live-pill"><i class="rocket-live-dot"></i><span id="rocketRoundLabel">НОВЫЙ РАУНД</span></span><span class="rocket-players-pill"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM17 11a4 4 0 0 0 0-8M17 15h1a4 4 0 0 1 4 4v2"/></svg><b id="rocketGameOnline">87</b></span></div>
+    <div class="rocket-history" id="rocketHistory" aria-label="Последние множители"><span class="rocket-history-chip low">x2.14</span><span class="rocket-history-chip low">x1.20</span><span class="rocket-history-chip high">x66.08</span><span class="rocket-history-chip low">x1.10</span><span class="rocket-history-chip mid">x3.42</span></div>
+    <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
+      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><path id="rocketFlightPath" d="M0 157 Q60 148 105 124 T180 75 T320 8"/></svg></div>
+      <img class="rocket-sprite" id="rocketSprite" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="Ракета">
+      <div class="rocket-multiplier" id="rocketMultiplier">x1.00</div><div class="rocket-status" id="rocketStatus">Ставки через 10 секунд</div>
+    </div>
+  </section>
+  <section class="rocket-control-card rocket-glass" aria-label="Ставка">
+    <div class="rocket-bet-label"><span>Ваша ставка</span><small>Баланс: <b id="rocketBalance">1000</b> ⭐</small></div>
+    <div class="rocket-bet-row"><input id="rocketBetInput" class="rocket-bet-input" type="number" inputmode="decimal" min="1" step="1" value="10" aria-label="Сумма ставки"><button class="rocket-small-btn" id="rocketHalfButton" type="button" aria-label="Половина ставки">½</button><button class="rocket-small-btn" id="rocketDoubleButton" type="button" aria-label="Удвоить ставку">×2</button><button class="rocket-small-btn rocket-max-btn" id="rocketMaxButton" type="button">MAX</button></div>
+    <button type="button" class="rocket-action-btn" id="rocketActionButton">Сделать ставку</button><div class="rocket-bet-message" id="rocketBetMessage">Ставки закроются с началом полёта</div>
+  </section>
+  <section class="rocket-bets-panel rocket-glass" aria-label="Ставки игроков">
+    <div class="rocket-bets-head"><h2>Ставки игроков</h2><span id="rocketBetCount">0 игроков</span></div>
+    <div class="rocket-bets-list" id="rocketBetsList"></div>
+    <p class="rocket-section-caption">Игровая демоверсия: баланс и раунды работают внутри этого приложения.</p>
+  </section>
+</section>
+
 <section id="earnScreen" class="earn-screen" aria-label="Заработок" hidden>
   <h1 class="earn-heading">Заработок</h1>
   <div class="earn-task-list">
@@ -1082,6 +1159,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const tab=button.dataset.tab;
     document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});
     button.classList.add('active');button.setAttribute('aria-current','page');closePopup();if(activeCase)closeCaseDetail(true);
+    const rocketGameScreen=document.getElementById('rocketGameScreen');if(rocketGameScreen)rocketGameScreen.hidden=true;
     const isCases=tab==='cases',isEarn=tab==='earn',isBonuses=tab==='bonuses';
     gamesScreen.hidden=isCases||isEarn||isBonuses;
     casesScreen.hidden=!isCases;
@@ -1094,6 +1172,163 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     try{await Promise.all([waitForSectionImages(target),new Promise(function(resolve){setTimeout(resolve,420);})]);}
     finally{hidePageLoader();}
   });});
+
+  // Local demo crash game: 10-second betting window, animated rocket and simulated bot bets.
+  const rocketGameScreen=document.getElementById('rocketGameScreen');
+  const rocketHero=document.querySelector('.game-hero');
+  const rocketBackButton=document.getElementById('rocketBackButton');
+  const rocketStage=document.getElementById('rocketStage');
+  const rocketHistory=document.getElementById('rocketHistory');
+  const rocketMultiplier=document.getElementById('rocketMultiplier');
+  const rocketStatus=document.getElementById('rocketStatus');
+  const rocketRoundLabel=document.getElementById('rocketRoundLabel');
+  const rocketBetInput=document.getElementById('rocketBetInput');
+  const rocketActionButton=document.getElementById('rocketActionButton');
+  const rocketBetMessage=document.getElementById('rocketBetMessage');
+  const rocketBalance=document.getElementById('rocketBalance');
+  const rocketBetsList=document.getElementById('rocketBetsList');
+  const rocketBetCount=document.getElementById('rocketBetCount');
+  const rocketSprite=document.getElementById('rocketSprite');
+  const rocketTrail=document.getElementById('rocketTrail');
+  const rocketFlightPath=document.getElementById('rocketFlightPath');
+  const rocketPlayersCount=document.getElementById('rocketGameOnline');
+  const rocketBots=[
+    'melanch0ly','Fun','Фхемасiк🗽','wataakae','.','FRYZU','☢️ TORNADO⚪','Fun','coward','Капибара','Цикада','Ꮋᴏᴛᴀция #Welcome','Fun','ᅠ.','FRYZU','¹Стэпчик¹','FRYZU','db','Ziroshka'
+  ];
+  const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
+  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketFrame=null,rocketRoundStart=0,rocketCrashAt=2.4,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false;
+  function rocketRandom(min,max){return min+Math.random()*(max-min);}
+  function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
+  function rocketUpdateBalance(){rocketBalance.textContent=String(starsBalance);if(typeof updateStarsBalance==='function')updateStarsBalance();}
+  function rocketSetTrail(multiplier){
+    let color='#59aaff';
+    if(multiplier>=50)color='#ff68d7';else if(multiplier>=20)color='#ffd24f';else if(multiplier>=10)color='#a875ff';else if(multiplier>=5)color='#ff657f';else if(multiplier>=3)color='#f4a83f';else if(multiplier>=2)color='#54e89a';
+    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background=color;rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke=color;rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
+  }
+  function rocketFormat(n){return Number(n).toFixed(2).replace(/\.00$/,'');}
+  function rocketMakeAvatar(name,index){const d=document.createElement('span');d.className='rocket-bot-avatar';d.style.background='linear-gradient(145deg,'+rocketAvatarColors[index%rocketAvatarColors.length]+',#14243d)';d.textContent=(Array.from(name.trim())[0]||'?').toUpperCase();return d;}
+  function rocketRenderBets(){
+    rocketBetsList.innerHTML='';
+    const sorted=rocketRoundBets.slice().sort(function(a,b){return (a.status==='active'?0:1)-(b.status==='active'?0:1);});
+    sorted.forEach(function(b){
+      const row=document.createElement('div');row.className='rocket-bet-item '+(b.status==='cashed'?'cashed':b.status==='busted'?'busted':'active');row.dataset.betId=String(b.id);
+      row.appendChild(rocketMakeAvatar(b.name,b.index));
+      const copy=document.createElement('span');copy.className='rocket-bet-player';
+      const name=document.createElement('span');name.className='rocket-bet-name';name.textContent=b.name;
+      const detail=document.createElement('span');detail.className='rocket-bet-detail';detail.textContent=(b.isUser?'Ваша ставка · ':'Поставил ')+rocketFormat(b.amount)+' звёзд';
+      copy.append(name,detail);row.appendChild(copy);
+      const right=document.createElement('span');right.className='rocket-bet-right';
+      const amount=document.createElement('span');amount.className='rocket-bet-amount';amount.textContent=rocketFormat(b.amount)+' ⭐';
+      const pin=document.createElementNS('http://www.w3.org/2000/svg','svg');pin.setAttribute('viewBox','0 0 24 24');pin.setAttribute('class','rocket-pin');pin.innerHTML='<path d="M8 4h8l-1 5 3 3v2H6v-2l3-3-1-5ZM12 14v7"/>';
+      const state=document.createElement('span');state.className='rocket-bet-state';state.textContent=b.status==='cashed'?'ЗАБРАЛ':b.status==='busted'?'СГОРЕЛА':'В ИГРЕ';
+      right.append(amount,pin,state);row.appendChild(right);rocketBetsList.appendChild(row);
+    });
+    rocketBetCount.textContent=rocketRoundBets.length+' '+(rocketRoundBets.length===1?'игрок':rocketRoundBets.length>=2&&rocketRoundBets.length<=4?'игрока':'игроков');
+  }
+  function rocketBuildRoundBets(){
+    rocketRoundBets=[];rocketRoundPlayers=rocketBots.length+1;
+    rocketBots.forEach(function(name,index){
+      if(Math.random()<.12)return;
+      const amount=[5,10,15,20,25,35,50,75,100][Math.floor(Math.random()*9)];
+      rocketRoundBets.push({id:'b'+rocketRoundId+'-'+index,index:index,name:name,amount:amount,status:'active',isUser:false,autoCash:Math.random()<.63?rocketRandom(1.15,Math.random()<.65?3.5:12):null});
+    });
+    if(rocketUserBet){rocketUserBet.status='active';rocketUserBet.index=99;rocketRoundBets.unshift(rocketUserBet);}
+    rocketRenderBets();
+  }
+  function rocketOpenGame(){
+    rocketScreenWasOpen=true;rocketGameScreen.hidden=false;gamesScreen.hidden=true;casesScreen.hidden=true;document.getElementById('earnScreen').hidden=true;document.getElementById('bonusesScreen').hidden=true;
+    closePopup();if(activeCase)closeCaseDetail(true);window.scrollTo(0,0);
+    rocketPlayersCount.textContent=rocketOnlineValue();rocketUpdateBalance();
+  }
+  function rocketCloseGame(){
+    rocketScreenWasOpen=false;rocketGameScreen.hidden=true;gamesScreen.hidden=false;window.scrollTo(0,0);
+  }
+  rocketHero.addEventListener('click',rocketOpenGame);
+  rocketBackButton.addEventListener('click',rocketCloseGame);
+  rocketPlayersCount.textContent=rocketOnlineValue();
+  const onlineSyncObserver=new MutationObserver(function(){rocketPlayersCount.textContent=rocketOnlineValue();});
+  const rocketOnlineNode=document.getElementById('rocketOnlineCount');if(rocketOnlineNode)onlineSyncObserver.observe(rocketOnlineNode,{childList:true,characterData:true,subtree:true});
+  document.getElementById('rocketHalfButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor((Number(rocketBetInput.value)||1)/2));});
+  document.getElementById('rocketDoubleButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor((Number(rocketBetInput.value)||1)*2));});
+  document.getElementById('rocketMaxButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor(starsBalance));});
+  function rocketAddHistory(multiplier){
+    rocketPreviousHistory.unshift(multiplier);rocketPreviousHistory=rocketPreviousHistory.slice(0,12);rocketHistory.innerHTML='';
+    rocketPreviousHistory.forEach(function(n){const chip=document.createElement('span');chip.className='rocket-history-chip '+(n<2?'low':n<10?'mid':'high');chip.textContent='x'+rocketFormat(n);rocketHistory.appendChild(chip);});
+  }
+  function rocketSetActionState(){
+    if(rocketPhase==='countdown'){
+      rocketActionButton.disabled=!!rocketUserBet;rocketActionButton.classList.remove('cashout');rocketActionButton.textContent=rocketUserBet?'Ставка принята ✓':'Сделать ставку';
+    }else if(rocketPhase==='flight'){
+      rocketActionButton.disabled=!rocketUserBet||rocketUserBet.status!=='active';rocketActionButton.classList.toggle('cashout',!!rocketUserBet&&rocketUserBet.status==='active');rocketActionButton.textContent=rocketUserBet&&rocketUserBet.status==='active'?'Забрать':'Раунд идёт';
+    }else{
+      rocketActionButton.disabled=true;rocketActionButton.classList.remove('cashout');rocketActionButton.textContent='Следующий раунд скоро';
+    }
+  }
+  function rocketPlaceBet(){
+    if(rocketPhase!=='countdown'||rocketUserBet)return;
+    const amount=Math.floor(Number(rocketBetInput.value));
+    if(!Number.isFinite(amount)||amount<1){rocketBetMessage.textContent='Укажи ставку минимум 1 ⭐';return;}
+    if(amount>starsBalance){rocketBetMessage.textContent='Недостаточно звёзд на балансе';return;}
+    starsBalance-=amount;rocketUserBet={id:'user-'+rocketRoundId,index:99,name:(document.getElementById('headerName')?.textContent||'Ваш ник').trim()||'Ваш ник',amount:amount,status:'active',isUser:true,autoCash:null};
+    rocketBetMessage.textContent='Ставка принята: '+amount+' ⭐. Удачи!';
+    rocketUpdateBalance();rocketRoundBets.unshift(rocketUserBet);rocketRenderBets();rocketSetActionState();
+  }
+  function rocketCashout(){
+    if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active')return;
+    const multiplier=Math.max(1,Number(rocketMultiplier.textContent.replace('x',''))||1);
+    const payout=Math.floor(rocketUserBet.amount*multiplier*100)/100;
+    starsBalance+=payout;rocketUserBet.status='cashed';rocketUserBet.payout=payout;rocketUserBet.cashAt=multiplier;
+    rocketBetMessage.textContent='Забрано на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐';
+    rocketUpdateBalance();rocketRenderBets();rocketSetActionState();
+  }
+  rocketActionButton.addEventListener('click',function(){if(rocketPhase==='countdown')rocketPlaceBet();else if(rocketPhase==='flight')rocketCashout();});
+  function rocketStartRound(){
+    clearInterval(rocketRoundTimer);cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
+    rocketStage.classList.remove('is-flight','is-crashed');rocketMultiplier.textContent='x1.00';rocketSetTrail(1);
+    rocketSprite.style.left='13%';rocketSprite.style.bottom='8px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray='500';
+    rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
+    rocketBetMessage.textContent='Можно изменить сумму перед ставкой';rocketSetActionState();rocketBuildRoundBets();
+    rocketRoundTimer=setInterval(function(){
+      if(rocketPhase!=='countdown')return;
+      rocketCountdown--;
+      if(rocketCountdown>0){rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';rocketRoundLabel.textContent='СТАРТ ЧЕРЕЗ '+rocketCountdown+'С';}
+      else{clearInterval(rocketRoundTimer);rocketBeginFlight();}
+    },1000);
+  }
+  function rocketBeginFlight(){
+    rocketPhase='flight';rocketRoundStart=performance.now();rocketRoundLabel.textContent='РАКЕТА В ПОЛЁТЕ';rocketStage.classList.add('is-flight');
+    rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
+    // Crash distribution intentionally favors low multipliers; large multipliers are rare.
+    const r=Math.random();if(r<.38)rocketCrashAt=rocketRandom(1.05,1.65);else if(r<.70)rocketCrashAt=rocketRandom(1.65,2.5);else if(r<.88)rocketCrashAt=rocketRandom(2.5,4.2);else if(r<.96)rocketCrashAt=rocketRandom(4.2,8);else if(r<.992)rocketCrashAt=rocketRandom(8,20);else rocketCrashAt=rocketRandom(20,75);
+    rocketSetActionState();
+    function frame(now){
+      if(rocketPhase!=='flight')return;
+      const elapsed=(now-rocketRoundStart)/1000;
+      const multiplier=Math.exp(elapsed*.24);
+      const shown=Math.min(multiplier,rocketCrashAt);
+      rocketMultiplier.textContent='x'+rocketFormat(shown);rocketSetTrail(shown);
+      const progress=Math.min(1,Math.log(shown)/Math.max(.01,Math.log(Math.max(rocketCrashAt,1.01))));
+      rocketSprite.style.left=(13+progress*58)+'%';rocketSprite.style.bottom=(8+progress*43)+'px';
+      rocketFlightPath.style.strokeDashoffset=String(Math.max(0,500-progress*500));
+      rocketRoundBets.forEach(function(b){
+        if(!b.isUser&&b.status==='active'&&b.autoCash&&shown>=b.autoCash&&shown<rocketCrashAt){b.status='cashed';b.payout=Math.floor(b.amount*b.autoCash*100)/100;b.cashAt=b.autoCash;}
+      });
+      if(Math.floor(elapsed*4)!==Math.floor((elapsed-.016)*4))rocketRenderBets();
+      if(shown>=rocketCrashAt){rocketCrashRound();return;}
+      rocketFrame=requestAnimationFrame(frame);
+    }
+    rocketFrame=requestAnimationFrame(frame);
+  }
+  function rocketCrashRound(){
+    rocketPhase='crashed';rocketStage.classList.remove('is-flight');rocketStage.classList.add('is-crashed');rocketMultiplier.textContent='x'+rocketFormat(rocketCrashAt);rocketStatus.textContent='КРАШ! Следующий раунд через пару секунд';rocketRoundLabel.textContent='РАУНД ЗАВЕРШЁН';
+    rocketRoundBets.forEach(function(b){if(b.status==='active')b.status='busted';});
+    if(rocketUserBet&&rocketUserBet.status==='active'){rocketUserBet.status='busted';rocketBetMessage.textContent='Краш на x'+rocketFormat(rocketCrashAt)+' — ставка сгорела';}
+    else if(rocketUserBet&&rocketUserBet.status==='cashed'){rocketBetMessage.textContent='Вы забрали на x'+rocketFormat(rocketUserBet.cashAt)+'!';}
+    rocketAddHistory(rocketCrashAt);rocketRenderBets();rocketSetActionState();
+    rocketRoundTimer=setTimeout(rocketStartRound,2600);
+  }
+  rocketUpdateBalance();rocketStartRound();
+
   // Show the loader on the initial home-screen load; the header and bottom navigation stay above it.
   showPageLoader();
   Promise.all([waitForSectionImages(gamesScreen),new Promise(function(resolve){setTimeout(resolve,700);})]).finally(hidePageLoader);
