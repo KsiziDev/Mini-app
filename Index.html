@@ -198,6 +198,52 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .free-cases .case-card:nth-child(2){background:linear-gradient(145deg,rgba(124,169,255,.19),rgba(111,107,222,.09) 52%,rgba(30,34,72,.18));border-color:rgba(151,177,255,.42)}
 
 
+
+/* Bonuses and giveaways */
+.bonuses-screen{padding:8px 14px calc(116px + var(--safe-bottom));min-height:65vh}
+.bonuses-screen[hidden],.friends-panel[hidden]{display:none!important}
+.bonuses-heading{margin:0 2px 15px;font-size:27px;line-height:1.1;font-weight:900;letter-spacing:-.7px}
+.bonus-hero-card{position:relative;isolation:isolate;display:flex;align-items:stretch;min-height:235px;overflow:hidden;padding:19px 16px;border:1px solid rgba(103,180,255,.48);border-radius:24px;background:radial-gradient(ellipse at 85% 15%,rgba(42,145,255,.32),transparent 46%),linear-gradient(135deg,#112d4b 0%,#10223b 50%,#191c42 100%);box-shadow:0 12px 28px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.13);color:#fff;text-decoration:none}
+.bonus-hero-copy{position:relative;z-index:2;display:flex;flex:1;flex-direction:column;align-items:flex-start;gap:10px;min-width:0;max-width:76%}
+.bonus-eyebrow{display:flex;align-items:center;gap:7px;color:#9bcaff;font-size:9px;font-weight:900;letter-spacing:1.05px}
+.bonus-live-dot{width:7px;height:7px;border-radius:50%;background:#45e69a;box-shadow:0 0 10px #45e69a}
+.bonus-hero-copy h2{margin:0;max-width:235px;font-size:25px;line-height:1.03;letter-spacing:-.85px;font-weight:950}
+.bonus-hero-copy p{margin:0;max-width:225px;color:#c3d3e8;font-size:12px;line-height:1.5}
+.bonus-telegram-cta{display:inline-flex;align-items:center;gap:7px;margin-top:auto;padding:10px 12px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:linear-gradient(135deg,#2495ff,#1765d8);box-shadow:0 5px 15px #1677f83b;color:white;font-size:11px;font-weight:850}
+.bonus-telegram-cta svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bonus-hero-art{position:absolute;z-index:1;right:-17px;bottom:-13px;width:58%;height:92%;display:grid;place-items:center;pointer-events:none}
+.bonus-hero-art img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 7px 17px #0007)}
+.bonus-hero-glow{position:absolute;z-index:0;right:0;bottom:-20%;width:62%;height:85%;border-radius:50%;background:#368dff35;filter:blur(27px);pointer-events:none}
+.friends-card{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:14px;border:1px solid rgba(255,255,255,.17);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));box-shadow:inset 0 1px 0 rgba(255,255,255,.1);color:#f7faff;text-align:left;font:inherit;cursor:pointer}
+.friends-icon{display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;border:1px solid #77b8ff3d;border-radius:14px;background:#3289ed20;color:#80bdff}
+.friends-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.friends-copy{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.friends-copy strong{font-size:13px;font-weight:850}
+.friends-copy small{color:#95a9c1;font-size:10px;line-height:1.35}
+.friends-chevron{width:19px;height:19px;flex:0 0 19px;fill:none;stroke:#8fc5ff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.friends-card[aria-expanded="true"] .friends-chevron{transform:rotate(90deg)}
+.friends-panel{margin-top:8px;padding:18px 16px 15px;border:1px solid rgba(126,181,255,.25);border-radius:18px;background:linear-gradient(145deg,#13243a,#0c192a);text-align:center;animation:friendsPanelIn .2s ease-out}
+@keyframes friendsPanelIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.friends-empty-icon{display:grid;place-items:center;width:48px;height:48px;margin:0 auto 10px;border:1px solid #79b8ff30;border-radius:16px;background:#3b8ce41c;color:#91c5ff}
+.friends-empty-icon svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.friends-panel>strong{display:block;font-size:14px;font-weight:850}
+.friends-panel p{margin:7px 0 13px;color:#a9bad0;font-size:11px;line-height:1.55}
+.friends-close{padding:9px 20px;border:1px solid #ffffff1b;border-radius:11px;background:#ffffff0b;color:#eaf3ff;font:inherit;font-size:11px;font-weight:750;cursor:pointer}
+.bonus-section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 2px 10px}
+.bonus-section-heading h2{margin:0;font-size:18px;font-weight:900;letter-spacing:-.4px}
+.bonus-section-heading>span{color:#8fa9c8;font-size:10px;font-weight:750}
+.bonus-giveaway-list{display:flex;flex-direction:column;gap:9px}
+.bonus-giveaway-card{display:flex;align-items:center;gap:12px;min-width:0;padding:10px;border:1px solid #ffffff1a;border-radius:17px;background:linear-gradient(145deg,#ffffff12,#ffffff05);color:#f7faff;text-decoration:none;box-shadow:inset 0 1px 0 #ffffff0b;transition:transform .15s ease}
+.bonus-giveaway-card:active{transform:scale(.98)}
+.giveaway-art{display:grid;place-items:center;width:62px;height:62px;flex:0 0 62px;overflow:hidden;border-radius:13px;background:linear-gradient(145deg,#193d5e,#101b34)}
+.giveaway-art img{display:block;width:100%;height:100%;object-fit:contain}
+.giveaway-copy{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0}
+.giveaway-copy strong{font-size:12px;font-weight:850}
+.giveaway-copy small{color:#9eb0c8;font-size:10px;line-height:1.4}
+.bonus-giveaway-card>svg{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:#8fc5ff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:370px){.bonus-hero-card{min-height:226px;padding:16px 13px}.bonus-hero-copy{max-width:79%;gap:9px}.bonus-hero-copy h2{font-size:22px}.bonus-hero-copy p{font-size:11px;max-width:190px}.bonus-hero-art{right:-24px;width:61%}.friends-card{padding:12px;gap:10px}.giveaway-art{width:56px;height:56px;flex-basis:56px}}
+@media(prefers-reduced-motion:reduce){.friends-chevron,.bonus-giveaway-card{transition:none}.friends-panel{animation:none}}
+
 /* Earnings tab */
 .earn-screen{padding:8px 14px calc(112px + var(--safe-bottom));min-height:65vh}
 .earn-screen[hidden]{display:none!important}
@@ -352,6 +398,43 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       </article>
     </div>
   </section>
+</section>
+
+<section id="bonusesScreen" class="bonuses-screen" aria-label="Бонусы и розыгрыши" hidden>
+  <h1 class="bonuses-heading">Бонусы</h1>
+  <a class="bonus-hero-card" href="https://t.me/ripiup" target="_blank" rel="noopener noreferrer" aria-label="Перейти в Telegram-канал RipiUp к большому розыгрышу">
+    <div class="bonus-hero-copy">
+      <span class="bonus-eyebrow"><span class="bonus-live-dot"></span> БОЛЬШОЙ РОЗЫГРЫШ</span>
+      <h2>Залетай в наш Telegram!</h2>
+      <p>Сейчас в канале проходит огромный розыгрыш. Переходи, чтобы не пропустить шанс забрать призы.</p>
+      <span class="bonus-telegram-cta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 3-7.2 18-4.1-7.1L3 9.8 21 3Z"/><path d="m9.7 13.9 5.1-5.1"/></svg> Перейти в канал <span aria-hidden="true">↗</span></span>
+    </div>
+    <div class="bonus-hero-art"><img src="./assets/videos/bee.webp" alt="" loading="eager" decoding="async"></div>
+    <span class="bonus-hero-glow" aria-hidden="true"></span>
+  </a>
+  <button class="friends-card" id="friendsToggle" type="button" aria-expanded="false" aria-controls="friendsPanel">
+    <span class="friends-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+    <span class="friends-copy"><strong>Приглашённые друзья</strong><small>Приглашай друзей и следи за списком</small></span>
+    <svg class="friends-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+  </button>
+  <div class="friends-panel" id="friendsPanel" hidden>
+    <div class="friends-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1.5A4.5 4.5 0 0 1 7 14h4a4.5 4.5 0 0 1 4.5 4.5V20"/><path d="M17 8h5m-2.5-2.5v5"/></svg></div>
+    <strong>Пока нет приглашённых друзей</strong>
+    <p>Вы пока ещё не пригласили ни одного друга. Поделись приложением с друзьями — и они появятся здесь.</p>
+    <button class="friends-close" id="friendsClose" type="button">Закрыть</button>
+  </div>
+  <div class="bonus-section-heading"><h2>Другие розыгрыши</h2><span>RipiUp</span></div>
+  <div class="bonus-giveaway-list">
+    <a class="bonus-giveaway-card giveaway-money" href="https://t.me/ripiup" target="_blank" rel="noopener noreferrer">
+      <span class="giveaway-art"><img src="./assets/videos/money.webp" alt="" loading="lazy" decoding="async"></span><span class="giveaway-copy"><strong>Розыгрыши призов</strong><small>Все подробности — в нашем канале</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </a>
+    <a class="bonus-giveaway-card giveaway-love" href="https://t.me/ripiup" target="_blank" rel="noopener noreferrer">
+      <span class="giveaway-art"><img src="./assets/videos/love-button.webp" alt="" loading="lazy" decoding="async"></span><span class="giveaway-copy"><strong>Подарки подписчикам</strong><small>Следи за новостями и условиями</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </a>
+    <a class="bonus-giveaway-card giveaway-dog" href="https://t.me/ripiup" target="_blank" rel="noopener noreferrer">
+      <span class="giveaway-art"><img src="./assets/videos/strong-dog.webp" alt="" loading="lazy" decoding="async"></span><span class="giveaway-copy"><strong>Новые розыгрыши</strong><small>Не пропускай свежие анонсы</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </a>
+  </div>
 </section>
 <section id="casesScreen" class="cases-screen" aria-label="Коллекция кейсов" hidden><header class="cases-header"><div class="cases-heading-copy"><h1>Кейсы</h1></div></header><section class="case-group free-cases" aria-label="Бесплатные 24ч"><div class="case-section-heading"><div><h2>Бесплатные 24ч</h2></div><span class="case-section-count">2 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Ежедневный подарок — пока недоступен"><span class="case-art art-free"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Ежедневный подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button><button class="case-card" type="button" aria-label="Кейс NFT подарок — пока недоступен"><span class="case-art art-daily"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">NFT подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button></div></section>
 <section class="case-group case-group-radiation" aria-label="Радиация"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-radiation" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M11 9 8.5 4.7A7.8 7.8 0 0 1 15.5 4.7L13 9M9.4 13.5l-4.7 1.2a7.8 7.8 0 0 1-1-6.7l4.6 1.2M14.6 13.5l4.7 1.2a7.8 7.8 0 0 0 1-6.7l-4.6 1.2" fill="currentColor" stroke="currentColor" stroke-width=".5"/></svg>Радиация</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Заражение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Заражение</span><span class="case-price" aria-label="19 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="eager" decoding="async"><span>19</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Мутация — пока недоступен"><span class="case-art art-mutation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Мутация</span><span class="case-price" aria-label="29 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>29</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Излучение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Излучение</span><span class="case-price" aria-label="39 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>39</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Эпицентр — пока недоступен"><span class="case-art art-epicenter"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Эпицентр</span><span class="case-price" aria-label="49 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>49</span></span></span></button></div></section>
@@ -745,6 +828,13 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   multiplierCards.forEach(animateMultiplier);
   const gamesScreen=document.getElementById('gamesScreen'),casesScreen=document.getElementById('casesScreen'),popup=document.getElementById('caseDropPopup'),popupTitle=document.getElementById('caseDropTitle'),popupList=document.getElementById('caseDropList');let popupTimer=null;
+  const friendsToggle=document.getElementById('friendsToggle');
+  const friendsPanel=document.getElementById('friendsPanel');
+  function setFriendsPanel(open){friendsToggle.setAttribute('aria-expanded',String(open));friendsPanel.hidden=!open;}
+  friendsToggle.addEventListener('click',function(){setFriendsPanel(friendsToggle.getAttribute('aria-expanded')!=='true');});
+  document.getElementById('friendsClose').addEventListener('click',function(){setFriendsPanel(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')setFriendsPanel(false);});
+
   const drops={
   'Ежедневный подарок':[['Candy Cane','Обычная','common'],['Lol Pop','Обычная','common'],['Star Notepad','Редкая','rare'],['Magic Potion','Эпическая','epic']],
   'NFT подарок':[['Cookie Heart','Обычная','common'],['Bunny Muffin','Обычная','common'],['Jelly Bunny','Редкая','rare'],['Eternal Rose','Легендарная','legendary']],
@@ -808,14 +898,15 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const tab=button.dataset.tab;
     document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});
     button.classList.add('active');button.setAttribute('aria-current','page');closePopup();
-    const isCases=tab==='cases',isEarn=tab==='earn';
-    gamesScreen.hidden=isCases||isEarn;
+    const isCases=tab==='cases',isEarn=tab==='earn',isBonuses=tab==='bonuses';
+    gamesScreen.hidden=isCases||isEarn||isBonuses;
     casesScreen.hidden=!isCases;
     document.getElementById('earnScreen').hidden=!isEarn;
+    document.getElementById('bonusesScreen').hidden=!isBonuses;
     if(isCases){casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}
-    if(!isCases&&!isEarn){window.scrollTo(0,0);return;}
+    if(!isCases&&!isEarn&&!isBonuses){window.scrollTo(0,0);return;}
     showPageLoader();
-    const target=isCases?casesScreen:document.getElementById('earnScreen');
+    const target=isCases?casesScreen:(isEarn?document.getElementById('earnScreen'):document.getElementById('bonusesScreen'));
     try{await Promise.all([waitForSectionImages(target),new Promise(function(resolve){setTimeout(resolve,420);})]);}
     finally{hidePageLoader();}
   });});
