@@ -1541,6 +1541,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   // Show the loader on the initial home-screen load; the header and bottom navigation stay above it.
   showPageLoader();
   Promise.all([waitForSectionImages(gamesScreen),new Promise(function(resolve){setTimeout(resolve,700);})]).finally(hidePageLoader);
+  // Public bridge for the separate upgrader script: share the same balance safely.
+  window.RipiUpGameBridge={getBalance:function(){return starsBalance;},setBalance:function(value){starsBalance=Math.round((Number(value)||0)*10)/10;updateStarsBalance();}};
 })();
 </script>
 <script>
@@ -1563,7 +1565,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const halfButton=document.getElementById('upgraderHalf');
     const doubleButton=document.getElementById('upgraderDouble');
     const maxButton=document.getElementById('upgraderMax');
-    if(!screen||!openButton||!wheel||!stakeInput||!playButton||!customChance)return;
+    const bridge=window.RipiUpGameBridge;if(!screen||!openButton||!wheel||!stakeInput||!playButton||!customChance||!bridge)return;
     let chance=50,locked=false,audioContext=null,lastTick=-1,spinFrame=null,spinTimeout=null;
     const names=['NeoFox','LunaStar','PixelCat','CryptoBear','MiraX','FoxByte','StarPilot','KiraMoon','RexPlay','NovaDuck','SatoshiKid','BlueWolf'];
     const emojis=['🦊','🌙','🐱','🐻','✨','🐺','🚀','🐸','💎','🦄'];
@@ -1588,20 +1590,19 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       multiplierLabel.textContent='x'+mult.toFixed(2);
       payoutLabel.textContent=money(stake*mult)+' ⭐';
       chanceLabel.textContent=chance+'%';
-      balanceLabel.textContent=money(starsBalance);
+      balanceLabel.textContent=money(bridge.getBalance());
       customChance.value=String(chance);
       chanceButtons.forEach(function(b){b.classList.toggle('active',Number(b.dataset.chance)===chance);});
       halfButton.disabled=locked;doubleButton.disabled=locked;maxButton.disabled=locked;customChance.disabled=locked;stakeInput.disabled=locked;
-      playButton.disabled=locked||stake<1||stake>starsBalance;
+      playButton.disabled=locked||stake<1||stake>bridge.getBalance();
       playButton.textContent=locked?'РУЛЕТКА КРУТИТСЯ…':'КРУТИТЬ РУЛЕТКУ';
       updateWheel();
     }
     function open(){
-      screen.hidden=false;gamesScreen.hidden=true;casesScreen.hidden=true;
+      screen.hidden=false;document.getElementById('gamesScreen').hidden=true;document.getElementById('casesScreen').hidden=true;
       document.getElementById('rocketGameScreen').hidden=true;
       document.getElementById('earnScreen').hidden=true;document.getElementById('bonusesScreen').hidden=true;
-      if(typeof closePopup==='function')closePopup();
-      if(typeof activeCase!=='undefined'&&activeCase&&typeof closeCaseDetail==='function')closeCaseDetail(true);
+      const popup=document.getElementById('caseDropPopup');if(popup)popup.hidden=true;const detail=document.getElementById('caseDetailScreen');if(detail)detail.hidden=true;
       refresh();window.scrollTo(0,0);
       try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.BackButton)Telegram.WebApp.BackButton.hide();}catch(e){}
     }
@@ -1632,15 +1633,14 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     stakeInput.addEventListener('input',refresh);
     halfButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(currentStake()/2));refresh();}});
     doubleButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(currentStake()*2));refresh();}});
-    maxButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(starsBalance));refresh();}});
+    maxButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(bridge.getBalance()));refresh();}});
     playButton.addEventListener('click',function(){
       if(locked)return;
       const stake=currentStake();
-      if(stake<1||stake>starsBalance){resultLabel.className='upgrader-result loss';resultLabel.textContent=stake>starsBalance?'Недостаточно звёзд на балансе':'Минимальная ставка — 1 ⭐';refresh();return;}
+      if(stake<1||stake>bridge.getBalance()){resultLabel.className='upgrader-result loss';resultLabel.textContent=stake>starsBalance?'Недостаточно звёзд на балансе':'Минимальная ставка — 1 ⭐';refresh();return;}
       locked=true;
       const pickedChance=chance,mult=multiplier(),won=Math.random()<pickedChance/100;
-      starsBalance=Math.round((starsBalance-stake)*10)/10;
-      updateStarsBalance();refresh();
+      bridge.setBalance(bridge.getBalance()-stake);refresh();
       resultLabel.className='upgrader-result';resultLabel.textContent='Рулетка вращается…';
       playButton.setAttribute('aria-busy','true');
       try{if(audioContext&&audioContext.state==='suspended')audioContext.resume();}catch(e){}
@@ -1669,7 +1669,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       spinTimeout=setTimeout(function(){
         wheel.dataset.rotation=String(totalRotation);stopTicks();locked=false;playButton.removeAttribute('aria-busy');
         if(won){
-          const payout=Math.round(stake*mult*10)/10;starsBalance=Math.round((starsBalance+payout)*10)/10;updateStarsBalance();
+          const payout=Math.round(stake*mult*10)/10;bridge.setBalance(bridge.getBalance()+payout);
           resultLabel.className='upgrader-result win';resultLabel.textContent='Попадание! Начислено '+money(payout)+' ⭐';
         }else{resultLabel.className='upgrader-result loss';resultLabel.textContent='Не попало — ставка сгорела ('+money(stake)+' ⭐)';}
         addFeed('Вы','⭐',stake,won,pickedChance,mult);refresh();
