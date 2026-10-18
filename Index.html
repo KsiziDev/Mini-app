@@ -336,7 +336,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 </head>
 <body>
 
-<div id="pageLoader" class="page-loader" role="status" aria-live="polite" aria-label="Загрузка" hidden>
+<div id="pageLoader" class="page-loader" role="status" aria-live="polite" aria-label="Загрузка">
   <span class="page-loader-spinner" aria-hidden="true"></span>
   <span class="page-loader-label">Загрузка</span>
 </div>
@@ -1094,6 +1094,9 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     try{await Promise.all([waitForSectionImages(target),new Promise(function(resolve){setTimeout(resolve,420);})]);}
     finally{hidePageLoader();}
   });});
+  // Show the loader on the initial home-screen load; the header and bottom navigation stay above it.
+  showPageLoader();
+  Promise.all([waitForSectionImages(gamesScreen),new Promise(function(resolve){setTimeout(resolve,700);})]).finally(hidePageLoader);
 })();
 </script>
 </body>
