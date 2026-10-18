@@ -443,6 +443,27 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 .upgrader-feed-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.upgrader-feed-head h2{margin:0;font-size:16px;font-weight:900}.upgrader-feed-live{display:flex;align-items:center;gap:5px;color:#91e6b0;font-size:10px;font-weight:850}.upgrader-feed-live:before{content:"";width:6px;height:6px;border-radius:50%;background:#51e18c;box-shadow:0 0 9px #51e18c}
 .upgrader-feed-list{display:grid;gap:8px}.upgrader-feed-item{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #ffffff0b;border-radius:13px;background:#050d19a8}.upgrader-feed-avatar{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:#ffffff0b;font-size:18px}.upgrader-feed-copy{min-width:0;flex:1}.upgrader-feed-name{overflow:hidden;color:#e2eaf6;font-size:12px;font-weight:850;text-overflow:ellipsis;white-space:nowrap}.upgrader-feed-detail{margin-top:3px;color:#8fa4bf;font-size:10px}.upgrader-feed-status{flex:0 0 auto;font-size:11px;font-weight:900}.upgrader-feed-item.win .upgrader-feed-status{color:#8ef0b5}.upgrader-feed-item.loss .upgrader-feed-status{color:#ff929b}
 @media(max-width:370px){.upgrader-screen{padding-left:11px;padding-right:11px}.upgrader-heading h1{font-size:22px}.upgrader-orb{width:100px;height:100px}.upgrader-chances{gap:5px}}
+
+/* Upgrader roulette redesign */
+.upgrader-screen{padding:8px 14px calc(112px + var(--safe-bottom));min-height:70vh;animation:caseDetailIn .2s ease-out}
+.upgrader-screen[hidden]{display:none!important}
+.upgrader-arena{padding:20px 14px 19px}
+.upgrader-roulette-wrap{position:relative;width:min(270px,76vw);aspect-ratio:1;margin:0 auto 25px;padding:10px;border-radius:50%;background:linear-gradient(145deg,#a9d7ff,#2f6dc1 45%,#14294b);box-shadow:0 0 0 2px #9fd0ff55,0 0 28px #368bff30,inset 0 2px 4px #fff6}
+.upgrader-wheel{position:relative;width:100%;height:100%;border-radius:50%;border:3px solid #d6e9ff;background:conic-gradient(from 0deg,#39df9a 0deg var(--chance-angle),#ed526d var(--chance-angle) 360deg);box-shadow:inset 0 0 0 2px #061323, inset 0 0 20px #0008;transform:rotate(0deg);will-change:transform}
+.upgrader-wheel:before{content:"";position:absolute;inset:5px;border:1px solid #ffffff65;border-radius:50%;background:repeating-conic-gradient(from 0deg,#ffffff25 0deg 1deg,transparent 1deg 10deg);pointer-events:none}
+.upgrader-wheel:after{content:"";position:absolute;inset:13px;border:1px solid #ffffff45;border-radius:50%;pointer-events:none}
+.upgrader-pointer{position:absolute;z-index:5;top:-1px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:0;border-bottom:25px solid #fff;filter:drop-shadow(0 3px 4px #0009)}
+.upgrader-wheel-label{position:absolute;z-index:2;top:17%;font-size:clamp(10px,3vw,13px);font-weight:1000;letter-spacing:1px;color:#fff;text-shadow:0 2px 4px #0008;pointer-events:none}
+.upgrader-wheel-win{left:50%;transform:translateX(-50%)}.upgrader-wheel-lose{left:50%;top:auto;bottom:15%;transform:translateX(-50%)}
+.upgrader-wheel-center{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:76px;height:76px;border:3px solid #c9e4ff;border-radius:50%;background:radial-gradient(circle at 35% 25%,#2d5b91,#09172b 75%);box-shadow:0 3px 14px #0008,inset 0 1px 0 #fff5}
+.upgrader-wheel-center span{font-size:23px;color:#c8e8ff}.upgrader-wheel-center strong{font-size:13px;color:#fff;font-weight:950}
+.upgrader-chances{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:13px}
+.upgrader-custom-chance-row{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:0 13px;height:44px;border:1px solid #ffffff1b;border-radius:13px;background:#070f1d;color:#dcecff;font-weight:900}
+.upgrader-custom-chance{width:100%;min-width:0;border:0;outline:none;background:transparent;color:#fff;font-size:16px;font-weight:900}
+.upgrader-custom-chance-row span{color:#91c6ff}
+.upgrader-play{cursor:pointer;transition:transform .15s,filter .15s}.upgrader-play:active{transform:scale(.985);filter:brightness(.92)}
+.upgrader-play:disabled{cursor:wait}
+@media(max-width:370px){.upgrader-screen{padding-left:11px;padding-right:11px}.upgrader-roulette-wrap{width:min(245px,75vw)}.upgrader-wheel-center{width:68px;height:68px}}
 </style>
 </head>
 <body>
@@ -527,21 +548,27 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 </main>
 
 
-<section id="upgraderScreen" class="upgrader-screen" aria-label="Игра Апгрейдер" hidden>
-  <div class="upgrader-top">
-    <button type="button" class="upgrader-back" id="upgraderBackButton" aria-label="Назад">‹</button>
-    <div class="upgrader-heading"><h1>Апгрейдер</h1><p>Испытай удачу и увеличь ставку</p></div>
-    <div class="upgrader-balance"><span id="upgraderBalance">100.0</span> ⭐</div>
-  </div>
+<section id="upgraderScreen" class="upgrader-screen" aria-label="Апгрейдер" hidden>
   <div class="upgrader-arena">
-    <div class="upgrader-orb"><span class="upgrader-orb-icon" id="upgraderOrbIcon">✦</span><span class="upgrader-orb-multiplier" id="upgraderMultiplier">x1.90</span></div>
-    <div class="upgrader-chance-label">Выбери шанс выигрыша</div>
+    <div class="upgrader-roulette-wrap" aria-label="Рулетка апгрейдера">
+      <div class="upgrader-pointer" aria-hidden="true"></div>
+      <div class="upgrader-wheel" id="upgraderWheel" style="--chance-angle:180deg">
+        <span class="upgrader-wheel-label upgrader-wheel-win">УСПЕХ</span>
+        <span class="upgrader-wheel-label upgrader-wheel-lose">МИМО</span>
+        <div class="upgrader-wheel-center"><span id="upgraderOrbIcon">✦</span><strong id="upgraderMultiplier">x1.90</strong></div>
+      </div>
+    </div>
+    <div class="upgrader-chance-label">Шанс попадания</div>
     <div class="upgrader-chances" id="upgraderChances">
+      <button class="upgrader-chance" type="button" data-chance="1">1%<small>x95.00</small></button>
+      <button class="upgrader-chance" type="button" data-chance="5">5%<small>x19.00</small></button>
       <button class="upgrader-chance" type="button" data-chance="10">10%<small>x9.50</small></button>
       <button class="upgrader-chance" type="button" data-chance="25">25%<small>x3.80</small></button>
       <button class="upgrader-chance active" type="button" data-chance="50">50%<small>x1.90</small></button>
       <button class="upgrader-chance" type="button" data-chance="75">75%<small>x1.27</small></button>
     </div>
+    <label class="upgrader-stake-label" for="upgraderCustomChance">Или укажи свой шанс (1–100%)</label>
+    <div class="upgrader-custom-chance-row"><input id="upgraderCustomChance" class="upgrader-custom-chance" type="number" min="1" max="100" step="1" value="50" inputmode="numeric" aria-label="Свой шанс в процентах"><span>%</span></div>
     <label class="upgrader-stake-label" for="upgraderStake">Ваша ставка</label>
     <div class="upgrader-stake-row"><input id="upgraderStake" class="upgrader-stake-input" type="number" min="1" step="1" inputmode="numeric" value="10" autocomplete="off"><span class="upgrader-star-unit">⭐</span></div>
     <div class="upgrader-quick-buttons">
@@ -550,13 +577,14 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       <button type="button" class="upgrader-quick" id="upgraderMax">MAX Всё</button>
     </div>
     <div class="upgrader-potential"><div><span>При успехе получите</span><strong id="upgraderPayout">19.0 ⭐</strong><small>Включая возвращённую ставку</small></div><div style="text-align:right"><span>Шанс успеха</span><strong id="upgraderChanceLabel">50%</strong></div></div>
-    <button type="button" class="upgrader-play" id="upgraderPlay">ЗАПУСТИТЬ АПГРЕЙД</button>
+    <button type="button" class="upgrader-play" id="upgraderPlay">КРУТИТЬ РУЛЕТКУ</button>
     <p class="upgrader-result" id="upgraderResult" aria-live="polite">Выбери ставку и шанс</p>
   </div>
   <section class="upgrader-feed" aria-label="Последние апгрейды">
     <div class="upgrader-feed-head"><h2>Последние апгрейды</h2><span class="upgrader-feed-live">LIVE</span></div>
     <div class="upgrader-feed-list" id="upgraderFeed"></div>
   </section>
+</section>
 </section>
 
 <section id="rocketGameScreen" class="rocket-game-screen" aria-label="Игра Ракетка" hidden>
@@ -1517,12 +1545,13 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 </script>
 <script>
 
-  // Upgrader: local demo mechanics; balances use the existing account-specific localStorage key.
+  // Upgrader roulette: local demo game with percentage-based odds and pointer tick audio.
   (function(){
     const screen=document.getElementById('upgraderScreen');
     const openButton=document.querySelector('.game-tile.upgrader');
-    const backButton=document.getElementById('upgraderBackButton');
+    const wheel=document.getElementById('upgraderWheel');
     const chanceButtons=Array.from(document.querySelectorAll('.upgrader-chance'));
+    const customChance=document.getElementById('upgraderCustomChance');
     const stakeInput=document.getElementById('upgraderStake');
     const balanceLabel=document.getElementById('upgraderBalance');
     const multiplierLabel=document.getElementById('upgraderMultiplier');
@@ -1531,43 +1560,56 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const playButton=document.getElementById('upgraderPlay');
     const resultLabel=document.getElementById('upgraderResult');
     const feed=document.getElementById('upgraderFeed');
-    if(!screen||!openButton||!backButton||!stakeInput||!playButton)return;
-    let chance=50,locked=false;
+    const halfButton=document.getElementById('upgraderHalf');
+    const doubleButton=document.getElementById('upgraderDouble');
+    const maxButton=document.getElementById('upgraderMax');
+    if(!screen||!openButton||!wheel||!stakeInput||!playButton||!customChance)return;
+    let chance=50,locked=false,audioContext=null,lastTick=-1,spinFrame=null,spinTimeout=null;
     const names=['NeoFox','LunaStar','PixelCat','CryptoBear','MiraX','FoxByte','StarPilot','KiraMoon','RexPlay','NovaDuck','SatoshiKid','BlueWolf'];
     const emojis=['🦊','🌙','🐱','🐻','✨','🐺','🚀','🐸','💎','🦄'];
     function money(n){return (Math.round((Number(n)||0)*10)/10).toFixed(1);}
     function multiplier(){return 0.95/(chance/100);}
     function currentStake(){return Math.max(0,Math.floor(Number(stakeInput.value)||0));}
+    function playTick(){
+      try{
+        const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+        if(!audioContext)audioContext=new AC();
+        if(audioContext.state==='suspended')audioContext.resume();
+        const now=audioContext.currentTime,osc=audioContext.createOscillator(),gain=audioContext.createGain();
+        osc.type='square';osc.frequency.setValueAtTime(1150,now);osc.frequency.exponentialRampToValueAtTime(690,now+.022);
+        gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.025,now+.003);gain.gain.exponentialRampToValueAtTime(.0001,now+.032);
+        osc.connect(gain);gain.connect(audioContext.destination);osc.start(now);osc.stop(now+.035);
+      }catch(e){}
+    }
+    function stopTicks(){if(spinFrame!==null){cancelAnimationFrame(spinFrame);spinFrame=null;}lastTick=-1;}
+    function updateWheel(){wheel.style.setProperty('--chance-angle',(chance*3.6)+'deg');}
     function refresh(){
       const mult=multiplier(),stake=currentStake();
       multiplierLabel.textContent='x'+mult.toFixed(2);
       payoutLabel.textContent=money(stake*mult)+' ⭐';
       chanceLabel.textContent=chance+'%';
       balanceLabel.textContent=money(starsBalance);
+      customChance.value=String(chance);
       chanceButtons.forEach(function(b){b.classList.toggle('active',Number(b.dataset.chance)===chance);});
-      document.getElementById('upgraderHalf').disabled=locked;
-      document.getElementById('upgraderDouble').disabled=locked;
-      document.getElementById('upgraderMax').disabled=locked;
+      halfButton.disabled=locked;doubleButton.disabled=locked;maxButton.disabled=locked;customChance.disabled=locked;stakeInput.disabled=locked;
       playButton.disabled=locked||stake<1||stake>starsBalance;
-      playButton.textContent=locked?'АПГРЕЙД...':'ЗАПУСТИТЬ АПГРЕЙД';
+      playButton.textContent=locked?'РУЛЕТКА КРУТИТСЯ…':'КРУТИТЬ РУЛЕТКУ';
+      updateWheel();
     }
     function open(){
       screen.hidden=false;gamesScreen.hidden=true;casesScreen.hidden=true;
       document.getElementById('rocketGameScreen').hidden=true;
       document.getElementById('earnScreen').hidden=true;document.getElementById('bonusesScreen').hidden=true;
-      closePopup();if(activeCase)closeCaseDetail(true);
+      if(typeof closePopup==='function')closePopup();
+      if(typeof activeCase!=='undefined'&&activeCase&&typeof closeCaseDetail==='function')closeCaseDetail(true);
       refresh();window.scrollTo(0,0);
-      try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.BackButton){Telegram.WebApp.BackButton.show();Telegram.WebApp.BackButton.onClick(close);}}catch(e){}
-    }
-    function close(){
-      screen.hidden=true;gamesScreen.hidden=false;window.scrollTo(0,0);
       try{if(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.BackButton)Telegram.WebApp.BackButton.hide();}catch(e){}
     }
     function addFeed(name,emoji,stake,win,chanceValue,mult){
       const row=document.createElement('div');row.className='upgrader-feed-item '+(win?'win':'loss');
       const avatar=document.createElement('span');avatar.className='upgrader-feed-avatar';avatar.textContent=emoji;
       const copy=document.createElement('div');copy.className='upgrader-feed-copy';
-      const title=document.createElement('div');title.className='upgrader-feed-name';title.textContent=name+' '+(win?'заапгрейдил ставку':'не прошёл апгрейд');
+      const title=document.createElement('div');title.className='upgrader-feed-name';title.textContent=name+' '+(win?'попал в сектор':'не попал в сектор');
       const detail=document.createElement('div');detail.className='upgrader-feed-detail';detail.textContent=money(stake)+' ⭐ · шанс '+chanceValue+'% · x'+mult.toFixed(2);
       const status=document.createElement('span');status.className='upgrader-feed-status';status.textContent=win?'+'+money(stake*mult)+' ⭐':'−'+money(stake)+' ⭐';
       copy.append(title,detail);row.append(avatar,copy,status);feed.prepend(row);
@@ -1575,36 +1617,66 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     }
     function seedFeed(){
       if(feed.dataset.seeded)return;feed.dataset.seeded='true';
-      for(let i=0;i<6;i++){const ch=[10,25,50,75][Math.floor(Math.random()*4)],st=[5,10,15,25,40,75][Math.floor(Math.random()*6)],m=.95/(ch/100),won=Math.random()<ch/100;addFeed(names[Math.floor(Math.random()*names.length)],emojis[Math.floor(Math.random()*emojis.length)],st,won,ch,m);}
+      for(let i=0;i<6;i++){const ch=[1,5,10,25,50,75][Math.floor(Math.random()*6)],st=[5,10,15,25,40,75][Math.floor(Math.random()*6)],m=.95/(ch/100),won=Math.random()<ch/100;addFeed(names[Math.floor(Math.random()*names.length)],emojis[Math.floor(Math.random()*emojis.length)],st,won,ch,m);}
+    }
+    function chooseChance(value){
+      if(locked)return;
+      const n=Number(value);
+      if(!Number.isFinite(n)||n<1||n>100){resultLabel.className='upgrader-result loss';resultLabel.textContent='Укажи шанс от 1 до 100%';return;}
+      chance=Math.round(n);refresh();resultLabel.className='upgrader-result';resultLabel.textContent='Шанс установлен: '+chance+'%';
     }
     openButton.addEventListener('click',function(){seedFeed();open();});
-    backButton.addEventListener('click',close);
-    chanceButtons.forEach(function(b){b.addEventListener('click',function(){if(locked)return;chance=Number(b.dataset.chance)||50;refresh();});});
+    chanceButtons.forEach(function(b){b.addEventListener('click',function(){chooseChance(b.dataset.chance);});});
+    customChance.addEventListener('change',function(){chooseChance(customChance.value);});
+    customChance.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();chooseChance(customChance.value);customChance.blur();}});
     stakeInput.addEventListener('input',refresh);
-    document.getElementById('upgraderHalf').addEventListener('click',function(){stakeInput.value=Math.max(1,Math.floor(currentStake()/2));refresh();});
-    document.getElementById('upgraderDouble').addEventListener('click',function(){stakeInput.value=Math.max(1,Math.floor(currentStake()*2));refresh();});
-    document.getElementById('upgraderMax').addEventListener('click',function(){stakeInput.value=Math.max(1,Math.floor(starsBalance));refresh();});
+    halfButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(currentStake()/2));refresh();}});
+    doubleButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(currentStake()*2));refresh();}});
+    maxButton.addEventListener('click',function(){if(!locked){stakeInput.value=Math.max(1,Math.floor(starsBalance));refresh();}});
     playButton.addEventListener('click',function(){
       if(locked)return;
       const stake=currentStake();
       if(stake<1||stake>starsBalance){resultLabel.className='upgrader-result loss';resultLabel.textContent=stake>starsBalance?'Недостаточно звёзд на балансе':'Минимальная ставка — 1 ⭐';refresh();return;}
-      locked=true;starsBalance=Math.round((starsBalance-stake)*10)/10;updateStarsBalance();refresh();
-      resultLabel.className='upgrader-result';resultLabel.textContent='Апгрейд запущен…';
-      const pickedChance=chance,mult=multiplier();
-      setTimeout(function(){
-        const won=Math.random()<pickedChance/100;
-        if(won){starsBalance=Math.round((starsBalance+stake*mult)*10)/10;updateStarsBalance();resultLabel.className='upgrader-result win';resultLabel.textContent='Успех! Получено '+money(stake*mult)+' ⭐';}
-        else{resultLabel.className='upgrader-result loss';resultLabel.textContent='Не получилось — ставка сгорела ('+money(stake)+' ⭐)';}
-        addFeed('Вы', '⭐', stake, won, pickedChance, mult);
-        refresh();locked=false;refresh();
-      },850);
+      locked=true;
+      const pickedChance=chance,mult=multiplier(),won=Math.random()<pickedChance/100;
+      starsBalance=Math.round((starsBalance-stake)*10)/10;
+      updateStarsBalance();refresh();
+      resultLabel.className='upgrader-result';resultLabel.textContent='Рулетка вращается…';
+      playButton.setAttribute('aria-busy','true');
+      try{if(audioContext&&audioContext.state==='suspended')audioContext.resume();}catch(e){}
+      const chanceAngle=pickedChance*3.6;
+      const targetAngle=won?chanceAngle/2:chanceAngle+(360-chanceAngle)/2;
+      const finalAngle=((360-targetAngle)%360+360)%360;
+      const startRotation=Number(wheel.dataset.rotation||0);
+      const normalizedStart=((startRotation%360)+360)%360;
+      const totalRotation=startRotation+(360*5)+((finalAngle-normalizedStart+360)%360);
+      wheel.style.transition='none';wheel.style.transform='rotate('+startRotation+'deg)';
+      void wheel.offsetWidth;
+      wheel.style.transition='transform 3.25s cubic-bezier(.10,.72,.12,1)';
+      const startTime=performance.now(),duration=3300;
+      function tickFrame(now){
+        if(!locked)return;
+        const p=Math.min(1,(now-startTime)/duration);
+        const eased=1-Math.pow(1-p,3);
+        const angle=startRotation+(totalRotation-startRotation)*eased;
+        const tick=Math.floor(angle/8);
+        if(tick!==lastTick){playTick();lastTick=tick;}
+        if(p<1)spinFrame=requestAnimationFrame(tickFrame);else{spinFrame=null;stopTicks();}
+      }
+      spinFrame=requestAnimationFrame(tickFrame);
+      requestAnimationFrame(function(){wheel.style.transform='rotate('+totalRotation+'deg)';});
+      if(spinTimeout)clearTimeout(spinTimeout);
+      spinTimeout=setTimeout(function(){
+        wheel.dataset.rotation=String(totalRotation);stopTicks();locked=false;playButton.removeAttribute('aria-busy');
+        if(won){
+          const payout=Math.round(stake*mult*10)/10;starsBalance=Math.round((starsBalance+payout)*10)/10;updateStarsBalance();
+          resultLabel.className='upgrader-result win';resultLabel.textContent='Попадание! Начислено '+money(payout)+' ⭐';
+        }else{resultLabel.className='upgrader-result loss';resultLabel.textContent='Не попало — ставка сгорела ('+money(stake)+' ⭐)';}
+        addFeed('Вы','⭐',stake,won,pickedChance,mult);refresh();
+      },duration+40);
     });
     seedFeed();refresh();
-    // Demo bot activity in the feed; these are simulated players, not real accounts.
-    setInterval(function(){if(screen.hidden||locked)return;const ch=[10,25,50,75][Math.floor(Math.random()*4)],st=[5,10,15,20,35,60,100][Math.floor(Math.random()*7)],m=.95/(ch/100),won=Math.random()<ch/100;addFeed(names[Math.floor(Math.random()*names.length)],emojis[Math.floor(Math.random()*emojis.length)],st,won,ch,m);},4200);
-    // Keep the displayed balance in sync with the shared balance renderer.
-    const originalUpdate=updateStarsBalance;
-    updateStarsBalance=function(){originalUpdate();refresh();};
+    setInterval(function(){if(screen.hidden||locked)return;const ch=[1,5,10,25,50,75][Math.floor(Math.random()*6)],st=[5,10,15,20,35,60,100][Math.floor(Math.random()*7)],m=.95/(ch/100),won=Math.random()<ch/100;addFeed(names[Math.floor(Math.random()*names.length)],emojis[Math.floor(Math.random()*emojis.length)],st,won,ch,m);},4200);
   })();
 
 </script>
