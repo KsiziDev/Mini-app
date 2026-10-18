@@ -1295,13 +1295,18 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'||rocketCashoutPending)return;
     // A short confirmation delay means a crash during confirmation can invalidate the cashout.
     rocketCashoutPending=true;rocketActionButton.disabled=true;rocketActionButton.textContent='Подтверждаем…';
-    rocketBetMessage.textContent='Подтверждение вывода: 300 мс. Если за это время будет краш, ставка сгорит.';
+    rocketBetMessage.textContent='Подтверждение 300 мс: 80% шанс сгорания ставки, 20% — успешный вывод. Краш также сжигает ставку.';
     setTimeout(function(){
       if(!rocketCashoutPending)return;
       rocketCashoutPending=false;
       if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'){
         rocketBetMessage.textContent='Ракета разбилась до подтверждения — ставка сгорела';
         rocketSetActionState();rocketRenderBets();return;
+      }
+      if(Math.random()<0.8){
+        rocketUserBet.status='busted';
+        rocketBetMessage.textContent='Неудача при подтверждении (80% шанс) — ставка сгорела';
+        rocketRenderBets();rocketSetActionState();return;
       }
       const multiplier=Math.max(1,rocketLiveMultiplier||1);
       const payout=Math.round(rocketUserBet.amount*multiplier*10)/10;
