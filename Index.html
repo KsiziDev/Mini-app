@@ -1241,7 +1241,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketScreenWasOpen=false;rocketGameScreen.hidden=true;gamesScreen.hidden=false;window.scrollTo(0,0);
   }
   rocketHero.addEventListener('click',rocketOpenGame);
-  rocketBackButton.addEventListener('click',rocketCloseGame);
+  if(rocketBackButton)rocketBackButton.addEventListener('click',rocketCloseGame);
   rocketPlayersCount.textContent=rocketOnlineValue();
   const onlineSyncObserver=new MutationObserver(function(){rocketPlayersCount.textContent=rocketOnlineValue();});
   const rocketOnlineNode=document.getElementById('rocketOnlineCount');if(rocketOnlineNode)onlineSyncObserver.observe(rocketOnlineNode,{childList:true,characterData:true,subtree:true});
