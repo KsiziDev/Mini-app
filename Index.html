@@ -6,6 +6,12 @@
 <meta name="theme-color" content="#07111f">
 <title>RipiUp</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preload" as="image" href="./assets/images/Logo-Ripi-Up.png" fetchpriority="high">
+<link rel="preload" as="image" href="./assets/images/background-one.png">
+<link rel="preload" as="image" href="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" fetchpriority="high">
+<link rel="preload" as="image" href="./assets/images/case-image-test.png">
+<link rel="preload" as="image" href="./assets/images/stars-telegram.png">
+
 <style>
 :root{color-scheme:dark;--bg:#07111f;--text:#f8f7ff;--muted:#91a4bd;--purple:#63a8ff;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px);--tg-top:var(--tg-content-safe-area-inset-top,0px)}
 *{box-sizing:border-box}
@@ -158,14 +164,6 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .gift-live-item{flex-shrink:0;transform-origin:center;animation:giftAppear .32s ease-out both}
 @keyframes giftAppear{from{opacity:0}to{opacity:1}}
 
-/* Initial branded loading screen */
-#app-loading-screen{position:fixed;top:150px;left:0;right:0;bottom:calc(88px + var(--safe-bottom, 0px));z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:#07111f;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,visibility .14s ease}
-#app-loading-screen.is-loading{opacity:1;visibility:visible;pointer-events:auto}
-#app-loading-screen .loading-spinner{display:block;width:38px;height:38px;color:#5aaeff;animation:appLoadingSpin .72s linear infinite}
-#app-loading-screen .loading-label{margin:0;color:#a8b8cc;font-size:12px;font-weight:600;letter-spacing:.2px}
-@keyframes appLoadingSpin{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){#app-loading-screen .loading-spinner{animation-duration:1.8s}#app-loading-screen{transition:none}}
-
 /* Apple-inspired liquid glass case cards */
 .case-card{gap:8px;padding:8px;border:1px solid rgba(255,255,255,.24);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.17),rgba(255,255,255,.055) 48%,rgba(125,185,255,.07));backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%);box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -1px 0 rgba(255,255,255,.04),0 8px 24px rgba(0,0,0,.2);transition:transform .16s ease,border-color .16s ease,background .16s ease}
 .case-card:active{transform:scale(.975);border-color:rgba(130,205,255,.7);background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(100,180,255,.1))}
@@ -203,10 +201,6 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 </style>
 </head>
 <body>
-<div id="app-loading-screen" role="status" aria-label="Загрузка страницы">
-  <svg class="loading-spinner" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-opacity=".2" stroke-width="4"/><path d="M24 5a19 19 0 0 1 19 19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
-  <p class="loading-label">Загрузка...</p>
-</div>
 
 <div class="brand-logo-wrap" aria-label="Логотип RipiUp"><img class="brand-logo" src="./assets/images/Logo-Ripi-Up.png" alt="RipiUp"></div>
 <header class="top-header" aria-label="Профиль и баланс">
@@ -253,35 +247,35 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   <section class="game-tiles" aria-label="Другие игры">
     <button class="game-tile upgrader" type="button" aria-label="Открыть Апгрейдер">
       <span class="upgrader-online" aria-label="52 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="upgraderOnlineCount" aria-live="polite">52</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/cherry-redo-pepe-chicken.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-art"><img src="./assets/videos/cherry-redo-pepe-chicken.webp" alt="" loading="eager" decoding="async"></span>
       <span class="game-tile-title">Апгрейдер &gt;</span>
     </button>
     <button class="game-tile mines" type="button" aria-label="Открыть Крафты">
       <span class="upgrader-online" aria-label="61 игрок онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesOnlineCount" aria-live="polite">61</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/redo-craft.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-art"><img src="./assets/videos/redo-craft.webp" alt="" loading="eager" decoding="async"></span>
       <span class="game-tile-title">Крафты &gt;</span>
     </button>
   </section>
   <section class="fish-hero" aria-label="Игра Рыба">
     <span class="upgrader-online fish-online" aria-label="12 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="fishOnlineCount" aria-live="polite">12</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
     <span class="game-hero-eyebrow"><svg class="flame-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c.2 2.7-1.2 4.1-2.4 5.8C8.4 10.2 7.2 11.6 7.2 14a4.8 4.8 0 0 0 9.6 0c0-3.1-2-6.9-4.8-11.2Z"/><path class="flame-core" d="M12 12.2c-.1 1.1-1.5 2.1-1.5 3.5a1.5 1.5 0 0 0 3 0c0-1.1-.6-2.2-1.5-3.5Z"/></svg><span>ХИТ</span></span><div class="fish-hero-copy"><h2 class="fish-hero-title">Рыба &gt;</h2></div>
-    <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="lazy">
+    <img class="fish-hero-art" src="./assets/videos/fish-pink.webp" alt="" loading="eager" decoding="async">
   </section>
   <section class="game-tiles extra-game-tiles" aria-label="ПвП и Мины">
     <button class="game-tile pvp-tile" type="button" aria-label="Открыть ПвП с игроками">
       <span class="upgrader-online" aria-label="34 игрока онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="pvpOnlineCount" aria-live="polite">34</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/mamont.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-art"><img src="./assets/videos/mamont.webp" alt="" loading="eager" decoding="async"></span>
       <span class="game-tile-title">ПвП с игроками &gt;</span>
     </button>
     <button class="game-tile mines-tile" type="button" aria-label="Открыть Мины">
       <span class="upgrader-online" aria-label="46 игроков онлайн"><span class="upgrader-online-dot" aria-hidden="true"></span><span class="upgrader-online-count" id="minesGameOnlineCount" aria-live="polite">46</span><img class="online-people-icon" src="./assets/images/person-online.svg" alt="" aria-hidden="true"></span>
-      <span class="game-tile-art"><img src="./assets/videos/heart-pink.webp" alt="" loading="lazy"></span>
+      <span class="game-tile-art"><img src="./assets/videos/heart-pink.webp" alt="" loading="eager" decoding="async"></span>
       <span class="game-tile-title">Мины &gt;</span>
     </button>
   </section>
 </main>
 <section id="casesScreen" class="cases-screen" aria-label="Коллекция кейсов" hidden><header class="cases-header"><div class="cases-heading-copy"><h1>Кейсы</h1></div></header><section class="case-group free-cases" aria-label="Бесплатные 24ч"><div class="case-section-heading"><div><h2>Бесплатные 24ч</h2></div><span class="case-section-count">2 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Ежедневный подарок — пока недоступен"><span class="case-art art-free"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Ежедневный подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button><button class="case-card" type="button" aria-label="Кейс NFT подарок — пока недоступен"><span class="case-art art-daily"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">NFT подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button></div></section>
-<section class="case-group case-group-radiation" aria-label="Радиация"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-radiation" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M11 9 8.5 4.7A7.8 7.8 0 0 1 15.5 4.7L13 9M9.4 13.5l-4.7 1.2a7.8 7.8 0 0 1-1-6.7l4.6 1.2M14.6 13.5l4.7 1.2a7.8 7.8 0 0 0 1-6.7l-4.6 1.2" fill="currentColor" stroke="currentColor" stroke-width=".5"/></svg>Радиация</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Заражение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Заражение</span><span class="case-price" aria-label="19 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>19</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Мутация — пока недоступен"><span class="case-art art-mutation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Мутация</span><span class="case-price" aria-label="29 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>29</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Излучение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Излучение</span><span class="case-price" aria-label="39 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>39</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Эпицентр — пока недоступен"><span class="case-art art-epicenter"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Эпицентр</span><span class="case-price" aria-label="49 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>49</span></span></span></button></div></section>
+<section class="case-group case-group-radiation" aria-label="Радиация"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-radiation" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M11 9 8.5 4.7A7.8 7.8 0 0 1 15.5 4.7L13 9M9.4 13.5l-4.7 1.2a7.8 7.8 0 0 1-1-6.7l4.6 1.2M14.6 13.5l4.7 1.2a7.8 7.8 0 0 0 1-6.7l-4.6 1.2" fill="currentColor" stroke="currentColor" stroke-width=".5"/></svg>Радиация</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Заражение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Заражение</span><span class="case-price" aria-label="19 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="eager" decoding="async"><span>19</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Мутация — пока недоступен"><span class="case-art art-mutation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Мутация</span><span class="case-price" aria-label="29 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>29</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Излучение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Излучение</span><span class="case-price" aria-label="39 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>39</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Эпицентр — пока недоступен"><span class="case-art art-epicenter"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Эпицентр</span><span class="case-price" aria-label="49 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>49</span></span></span></button></div></section>
 <section class="case-group case-group-curse" aria-label="Проклятие"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-curse" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8C10 6.7 5 11.2 5 15.4a7 7 0 0 0 14 0C19 11.2 14 6.7 12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 15.5 11 18l4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Проклятие</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Порча — пока недоступен"><span class="case-art art-curse"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Порча</span><span class="case-price" aria-label="59 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>59</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Призрак — пока недоступен"><span class="case-art art-ghost"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Призрак</span><span class="case-price" aria-label="69 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>69</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Жатва — пока недоступен"><span class="case-art art-harvest"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Жатва</span><span class="case-price" aria-label="79 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>79</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Бездна — пока недоступен"><span class="case-art art-abyss"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Бездна</span><span class="case-price" aria-label="89 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>89</span></span></span></button></div></section>
 <section class="case-group case-group-gold" aria-label="Золотая лихорадка"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-gold" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9l4-6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 9h18M7 3l5 18 5-18M7 3l-4 6m14-6 4 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Золотая лихорадка</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Клад — пока недоступен"><span class="case-art art-gold"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Клад</span><span class="case-price" aria-label="99 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>99</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Караты — пока недоступен"><span class="case-art art-karats"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Караты</span><span class="case-price" aria-label="109 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>109</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Джекпот — пока недоступен"><span class="case-art art-jackpot"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Джекпот</span><span class="case-price" aria-label="119 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>119</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Эльдорадо — пока недоступен"><span class="case-art art-eldorado"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Эльдорадо</span><span class="case-price" aria-label="129 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>129</span></span></span></button></div></section>
 <section class="case-group case-group-anomaly" aria-label="Аномалия"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-anomaly" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-3.4-2.4-5.5-5.1-5.5-2.2 0-3.8 1.5-3.8 3.5 0 1.6 1.2 2.8 2.7 2.8 1.2 0 2.1-.8 2.1-1.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="7.5" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="16" r="1" fill="currentColor"/></svg>Аномалия</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Сбой — пока недоступен"><span class="case-art art-anomaly"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Сбой</span><span class="case-price" aria-label="149 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>149</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Разлом — пока недоступен"><span class="case-art art-rift"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Разлом</span><span class="case-price" aria-label="169 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>169</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Парадокс — пока недоступен"><span class="case-art art-paradox"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Парадокс</span><span class="case-price" aria-label="179 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>179</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Сингулярность — пока недоступен"><span class="case-art art-singularity"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Сингулярность</span><span class="case-price" aria-label="189 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>189</span></span></span></button></div></section></section>
@@ -694,51 +688,7 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function closePopup(){if(popupTimer!==null){clearTimeout(popupTimer);popupTimer=null;}popup.hidden=true;}
   function showPopup(name){if(popupTimer!==null)clearTimeout(popupTimer);popupTitle.textContent=name;popupList.replaceChildren();(drops[name]||[]).forEach(function(d){const row=document.createElement('div');row.className='case-drop-row '+d[2];const dot=document.createElement('span');dot.className='case-drop-dot';dot.setAttribute('aria-hidden','true');const copy=document.createElement('span');copy.className='case-drop-copy';const title=document.createElement('span');title.className='case-drop-name';title.textContent=d[0];const rarity=document.createElement('span');rarity.className='case-drop-rarity';rarity.textContent=d[1];copy.append(title,rarity);row.append(dot,copy);popupList.append(row);});popup.hidden=false;popupTimer=setTimeout(closePopup,2000);}
   document.querySelector('.case-drop-close').addEventListener('click',closePopup);document.querySelectorAll('[data-case-info]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();showPopup(b.dataset.caseInfo);});});
-  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});window.showPageLoader(casesScreen,'cases');}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.scrollTo({top:0,behavior:'smooth'});});});
-})();
-</script>
-<script>
-(function(){
-  const screen=document.getElementById('app-loading-screen');
-  const header=document.querySelector('.gifts-live');
-  const nav=document.querySelector('.bottom-nav');
-  if(!screen)return;
-  let loadRun=0;
-  const loadedPages=new Set();
-  function positionLoader(){
-    const topAnchor=header||document.querySelector('.top-header');
-    const top=topAnchor?Math.ceil(topAnchor.getBoundingClientRect().bottom):120;
-    const bottomNav=nav?Math.ceil(window.innerHeight-nav.getBoundingClientRect().top):88;
-    screen.style.top=top+'px';
-    screen.style.bottom=Math.max(72,bottomNav)+'px';
-  }
-  function waitForImage(image){
-    image.loading='eager';
-    if(image.complete)return Promise.resolve();
-    return new Promise(function(resolve){
-      const done=function(){
-        image.removeEventListener('load',done);
-        image.removeEventListener('error',done);
-        resolve();
-      };
-      image.addEventListener('load',done,{once:true});
-      image.addEventListener('error',done,{once:true});
-      if(image.complete)done();
-    });
-  }
-  window.addEventListener('resize',positionLoader,{passive:true});
-  window.showPageLoader=function(page,pageKey){
-    if(!page||!pageKey||loadedPages.has(pageKey))return;
-    const run=++loadRun;
-    positionLoader();
-    screen.classList.add('is-loading');
-    const images=Array.from(page.querySelectorAll('img'));
-    Promise.all(images.map(waitForImage)).then(function(){
-      if(run!==loadRun)return;
-      loadedPages.add(pageKey);
-      screen.classList.remove('is-loading');
-    });
-  };
+  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.scrollTo({top:0,behavior:'smooth'});});});
 })();
 </script>
 </body>
