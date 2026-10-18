@@ -469,7 +469,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   <section class="rocket-stage rocket-glass" id="rocketStage" aria-label="Полёт ракеты">
     <div class="rocket-stage-top"><span class="rocket-live-pill"><i class="rocket-live-dot"></i><span id="rocketRoundLabel">НОВЫЙ РАУНД</span></span><span class="rocket-players-pill"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM17 11a4 4 0 0 0 0-8M17 15h1a4 4 0 0 1 4 4v2"/></svg><b id="rocketGameOnline">87</b></span></div>
     <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
-      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#59aaff"/><stop offset="48%" stop-color="#59aaff"/><stop offset="68%" stop-color="#ffd447"/><stop offset="100%" stop-color="#ffd447"/></linearGradient></defs><path id="rocketFlightPath" d="M82 102 Q130 100 175 78 T273 59"/></svg></div>
+      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#ffd447"/><stop offset="48%" stop-color="#ffd447"/><stop offset="68%" stop-color="#59aaff"/><stop offset="100%" stop-color="#59aaff"/></linearGradient></defs><path id="rocketFlightPath" d="M82 102 Q130 100 175 78 T273 59"/></svg></div>
       <img class="rocket-sprite" id="rocketSprite" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="Ракета">
       <div class="rocket-multiplier" id="rocketMultiplier">x1.00</div><div class="rocket-status" id="rocketStatus">Ставки через 10 секунд</div>
     </div>
@@ -1199,7 +1199,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketUpdateBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;rocketBalance.textContent=starsBalance.toFixed(1);if(typeof updateStarsBalance==='function')updateStarsBalance();}
   function rocketSetTrail(multiplier){
     const color=multiplier>=2?'#ffd447':'#59aaff';
-    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background='linear-gradient(90deg,#59aaff 0%,#59aaff 42%,#ffd447 62%,#ffd447 100%)';rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke='url(#rocketTrailGradient)';rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
+    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background='linear-gradient(90deg,#ffd447 0%,#ffd447 42%,#59aaff 62%,#59aaff 100%)';rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke='url(#rocketTrailGradient)';rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
   }
   function rocketFormat(n){return Number(n).toFixed(2).replace(/\.00$/,'');}
   function rocketDisplayMultiplier(n){return 'x'+Number(n).toFixed(2);}
@@ -1308,9 +1308,9 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketBeginFlight(){
     rocketPhase='flight';rocketRoundStart=performance.now();rocketRoundLabel.textContent='РАКЕТА В ПОЛЁТЕ';rocketStage.classList.add('is-flight');
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
-    // Round duration scales from about 10 seconds for low crashes to 25 seconds for rare high multipliers.
-    const r=Math.random();if(r<.38)rocketCrashAt=rocketRandom(1.05,1.65);else if(r<.70)rocketCrashAt=rocketRandom(1.65,2.5);else if(r<.88)rocketCrashAt=rocketRandom(2.5,4.2);else if(r<.96)rocketCrashAt=rocketRandom(4.2,8);else if(r<.992)rocketCrashAt=rocketRandom(8,20);else rocketCrashAt=rocketRandom(20,75);
-    rocketFlightDuration=10000+(Math.min(75,Math.max(1.05,rocketCrashAt))-1.05)/(75-1.05)*15000;
+    // Each flight lasts a random 0.2–10 seconds. In 1 out of 5 rounds, a high multiplier is selected independently of whether the user bets.
+    const r=Math.random();if(r<.30)rocketCrashAt=rocketRandom(1.05,1.65);else if(r<.55)rocketCrashAt=rocketRandom(1.65,2.5);else if(r<.70)rocketCrashAt=rocketRandom(2.5,4.2);else if(r<.80)rocketCrashAt=rocketRandom(4.2,8);else rocketCrashAt=rocketRandom(10,75);
+    rocketFlightDuration=rocketRandom(200,10000);
     rocketSetActionState();
     function frame(now){
       if(rocketPhase!=='flight')return;
