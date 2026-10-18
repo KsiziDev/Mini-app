@@ -1013,7 +1013,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function getRouletteCardIndexAtMarker(){if(!rouletteTrack.children.length)return -1;const markerX=rouletteWindow.getBoundingClientRect().left+rouletteWindow.clientWidth/2;let crossed=-1;for(let i=0;i<rouletteTrack.children.length;i++){const r=rouletteTrack.children[i].getBoundingClientRect();if(r.left+r.width/2<=markerX)crossed=i;else break;}return crossed;}
   function trackRouletteCardSounds(){if(!caseSpinning)return;const current=getRouletteCardIndexAtMarker();if(lastSoundCardIndex<0)lastSoundCardIndex=current;else if(current>lastSoundCardIndex){for(let i=lastSoundCardIndex+1;i<=current;i++)playCaseSound('spin');lastSoundCardIndex=current;}rouletteSoundFrame=requestAnimationFrame(trackRouletteCardSounds);}
   const balanceKey='ripiup_test_stars_v1',dailyKey='ripiup_daily_case_v1';
-  try{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.round(Number(saved)*10)/10;else localStorage.setItem(balanceKey,'1000');}catch(e){}
+  try{const balanceResetKey='ripiup_balance_reset_v2';if(localStorage.getItem(balanceResetKey)!=='done'){starsBalance=1000;localStorage.setItem(balanceKey,'1000');localStorage.setItem(balanceResetKey,'done');}else{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.round(Number(saved)*10)/10;else localStorage.setItem(balanceKey,'1000');}}catch(e){}
   function updateStarsBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;starsBalanceValue.textContent=starsBalance.toFixed(1);if(balanceArea)balanceArea.setAttribute('aria-label','Ваш баланс: '+starsBalance.toFixed(1)+' звёзд');try{localStorage.setItem(balanceKey,String(starsBalance));}catch(e){}}
   updateStarsBalance();
   const prizeCatalog=[
@@ -1212,9 +1212,9 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   const rocketTrail=document.getElementById('rocketTrail');
   const rocketFlightPath=document.getElementById('rocketFlightPath');
   const rocketPlayersCount=document.getElementById('rocketGameOnline');
-  const rocketBots=[
-    'melanch0ly','Fun','Фхемасiк🗽','wataakae','.','FRYZU','☢️ TORNADO⚪','Fun','coward','Капибара','Цикада','Ꮋᴏᴛᴀция #Welcome','Fun','ᅠ.','FRYZU','¹Стэпчик¹','FRYZU','db','Ziroshka'
-  ];
+  const rocketBotPrefixes=['Lunar','Velvet','Silent','Cosmic','Silver','Neon','Lucky','Frost','Solar','Misty','Wild','Pixel','Nova','Amber','Rapid','Shadow','Crystal','Storm','Golden','Arctic','Blue','Echo','Night','Sunny','Tiny','Royal','Magic','Turbo','Cloud','Jade'];
+  const rocketBotSuffixes=['Fox','Comet','Orbit','Falcon','Raven','Panda','Wolf','Meteor','Pilot','Tiger','Otter','Spark','Voyager','Phoenix','Hawk','Willow','Star','Drifter','Koala','Badger'];
+  function rocketBotName(index){return rocketBotPrefixes[index%rocketBotPrefixes.length]+rocketBotSuffixes[Math.floor(index/rocketBotPrefixes.length)%rocketBotSuffixes.length];}
   const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
   const rocketHistoryKey='ripiup_rocket_history_v1';
   let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketBotTimers=[],rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false;
@@ -1249,13 +1249,12 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   function rocketBuildRoundBets(){
     rocketBotTimers.forEach(function(timer){clearTimeout(timer);});rocketBotTimers=[];
-    rocketRoundBets=[];rocketRoundPlayers=60;
+    rocketRoundBets=[];
+    const botCount=Math.floor(rocketRandom(65,94));
+    rocketRoundPlayers=botCount+(rocketUserBet?1:0);
     const amounts=[1,10,22,7,5,53,75,52,70,3,8,12,18,25,34,46,6,15,29,41,2,9,20,63,11,17,38,4,57,14];
-    const usedNames=new Set();
-    for(let index=0;index<59;index++){
-      let name=rocketBots[index%rocketBots.length];
-      if(usedNames.has(name))name=name+' · '+(index+1);
-      usedNames.add(name);
+    for(let index=0;index<botCount;index++){
+      const name=rocketBotName(index);
       const amount=amounts[Math.floor(Math.random()*amounts.length)];
       const bot={id:'b'+rocketRoundId+'-'+index,index:index,name:name,amount:amount,status:'active',isUser:false,autoCash:Math.random()<.66?rocketRandom(1.12,Math.random()<.72?3.2:8):null,createdAt:0};
       // Bots enter gradually during the betting countdown and flight instead of appearing all at once.
