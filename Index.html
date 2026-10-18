@@ -369,7 +369,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 .rocket-max-btn{background:#244f86a6;border-color:#5da9ff55}
 .rocket-action-btn{width:100%;min-height:48px;border:0;border-radius:14px;margin-top:9px;color:#061321;background:linear-gradient(100deg,#9be7ff,#70b7ff 55%,#9ba9ff);font-size:14px;font-weight:950;box-shadow:0 7px 20px #3888ff25;transition:transform .15s,filter .15s}
 .rocket-action-btn:active{transform:scale(.985)}.rocket-action-btn.cashout{background:linear-gradient(100deg,#a4ffc7,#47e59a);color:#052718}.rocket-action-btn:disabled{opacity:.45;filter:grayscale(.4)}
-.rocket-bet-message{font-size:11px;color:#9fb3cc;text-align:center;min-height:15px;margin-top:8px}
+.rocket-bet-message{display:none}
 .rocket-bets-panel{margin-top:13px;border-radius:21px;padding:13px}
 .rocket-bets-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.rocket-bets-head h2{margin:0;font-size:14px;font-weight:850}.rocket-bets-head span{font-size:10px;color:#a9bad0}
 .rocket-bets-list{display:flex;flex-direction:column;gap:7px}
@@ -1320,18 +1320,12 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'||rocketCashoutPending)return;
     // A short confirmation delay means a crash during confirmation can invalidate the cashout.
     rocketCashoutPending=true;rocketActionButton.disabled=true;rocketActionButton.textContent='Подтверждаем…';
-    rocketBetMessage.textContent='Подтверждение 300 мс: 80% шанс сгорания ставки, 20% — успешный вывод. Краш также сжигает ставку.';
+    rocketBetMessage.textContent='';
     setTimeout(function(){
       if(!rocketCashoutPending)return;
       rocketCashoutPending=false;
       if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'){
-        rocketBetMessage.textContent='Ракета разбилась до подтверждения — ставка сгорела';
         rocketSetActionState();rocketRenderBets();return;
-      }
-      if(Math.random()<0.8){
-        rocketUserBet.status='busted';
-        rocketBetMessage.textContent='Неудача при подтверждении (80% шанс) — ставка сгорела';
-        rocketRenderBets();rocketSetActionState();return;
       }
       const multiplier=Math.max(1,rocketLiveMultiplier||1);
       const payout=Math.round(rocketUserBet.amount*multiplier*10)/10;
