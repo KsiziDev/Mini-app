@@ -159,13 +159,12 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes giftAppear{from{opacity:0}to{opacity:1}}
 
 /* Initial branded loading screen */
-#app-loading-screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;background:#07111f;opacity:1;visibility:visible;transition:opacity .22s ease,visibility .22s ease}
+#app-loading-screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;background:#07111f;opacity:1;visibility:visible;transition:opacity .2s ease,visibility .2s ease}
 #app-loading-screen.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-#app-loading-screen .loading-logo{display:block;width:min(300px,78vw);height:auto;aspect-ratio:1/1;max-height:none;object-fit:contain}
-#app-loading-screen .loading-progress{flex:0 0 auto;width:min(180px,48vw);height:4px;border-radius:99px;overflow:hidden;background:#424a55;box-shadow:inset 0 1px 2px rgba(0,0,0,.35);transform:translateY(-25px)}
-#app-loading-screen .loading-progress-fill{display:block;width:100%;height:100%;border-radius:inherit;background:#35dc83;transform:scaleX(0);transform-origin:left center;animation:appLoadingFill .82s cubic-bezier(.22,.75,.25,1) forwards;box-shadow:0 0 8px rgba(53,220,131,.3)}
-@keyframes appLoadingFill{to{transform:scaleX(1)}}
-@media(prefers-reduced-motion:reduce){#app-loading-screen .loading-progress-fill{animation-duration:.25s}#app-loading-screen{transition:none}}
+#app-loading-screen .loading-spinner{display:block;width:46px;height:46px;color:#5aaeff;animation:appLoadingSpin .8s linear infinite}
+#app-loading-screen .loading-label{margin:0;color:#a8b8cc;font-size:12px;font-weight:600;letter-spacing:.2px}
+@keyframes appLoadingSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#app-loading-screen .loading-spinner{animation-duration:1.8s}#app-loading-screen{transition:none}}
 
 /* Apple-inspired liquid glass case cards */
 .case-card{gap:8px;padding:8px;border:1px solid rgba(255,255,255,.24);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.17),rgba(255,255,255,.055) 48%,rgba(125,185,255,.07));backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%);box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -1px 0 rgba(255,255,255,.04),0 8px 24px rgba(0,0,0,.2);transition:transform .16s ease,border-color .16s ease,background .16s ease}
@@ -204,9 +203,9 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 </style>
 </head>
 <body>
-<div id="app-loading-screen" role="status" aria-label="Загрузка приложения">
-  <img class="loading-logo" src="./assets/images/Logo-Ripi-Up.png" alt="RipiUp">
-  <span class="loading-progress" aria-hidden="true"><span class="loading-progress-fill"></span></span>
+<div id="app-loading-screen" role="status" aria-label="Загрузка страницы">
+  <svg class="loading-spinner" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-opacity=".2" stroke-width="4"/><path d="M24 5a19 19 0 0 1 19 19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+  <p class="loading-label">Загрузка...</p>
 </div>
 
 <div class="brand-logo-wrap" aria-label="Логотип RipiUp"><img class="brand-logo" src="./assets/images/Logo-Ripi-Up.png" alt="RipiUp"></div>
@@ -695,17 +694,45 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function closePopup(){if(popupTimer!==null){clearTimeout(popupTimer);popupTimer=null;}popup.hidden=true;}
   function showPopup(name){if(popupTimer!==null)clearTimeout(popupTimer);popupTitle.textContent=name;popupList.replaceChildren();(drops[name]||[]).forEach(function(d){const row=document.createElement('div');row.className='case-drop-row '+d[2];const dot=document.createElement('span');dot.className='case-drop-dot';dot.setAttribute('aria-hidden','true');const copy=document.createElement('span');copy.className='case-drop-copy';const title=document.createElement('span');title.className='case-drop-name';title.textContent=d[0];const rarity=document.createElement('span');rarity.className='case-drop-rarity';rarity.textContent=d[1];copy.append(title,rarity);row.append(dot,copy);popupList.append(row);});popup.hidden=false;popupTimer=setTimeout(closePopup,2000);}
   document.querySelector('.case-drop-close').addEventListener('click',closePopup);document.querySelectorAll('[data-case-info]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();showPopup(b.dataset.caseInfo);});});
-  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.scrollTo({top:0,behavior:'smooth'});});});
+  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.showPageLoader(tab==='cases'?casesScreen:gamesScreen);window.scrollTo({top:0,behavior:'smooth'});});});
 })();
 </script>
 <script>
 (function(){
   const screen=document.getElementById('app-loading-screen');
-  if(!screen)return;
-  window.setTimeout(function(){
-    screen.classList.add('is-leaving');
-    window.setTimeout(function(){screen.remove();},260);
-  },900);
+  const games=document.getElementById('gamesScreen');
+  if(!screen||!games)return;
+  let loadRun=0;
+  function waitForImage(image){
+    image.loading='eager';
+    if(image.complete)return Promise.resolve();
+    return new Promise(function(resolve){
+      const done=function(){
+        image.removeEventListener('load',done);
+        image.removeEventListener('error',done);
+        resolve();
+      };
+      image.addEventListener('load',done,{once:true});
+      image.addEventListener('error',done,{once:true});
+      if(image.complete)done();
+    });
+  }
+  window.showPageLoader=function(page){
+    const run=++loadRun;
+    screen.classList.remove('is-leaving');
+    const commonImages=Array.from(document.querySelectorAll('.brand-logo-wrap img,.top-header img,.gifts-live-track img'));
+    const pageImages=page?Array.from(page.querySelectorAll('img')):[];
+    const images=Array.from(new Set(commonImages.concat(pageImages)));
+    Promise.all(images.map(waitForImage)).then(function(){
+      if(run!==loadRun)return;
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          if(run===loadRun)screen.classList.add('is-leaving');
+        });
+      });
+    });
+  };
+  window.showPageLoader(games);
 })();
 </script>
 </body>
