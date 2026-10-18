@@ -1565,7 +1565,22 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const halfButton=document.getElementById('upgraderHalf');
     const doubleButton=document.getElementById('upgraderDouble');
     const maxButton=document.getElementById('upgraderMax');
-    const bridge=window.RipiUpGameBridge;if(!screen||!openButton||!wheel||!stakeInput||!playButton||!customChance||!bridge)return;
+    let bridge=window.RipiUpGameBridge;
+    // Fallback keeps the upgrader interactive even if the main page script failed before publishing its bridge.
+    if(!bridge){
+      const storagePrefix='ripiup_test_stars_v1.';
+      function findBalanceKey(){
+        try{for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.indexOf(storagePrefix)===0)return key;}}catch(e){}
+        return storagePrefix+'guest';
+      }
+      const fallbackKey=findBalanceKey();
+      bridge={
+        getBalance:function(){try{const v=Number(localStorage.getItem(fallbackKey));if(Number.isFinite(v)&&v>=0)return v;}catch(e){}const el=document.querySelector('.balance-area');const match=el&&el.textContent.match(/[0-9]+(?:[.,][0-9]+)?/);return match?Number(match[0].replace(',','.')):100;},
+        setBalance:function(value){const n=Math.round((Number(value)||0)*10)/10;try{localStorage.setItem(fallbackKey,String(n));}catch(e){}const el=document.querySelector('.balance-area');if(el){const valueEl=el.querySelector('[data-balance],.balance-value,.balance-number');if(valueEl)valueEl.textContent=n.toFixed(1);el.setAttribute('aria-label','Ваш баланс: '+n.toFixed(1)+' звёзд');}}
+      };
+      window.RipiUpGameBridge=bridge;
+    }
+    if(!screen||!openButton||!wheel||!stakeInput||!playButton||!customChance||!halfButton||!doubleButton||!maxButton||!feed)return;
     let chance=50,locked=false,audioContext=null,lastTick=-1,spinFrame=null,spinTimeout=null;
     const names=['NeoFox','LunaStar','PixelCat','CryptoBear','MiraX','FoxByte','StarPilot','KiraMoon','RexPlay','NovaDuck','SatoshiKid','BlueWolf'];
     const emojis=['🦊','🌙','🐱','🐻','✨','🐺','🚀','🐸','💎','🦄'];
@@ -1628,6 +1643,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     }
     openButton.addEventListener('click',function(){seedFeed();open();});
     chanceButtons.forEach(function(b){b.addEventListener('click',function(){chooseChance(b.dataset.chance);});});
+    customChance.addEventListener('input',function(){const n=Number(customChance.value);if(Number.isFinite(n)&&n>=1&&n<=100){chance=Math.round(n);refresh();resultLabel.className='upgrader-result';resultLabel.textContent='Шанс установлен: '+chance+'%';}});
     customChance.addEventListener('change',function(){chooseChance(customChance.value);});
     customChance.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();chooseChance(customChance.value);customChance.blur();}});
     stakeInput.addEventListener('input',refresh);
