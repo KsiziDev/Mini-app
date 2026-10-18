@@ -1248,7 +1248,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketBotTimers=[],rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false,rocketSegmentStart=0,rocketSegmentMultiplier=1,rocketSegmentDuration=0,rocketLongFlightEligible=false,rocketWinStreak=0,rocketForcedLossRounds=0,rocketRoundForcedLoss=false;
   try{const savedHistory=JSON.parse(localStorage.getItem(rocketHistoryKey)||'null');if(Array.isArray(savedHistory))rocketPreviousHistory=savedHistory.filter(function(n){return Number.isFinite(Number(n))&&Number(n)>=1;}).slice(0,12);}catch(e){}
   function rocketRandom(min,max){return min+Math.random()*(max-min);}
-  function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
+  function rocketOnlineValue(){return String(Math.floor(rocketRandom(17,103)));}
   function rocketUpdateBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;rocketBalance.textContent=starsBalance.toFixed(1);if(typeof updateStarsBalance==='function')updateStarsBalance();}
   function rocketSetTrail(multiplier){
     const color=multiplier>=2?'#ffd447':'#59aaff';
@@ -1310,9 +1310,12 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   rocketHero.addEventListener('click',rocketOpenGame);
   if(rocketBackButton)rocketBackButton.addEventListener('click',rocketCloseGame);
-  rocketPlayersCount.textContent=rocketOnlineValue();
-  const onlineSyncObserver=new MutationObserver(function(){rocketPlayersCount.textContent=rocketOnlineValue();});
-  const rocketOnlineNode=document.getElementById('rocketOnlineCount');if(rocketOnlineNode)onlineSyncObserver.observe(rocketOnlineNode,{childList:true,characterData:true,subtree:true});
+  const rocketOnlineNode=document.getElementById('rocketOnlineCount');
+  function rocketRefreshOnlineCount(){const count=Math.floor(rocketRandom(17,103));if(rocketOnlineNode){rocketOnlineNode.textContent=String(count);rocketOnlineNode.setAttribute('aria-label',count+' игроков онлайн');}rocketPlayersCount.textContent=String(count);}
+  rocketRefreshOnlineCount();
+  const onlineSyncObserver=new MutationObserver(function(){rocketPlayersCount.textContent=rocketOnlineNode?rocketOnlineNode.textContent.trim():rocketOnlineValue();});
+  if(rocketOnlineNode)onlineSyncObserver.observe(rocketOnlineNode,{childList:true,characterData:true,subtree:true});
+  setInterval(rocketRefreshOnlineCount,7000);
   document.getElementById('rocketHalfButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor((Number(rocketBetInput.value)||1)/2));});
   document.getElementById('rocketDoubleButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor((Number(rocketBetInput.value)||1)*2));});
   document.getElementById('rocketMaxButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor(starsBalance));});
