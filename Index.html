@@ -174,10 +174,12 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .case-art:before{display:none}
 .case-art img{width:100%;height:100%;border-radius:16px;object-fit:cover;filter:none}
 .case-card-footer{min-height:30px;padding:0 2px 1px}
-.case-price{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;min-width:82px;height:34px;padding:0 13px;border:1px solid rgba(93,184,255,.42);border-radius:12px;background:rgba(28,145,245,.22);color:#eaf6ff;font-size:12px;font-weight:700;letter-spacing:.1px;box-shadow:none;transition:background .16s ease,border-color .16s ease,transform .16s ease}
-.case-price img{display:block;width:17px;height:17px;object-fit:contain}
-.case-price-free{font-size:11px;letter-spacing:0;color:#eaf6ff;text-transform:none;font-weight:700}
-.case-card:active .case-price{background:rgba(28,145,245,.34);border-color:rgba(93,184,255,.65);transform:scale(.97)}
+.case-price{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex:0 0 auto;min-width:0;height:25px;padding:0 8px;border:0;border-radius:8px;background:#1677f8;color:#fff;font-size:10px;font-weight:750;letter-spacing:0;line-height:1;box-shadow:none;white-space:nowrap;transition:background .15s ease,transform .15s ease}
+.case-price img{display:block;width:13px;height:13px;object-fit:contain}
+.case-price-free{font-size:10px;letter-spacing:0;color:#fff;text-transform:none;font-weight:750}
+.case-card:active .case-price{background:#0d68e8;transform:scale(.97)}
+.case-card-footer{gap:4px;min-height:27px}
+.case-card-title{min-width:0;flex:1 1 auto;white-space:normal;overflow-wrap:anywhere;font-size:11px}
 .case-card:has(.art-free),.case-card:has(.art-daily),.case-card:has(.art-radiation),.case-card:has(.art-mutation),.case-card:has(.art-epicenter),.case-card:has(.art-curse),.case-card:has(.art-harvest),.case-card:has(.art-ghost),.case-card:has(.art-abyss),.case-card:has(.art-gold),.case-card:has(.art-karats),.case-card:has(.art-jackpot),.case-card:has(.art-eldorado),.case-card:has(.art-anomaly),.case-card:has(.art-rift),.case-card:has(.art-paradox),.case-card:has(.art-singularity){border-color:rgba(255,255,255,.24)}
 
 
