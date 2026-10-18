@@ -382,6 +382,31 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 .rocket-section-caption{display:none}
 @media(max-width:380px){.rocket-stage{padding:11px;min-height:258px}.rocket-sprite{width:84px;height:84px}.rocket-bet-row{grid-template-columns:minmax(0,1fr) 37px 37px 43px;gap:5px}.rocket-small-btn{font-size:11px}.rocket-control-card{padding:11px}}
 
+
+
+/* Liquid glass finish and animated space scenery */
+.rocket-glass{position:relative;border-color:rgba(218,237,255,.22);background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.045) 38%,rgba(79,145,255,.075)),rgba(8,19,37,.66);box-shadow:inset 0 1px 0 rgba(255,255,255,.23),inset 0 -1px 0 rgba(255,255,255,.045),0 18px 42px rgba(0,0,0,.24),0 0 0 1px rgba(132,187,255,.035);backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%)}
+.rocket-glass:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(118deg,rgba(255,255,255,.075),transparent 25% 68%,rgba(113,166,255,.045));opacity:.9}
+.rocket-stage{isolation:isolate;background:radial-gradient(ellipse at 50% 85%,rgba(27,116,201,.23),transparent 57%),radial-gradient(ellipse at 100% 0%,rgba(126,91,255,.12),transparent 42%),linear-gradient(155deg,rgba(18,35,60,.96),rgba(5,14,29,.97) 72%,rgba(14,22,45,.98))}
+.rocket-flight-area{isolation:isolate}
+.rocket-space-objects{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;opacity:.9;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.space-star{position:absolute;display:block;width:2px;height:2px;border-radius:50%;background:#e9f5ff;box-shadow:0 0 7px 1px rgba(171,214,255,.65);animation:spaceDrift 7s linear infinite,spaceTwinkle 2.3s ease-in-out infinite alternate}
+.star-a{left:15%;top:25%;animation-delay:-1s}.star-b{left:31%;top:68%;animation-delay:-4s}.star-c{left:48%;top:18%;width:3px;height:3px;animation-delay:-2s}.star-d{left:63%;top:76%;animation-delay:-5s}.star-e{left:78%;top:30%;animation-delay:-3s}.star-f{left:91%;top:59%;animation-delay:-6s}.star-g{left:39%;top:43%;animation-delay:-.5s}.star-h{left:70%;top:10%;animation-delay:-4.5s}
+.space-planet{position:absolute;display:block;border-radius:50%;opacity:.72;filter:drop-shadow(0 0 12px rgba(87,167,255,.22));animation:planetDrift 15s linear infinite}
+.planet-a{width:25px;height:25px;right:-32px;top:23%;background:radial-gradient(circle at 30% 26%,#e1f4ff 0,#78b6e8 16%,#3464a5 48%,#17294e 78%);box-shadow:inset -5px -3px 8px #071326,0 0 0 1px #b7dcff44;animation-duration:17s}
+.planet-a:after{content:"";position:absolute;width:39px;height:10px;left:-8px;top:8px;border:2px solid rgba(166,207,255,.62);border-radius:50%;transform:rotate(-24deg);box-shadow:0 0 6px #72baff33}
+.planet-b{width:13px;height:13px;right:-20px;top:72%;background:radial-gradient(circle at 30% 25%,#f5d6a4,#b77965 48%,#533d60 80%);animation-duration:12s;animation-delay:-7s}
+.space-meteor{position:absolute;display:block;width:39px;height:1px;background:linear-gradient(90deg,transparent,rgba(155,211,255,.95));filter:drop-shadow(0 0 3px #8ccaff);transform:rotate(-24deg);animation:meteorPass 4.8s linear infinite}
+.meteor-a{right:-50px;top:22%;animation-delay:-1s}.meteor-b{right:-50px;top:61%;animation-delay:-3.2s;animation-duration:6s;transform:rotate(-18deg) scale(.7)}.meteor-c{right:-50px;top:42%;animation-delay:-4.1s;animation-duration:5.6s;transform:rotate(-30deg) scale(.55)}
+@keyframes spaceDrift{0%{transform:translateX(35px);opacity:.2}30%{opacity:.95}100%{transform:translateX(-115px);opacity:.1}}
+@keyframes spaceTwinkle{from{filter:brightness(.6)}to{filter:brightness(1.7)}}
+@keyframes planetDrift{from{translate:0 0;rotate:0deg}to{translate:-430px 12px;rotate:35deg}}
+@keyframes meteorPass{0%{translate:65px -12px;opacity:0}12%{opacity:1}72%{opacity:.85}100%{translate:-430px 80px;opacity:0}}
+.rocket-grid-lines{z-index:0;opacity:.65}.rocket-trail,.rocket-flight-line{z-index:1}.rocket-sprite{z-index:3}.rocket-multiplier,.rocket-status{z-index:4}
+.rocket-control-card,.rocket-bets-panel{overflow:hidden}
+.rocket-bet-input,.rocket-small-btn{border-color:rgba(219,237,255,.2);background:rgba(3,12,26,.36);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 5px 16px rgba(0,0,0,.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.rocket-small-btn:active{background:rgba(144,196,255,.2)}
+@media(prefers-reduced-motion:reduce){.space-star,.space-planet,.space-meteor{animation:none}.rocket-glass{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}}
 </style>
 </head>
 <body>
@@ -468,7 +493,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
 <section id="rocketGameScreen" class="rocket-game-screen" aria-label="Игра Ракетка" hidden>
   <section class="rocket-stage rocket-glass" id="rocketStage" aria-label="Полёт ракеты">
     <div class="rocket-stage-top"><span class="rocket-live-pill"><i class="rocket-live-dot"></i><span id="rocketRoundLabel">НОВЫЙ РАУНД</span></span><span class="rocket-players-pill"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM17 11a4 4 0 0 0 0-8M17 15h1a4 4 0 0 1 4 4v2"/></svg><b id="rocketGameOnline">87</b></span></div>
-    <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
+    <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-space-objects" aria-hidden="true"><i class="space-star star-a"></i><i class="space-star star-b"></i><i class="space-star star-c"></i><i class="space-star star-d"></i><i class="space-star star-e"></i><i class="space-star star-f"></i><i class="space-star star-g"></i><i class="space-star star-h"></i><i class="space-planet planet-a"></i><i class="space-planet planet-b"></i><i class="space-meteor meteor-a"></i><i class="space-meteor meteor-b"></i><i class="space-meteor meteor-c"></i></div><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
       <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#ffd447"/><stop offset="100%" stop-color="#ffd447"/></linearGradient></defs><path id="rocketFlightPath" d="M12 150 Q70 145 125 110 T310 12"/></svg></div>
       <img class="rocket-sprite" id="rocketSprite" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="Ракета">
       <div class="rocket-multiplier" id="rocketMultiplier">x1.00</div><div class="rocket-status" id="rocketStatus">Ставки через 10 секунд</div>
