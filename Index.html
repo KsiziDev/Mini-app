@@ -1245,7 +1245,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketBotName(index){const root=rocketBotRoots[index%rocketBotRoots.length];const tag=rocketBotTags[Math.floor(index/rocketBotRoots.length)%rocketBotTags.length];return root+tag;}
   const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
   const rocketHistoryKey='ripiup_rocket_history_v1';
-  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketBotTimers=[],rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false,rocketSegmentStart=0,rocketSegmentMultiplier=1,rocketSegmentDuration=0,rocketLongFlightEligible=false;
+  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketBotTimers=[],rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false,rocketSegmentStart=0,rocketSegmentMultiplier=1,rocketSegmentDuration=0,rocketLongFlightEligible=false,rocketWinStreak=0,rocketForcedLossRounds=0,rocketRoundForcedLoss=false;
   try{const savedHistory=JSON.parse(localStorage.getItem(rocketHistoryKey)||'null');if(Array.isArray(savedHistory))rocketPreviousHistory=savedHistory.filter(function(n){return Number.isFinite(Number(n))&&Number(n)>=1;}).slice(0,12);}catch(e){}
   function rocketRandom(min,max){return min+Math.random()*(max-min);}
   function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
@@ -1357,11 +1357,12 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketShowCaptcha(){if(rocketCaptchaRequired)return;rocketCaptchaRequired=true;const a=1+Math.floor(Math.random()*9),b=1+Math.floor(Math.random()*9);rocketCaptchaExpected=a+b;document.getElementById('rocketCaptchaQuestion').textContent='Сколько будет '+a+' + '+b+'?';document.getElementById('rocketCaptchaMessage').textContent='Слишком быстрые нажатия. Подтверди, что ты не бот.';rocketCaptchaAnswer.value='';rocketCaptchaModal.hidden=false;setTimeout(function(){rocketCaptchaAnswer.focus();},0);}
   function rocketHideCaptcha(){rocketCaptchaModal.hidden=true;}
   document.body.appendChild(rocketCaptchaModal);
-  document.addEventListener('click',function(event){const button=event.target&&event.target.closest?event.target.closest('button'):null;if(!button||button.closest('#rocketRapidClickModal'))return;if(rocketCaptchaRequired){event.preventDefault();event.stopImmediatePropagation();return;}const now=Date.now(),times=(rocketButtonClickTimes.get(button)||[]).filter(function(time){return now-time<=1600;});times.push(now);rocketButtonClickTimes.set(button,times);if(times.length>=4){event.preventDefault();event.stopImmediatePropagation();rocketButtonClickTimes.set(button,[]);rocketShowCaptcha();}},true);
+  document.addEventListener('click',function(event){const button=event.target&&event.target.closest?event.target.closest('button'):null;if(!button||button.closest('#rocketRapidClickModal'))return;if(rocketCaptchaRequired){event.preventDefault();event.stopImmediatePropagation();return;}const now=Date.now(),times=(rocketButtonClickTimes.get(button)||[]).filter(function(time){return now-time<=1500;});times.push(now);rocketButtonClickTimes.set(button,times);if(times.length>=3){event.preventDefault();event.stopImmediatePropagation();rocketButtonClickTimes.set(button,[]);const message=document.getElementById('rocketBetMessage');if(message)message.textContent='Ошибка: не нажимай так быстро. Пройди проверку, чтобы продолжить.';rocketShowCaptcha();}},true);
   rocketCaptchaForm.addEventListener('submit',function(event){event.preventDefault();if(Number(rocketCaptchaAnswer.value)===rocketCaptchaExpected){rocketCaptchaRequired=false;rocketHideCaptcha();document.getElementById('rocketCaptchaMessage').textContent='';}else{document.getElementById('rocketCaptchaMessage').textContent='Неверный ответ. Попробуй ещё раз.';rocketCaptchaAnswer.value='';rocketCaptchaAnswer.focus();}});
   rocketCancelButton.addEventListener('click',rocketCancelBet);
   function rocketCashout(){
     if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'||rocketCashoutPending)return;
+    if(rocketRoundForcedLoss){rocketBetMessage.textContent='В этом раунде действует обязательный проигрыш после серии побед. Следующие раунды: '+Math.max(0,rocketForcedLossRounds-1)+'.';return;}
     // A short confirmation delay means a crash during confirmation can invalidate the cashout.
     rocketCashoutPending=true;rocketActionButton.setAttribute('aria-busy','true');rocketActionButton.textContent='Подтверждаем…';
     rocketBetMessage.textContent='';
@@ -1373,7 +1374,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       }
       const multiplier=Math.max(1,rocketLiveMultiplier||1);
       const payout=Math.round(rocketUserBet.amount*multiplier*10)/10;
-      rocketUserBet.status='cashed';rocketUserBet.payout=payout;rocketUserBet.cashAt=multiplier;
+      rocketUserBet.status='cashed';rocketUserBet.payout=payout;rocketUserBet.cashAt=multiplier;rocketWinStreak++;rocketBetMessage.textContent='Победа! Серия: '+rocketWinStreak+' из 3 подряд.';
+      if(rocketWinStreak>=3){rocketForcedLossRounds=3+Math.floor(Math.random()*2);rocketWinStreak=0;rocketBetMessage.textContent='Три победы подряд! Включён режим серии: следующие '+rocketForcedLossRounds+' раунда(ов) со ставкой будут проигрышными.';}
       // В 1 из 10 подходящих раундов после фиксации выигрыша полёт может продолжиться до x15.
       if(rocketLongFlightEligible&&rocketCrashAt<=5&&rocketLiveMultiplier<5){rocketSegmentMultiplier=rocketLiveMultiplier;rocketSegmentStart=performance.now();rocketCrashAt=rocketRandom(5.01,15);rocketSegmentDuration=rocketRandom(1800,6000);clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketSegmentDuration);}
       starsBalance=Math.round((starsBalance+payout)*10)/10;
@@ -1383,7 +1385,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   rocketActionButton.addEventListener('click',function(){if(rocketPhase==='countdown')rocketPlaceBet();else if(rocketPhase==='flight')rocketCashout();});
   function rocketStartRound(){
-    clearInterval(rocketRoundTimer);clearTimeout(rocketCrashTimer);rocketBotTimers.forEach(function(timer){clearTimeout(timer);});rocketBotTimers=[];cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;rocketCancelButton.hidden=true;
+    clearInterval(rocketRoundTimer);clearTimeout(rocketCrashTimer);rocketBotTimers.forEach(function(timer){clearTimeout(timer);});rocketBotTimers=[];cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;rocketRoundForcedLoss=false;rocketCancelButton.hidden=true;
     rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent=rocketPreviousHistory.length?'x'+rocketFormat(rocketPreviousHistory[0]):'x1.00';rocketSetTrail(1);
     rocketSprite.style.left='0%';rocketSprite.style.bottom='0px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
     rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
@@ -1399,11 +1401,12 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketPhase='flight';rocketRoundStart=performance.now();rocketPlayTone('start');rocketStartEngine();rocketRoundLabel.textContent='РАКЕТА В ПОЛЁТЕ';rocketStage.classList.add('is-flight');
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
     // При активной ставке обычный предел — x5: чаще всего краш в диапазоне x1–x3.5, x5 очень редкий.
-    const r=Math.random();rocketLongFlightEligible=r<.10;
-    if(rocketUserBet){if(r<.02)rocketCrashAt=rocketRandom(4.85,5);else if(r<.25)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.60)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
+    const r=Math.random();rocketLongFlightEligible=r<.10;rocketRoundForcedLoss=!!rocketUserBet&&rocketForcedLossRounds>0;
+    if(rocketRoundForcedLoss){rocketCrashAt=1.01;rocketLongFlightEligible=false;rocketBetMessage.textContent='Серия побед завершена: этот раунд отмечен как обязательный проигрышный ('+rocketForcedLossRounds+' осталось).';}
+    else if(rocketUserBet){if(r<.02)rocketCrashAt=rocketRandom(4.85,5);else if(r<.25)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.60)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     else{if(r<.10)rocketCrashAt=rocketRandom(5,15);else if(r<.25)rocketCrashAt=rocketRandom(3.5,4.8);else if(r<.55)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.80)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     // Длительность не привязана к множителю, поэтому скорость раундов различается.
-    rocketFlightDuration=rocketRandom(1000,3500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
+    rocketFlightDuration=rocketRoundForcedLoss?1000:rocketRandom(1000,3500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
     clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketFlightDuration);
     rocketSetActionState();
     function frame(now){
@@ -1430,7 +1433,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     if(rocketPhase!=='flight')return;
     clearTimeout(rocketCrashTimer);cancelAnimationFrame(rocketFrame);rocketStopEngine();rocketPlayTone('crash');rocketPhase='crashed';rocketCashoutPending=false;rocketStage.classList.remove('is-flight');rocketStage.classList.add('is-crashed');rocketLiveMultiplier=rocketCrashAt;rocketMultiplier.textContent=rocketDisplayMultiplier(rocketCrashAt);rocketStatus.textContent='КРАШ! Следующий раунд через пару секунд';rocketRoundLabel.textContent='РАУНД ЗАВЕРШЁН';
     rocketRoundBets.forEach(function(b){if(b.status==='active')b.status='busted';});
-    if(rocketUserBet&&rocketUserBet.status==='active'){rocketUserBet.status='busted';rocketBetMessage.textContent='Краш на x'+rocketFormat(rocketCrashAt)+' — ставка сгорела';}
+    if(rocketUserBet&&rocketUserBet.status==='active'){rocketUserBet.status='busted';rocketWinStreak=0;if(rocketRoundForcedLoss&&rocketForcedLossRounds>0)rocketForcedLossRounds--;rocketBetMessage.textContent=rocketRoundForcedLoss?'Обязательный проигрыш после серии побед. Осталось раундов: '+rocketForcedLossRounds+'.':'Краш на x'+rocketFormat(rocketCrashAt)+' — ставка сгорела';}
     else if(rocketUserBet&&rocketUserBet.status==='cashed'){rocketBetMessage.textContent='Вы забрали на x'+rocketFormat(rocketUserBet.cashAt)+'!';}
     rocketAddHistory(rocketCrashAt);rocketRenderBets();rocketSetActionState();
     rocketRoundTimer=setTimeout(rocketStartRound,3500);
