@@ -198,6 +198,33 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 .free-cases .case-card{background:linear-gradient(145deg,rgba(90,226,190,.18),rgba(64,166,208,.09) 52%,rgba(20,49,69,.18));border-color:rgba(115,233,211,.38)}
 .free-cases .case-card:nth-child(2){background:linear-gradient(145deg,rgba(124,169,255,.19),rgba(111,107,222,.09) 52%,rgba(30,34,72,.18));border-color:rgba(151,177,255,.42)}
 
+
+/* Earnings tab */
+.earn-screen{padding:8px 14px calc(112px + var(--safe-bottom));min-height:65vh}
+.earn-screen[hidden]{display:none!important}
+.earn-heading{margin:0 2px 16px;font-size:27px;line-height:1.1;font-weight:900;letter-spacing:-.7px}
+.earn-task-list{display:flex;flex-direction:column;gap:11px}
+.earn-task-card{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:76px;padding:17px 17px;border:1px solid rgba(255,255,255,.2);border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.045) 65%,rgba(71,143,255,.07));box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 7px 20px rgba(0,0,0,.14);color:#f8faff}
+.earn-task-card.tiktok{background:linear-gradient(115deg,rgba(33,190,190,.18),rgba(255,255,255,.06) 55%,rgba(255,69,102,.1));border-color:rgba(120,220,226,.3)}
+.earn-task-name{font-size:16px;font-weight:850;letter-spacing:-.2px}
+.earn-task-arrow{display:block;width:21px;height:21px;flex:0 0 21px;fill:none;stroke:#8fc5ff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.earn-payout-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}
+.earn-payout-label,.earn-payout-value{display:flex;align-items:center;justify-content:center;gap:9px;min-height:70px;padding:14px 12px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.earn-payout-label{font-size:15px;font-weight:800}
+.earn-payout-value{font-size:23px;font-weight:900;font-variant-numeric:tabular-nums}
+.earn-payout-value img{display:block;width:25px;height:25px;object-fit:contain}
+.earn-faq{margin-top:25px}
+.earn-faq-heading{margin:0 2px 12px;font-size:21px;font-weight:900;letter-spacing:-.45px}
+.earn-faq-list{display:flex;flex-direction:column;gap:9px}
+.earn-faq-item{overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(255,255,255,.035));box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.earn-faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 14px;border:0;background:transparent;color:#f8faff;text-align:left;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.earn-faq-chevron{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:#8fc5ff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s ease}
+.earn-faq-question[aria-expanded="true"] .earn-faq-chevron{transform:rotate(90deg)}
+.earn-faq-answer{padding:0 14px 15px;color:#b7c6d9;font-size:12px;line-height:1.65;white-space:normal}
+.earn-faq-answer[hidden]{display:none!important}
+@media(max-width:370px){.earn-screen{padding-left:11px;padding-right:11px}.earn-heading{font-size:25px}.earn-task-card{min-height:69px;padding:15px;border-radius:17px}.earn-payout-row{gap:8px}.earn-payout-label,.earn-payout-value{min-height:64px;padding:12px 8px}.earn-payout-label{font-size:13px}.earn-payout-value{font-size:21px}.earn-faq-heading{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.earn-faq-chevron{transition:none}}
+
 </style>
 </head>
 <body>
@@ -274,6 +301,39 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
     </button>
   </section>
 </main>
+<section id="earnScreen" class="earn-screen" aria-label="Заработок" hidden>
+  <h1 class="earn-heading">Заработок</h1>
+  <div class="earn-task-list">
+    <article class="earn-task-card tiktok"><span class="earn-task-name">TikTok</span><svg class="earn-task-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></article>
+    <article class="earn-task-card"><span class="earn-task-name">Комментарии</span></article>
+    <article class="earn-task-card"><span class="earn-task-name">Видео</span></article>
+  </div>
+  <div class="earn-payout-row" aria-label="Выплачено">
+    <div class="earn-payout-label">Выплачено</div>
+    <div class="earn-payout-value"><img src="./assets/images/stars-telegram.png" alt=""><span>0</span></div>
+  </div>
+  <section class="earn-faq" aria-labelledby="earnFaqHeading">
+    <h2 id="earnFaqHeading" class="earn-faq-heading">Частые вопросы</h2>
+    <div class="earn-faq-list">
+      <article class="earn-faq-item">
+        <button class="earn-faq-question" type="button" aria-expanded="false" aria-controls="earnFaqAnswer1"><span>Как проходить этапы</span><svg class="earn-faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        <div class="earn-faq-answer" id="earnFaqAnswer1" hidden>1 и 2 этап открыты сразу, 3, 4 и 5 — по очереди.<br>Нажмите «Выполнить», выполните условие в ВЕТВООМ и нажмите «Я выполнил».<br>Сумма пополнения во 2 и 3 этапе у каждого своя: у вас — от 481 ₽ и от 334 ₽. В 4 и 5 этапе — от 500 ₽.</div>
+      </article>
+      <article class="earn-faq-item">
+        <button class="earn-faq-question" type="button" aria-expanded="false" aria-controls="earnFaqAnswer2"><span>Зачем скриншот</span><svg class="earn-faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        <div class="earn-faq-answer" id="earnFaqAnswer2" hidden>Со 2 этапа пришлите скриншот ставок на сумму из этапа — любые, на любые события. Проверим при выплате.</div>
+      </article>
+      <article class="earn-faq-item">
+        <button class="earn-faq-question" type="button" aria-expanded="false" aria-controls="earnFaqAnswer3"><span>Колесо удачи</span><svg class="earn-faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        <div class="earn-faq-answer" id="earnFaqAnswer3" hidden>4 этап — случайный приз до 4 545 ⭐, 5 этап — до 9 091 ⭐. Доступность вывода — в кошельке.</div>
+      </article>
+      <article class="earn-faq-item">
+        <button class="earn-faq-question" type="button" aria-expanded="false" aria-controls="earnFaqAnswer4"><span>Куда приходит награда</span><svg class="earn-faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        <div class="earn-faq-answer" id="earnFaqAnswer4" hidden>Награды и призы колёс поступают на баланс после подтверждения. Доступность вывода — в кошельке.</div>
+      </article>
+    </div>
+  </section>
+</section>
 <section id="casesScreen" class="cases-screen" aria-label="Коллекция кейсов" hidden><header class="cases-header"><div class="cases-heading-copy"><h1>Кейсы</h1></div></header><section class="case-group free-cases" aria-label="Бесплатные 24ч"><div class="case-section-heading"><div><h2>Бесплатные 24ч</h2></div><span class="case-section-count">2 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Ежедневный подарок — пока недоступен"><span class="case-art art-free"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Ежедневный подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button><button class="case-card" type="button" aria-label="Кейс NFT подарок — пока недоступен"><span class="case-art art-daily"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">NFT подарок</span><span class="case-price" aria-label="Бесплатно"><span class="case-price-free">Бесплатно</span></span></span></button></div></section>
 <section class="case-group case-group-radiation" aria-label="Радиация"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-radiation" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M11 9 8.5 4.7A7.8 7.8 0 0 1 15.5 4.7L13 9M9.4 13.5l-4.7 1.2a7.8 7.8 0 0 1-1-6.7l4.6 1.2M14.6 13.5l4.7 1.2a7.8 7.8 0 0 0 1-6.7l-4.6 1.2" fill="currentColor" stroke="currentColor" stroke-width=".5"/></svg>Радиация</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Заражение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Заражение</span><span class="case-price" aria-label="19 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="eager" decoding="async"><span>19</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Мутация — пока недоступен"><span class="case-art art-mutation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Мутация</span><span class="case-price" aria-label="29 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>29</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Излучение — пока недоступен"><span class="case-art art-radiation"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Излучение</span><span class="case-price" aria-label="39 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>39</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Эпицентр — пока недоступен"><span class="case-art art-epicenter"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Эпицентр</span><span class="case-price" aria-label="49 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>49</span></span></span></button></div></section>
 <section class="case-group case-group-curse" aria-label="Проклятие"><div class="case-section-heading"><div><h2><svg class="case-category-icon icon-curse" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8C10 6.7 5 11.2 5 15.4a7 7 0 0 0 14 0C19 11.2 14 6.7 12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 15.5 11 18l4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Проклятие</h2></div><span class="case-section-count">4 кейса</span></div><div class="cases-grid"><button class="case-card" type="button" aria-label="Кейс Порча — пока недоступен"><span class="case-art art-curse"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Порча</span><span class="case-price" aria-label="59 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>59</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Призрак — пока недоступен"><span class="case-art art-ghost"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Призрак</span><span class="case-price" aria-label="69 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>69</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Жатва — пока недоступен"><span class="case-art art-harvest"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Жатва</span><span class="case-price" aria-label="79 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>79</span></span></span></button><button class="case-card" type="button" aria-label="Кейс Бездна — пока недоступен"><span class="case-art art-abyss"><img src="./assets/images/case-image-test.png" alt="Иллюстрация кейса" loading="lazy"></span><span class="case-card-footer"><span class="case-card-name">Бездна</span><span class="case-price" aria-label="89 звёзд"><img src="./assets/images/stars-telegram.png" alt="" loading="lazy"><span>89</span></span></span></button></div></section>
@@ -688,7 +748,8 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function closePopup(){if(popupTimer!==null){clearTimeout(popupTimer);popupTimer=null;}popup.hidden=true;}
   function showPopup(name){if(popupTimer!==null)clearTimeout(popupTimer);popupTitle.textContent=name;popupList.replaceChildren();(drops[name]||[]).forEach(function(d){const row=document.createElement('div');row.className='case-drop-row '+d[2];const dot=document.createElement('span');dot.className='case-drop-dot';dot.setAttribute('aria-hidden','true');const copy=document.createElement('span');copy.className='case-drop-copy';const title=document.createElement('span');title.className='case-drop-name';title.textContent=d[0];const rarity=document.createElement('span');rarity.className='case-drop-rarity';rarity.textContent=d[1];copy.append(title,rarity);row.append(dot,copy);popupList.append(row);});popup.hidden=false;popupTimer=setTimeout(closePopup,2000);}
   document.querySelector('.case-drop-close').addEventListener('click',closePopup);document.querySelectorAll('[data-case-info]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();showPopup(b.dataset.caseInfo);});});
-  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.scrollTo({top:0,behavior:'smooth'});});});
+  document.querySelectorAll('.earn-faq-question').forEach(function(button){button.addEventListener('click',function(){const expanded=button.getAttribute('aria-expanded')==='true';button.setAttribute('aria-expanded',String(!expanded));const answer=document.getElementById(button.getAttribute('aria-controls'));if(answer)answer.hidden=expanded;});});
+  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();gamesScreen.hidden=tab==='cases'||tab==='earn';casesScreen.hidden=tab!=='cases';document.getElementById('earnScreen').hidden=tab!=='earn';if(tab==='cases'){casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}window.scrollTo({top:0,behavior:'smooth'});});});
 })();
 </script>
 </body>
