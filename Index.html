@@ -1293,13 +1293,23 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   let rocketCashoutPending=false;
   function rocketCashout(){
     if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'||rocketCashoutPending)return;
-    // Register cashout at the multiplier visible at click time; no random delay can turn it into a loss.
-    const multiplier=Math.max(1,rocketLiveMultiplier||1);
-    const payout=Math.round(rocketUserBet.amount*multiplier*10)/10;
-    rocketUserBet.status='cashed';rocketUserBet.payout=payout;rocketUserBet.cashAt=multiplier;
-    starsBalance=Math.round((starsBalance+payout)*10)/10;
-    rocketBetMessage.textContent='Забрано на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐';
-    rocketUpdateBalance();rocketRenderBets();rocketSetActionState();
+    // A short confirmation delay means a crash during confirmation can invalidate the cashout.
+    rocketCashoutPending=true;rocketActionButton.disabled=true;rocketActionButton.textContent='Подтверждаем…';
+    rocketBetMessage.textContent='Подтверждение вывода: 300 мс. Если за это время будет краш, ставка сгорит.';
+    setTimeout(function(){
+      if(!rocketCashoutPending)return;
+      rocketCashoutPending=false;
+      if(rocketPhase!=='flight'||!rocketUserBet||rocketUserBet.status!=='active'){
+        rocketBetMessage.textContent='Ракета разбилась до подтверждения — ставка сгорела';
+        rocketSetActionState();rocketRenderBets();return;
+      }
+      const multiplier=Math.max(1,rocketLiveMultiplier||1);
+      const payout=Math.round(rocketUserBet.amount*multiplier*10)/10;
+      rocketUserBet.status='cashed';rocketUserBet.payout=payout;rocketUserBet.cashAt=multiplier;
+      starsBalance=Math.round((starsBalance+payout)*10)/10;
+      rocketBetMessage.textContent='Забрано на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐';
+      rocketUpdateBalance();rocketRenderBets();rocketSetActionState();
+    },300);
   }
   rocketActionButton.addEventListener('click',function(){if(rocketPhase==='countdown')rocketPlaceBet();else if(rocketPhase==='flight')rocketCashout();});
   function rocketStartRound(){
