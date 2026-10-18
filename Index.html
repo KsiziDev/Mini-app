@@ -1294,7 +1294,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   rocketActionButton.addEventListener('click',function(){if(rocketPhase==='countdown')rocketPlaceBet();else if(rocketPhase==='flight')rocketCashout();});
   function rocketStartRound(){
     clearInterval(rocketRoundTimer);cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
-    rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent='x1.000';rocketSetTrail(1);
+    rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent=rocketPreviousHistory.length?'x'+rocketFormat(rocketPreviousHistory[0]):'x1.00';rocketSetTrail(1);
     rocketSprite.style.left='13%';rocketSprite.style.bottom='8px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
     rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
     rocketBetMessage.textContent='Можно изменить сумму перед ставкой';rocketSetActionState();rocketBuildRoundBets();
