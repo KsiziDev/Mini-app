@@ -159,9 +159,9 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
 @keyframes giftAppear{from{opacity:0}to{opacity:1}}
 
 /* Initial branded loading screen */
-#app-loading-screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;background:#07111f;opacity:1;visibility:visible;transition:opacity .2s ease,visibility .2s ease}
-#app-loading-screen.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-#app-loading-screen .loading-spinner{display:block;width:46px;height:46px;color:#5aaeff;animation:appLoadingSpin .8s linear infinite}
+#app-loading-screen{position:fixed;top:150px;left:0;right:0;bottom:calc(88px + var(--safe-bottom, 0px));z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:#07111f;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,visibility .14s ease}
+#app-loading-screen.is-loading{opacity:1;visibility:visible;pointer-events:auto}
+#app-loading-screen .loading-spinner{display:block;width:38px;height:38px;color:#5aaeff;animation:appLoadingSpin .72s linear infinite}
 #app-loading-screen .loading-label{margin:0;color:#a8b8cc;font-size:12px;font-weight:600;letter-spacing:.2px}
 @keyframes appLoadingSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){#app-loading-screen .loading-spinner{animation-duration:1.8s}#app-loading-screen{transition:none}}
@@ -694,15 +694,24 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
   function closePopup(){if(popupTimer!==null){clearTimeout(popupTimer);popupTimer=null;}popup.hidden=true;}
   function showPopup(name){if(popupTimer!==null)clearTimeout(popupTimer);popupTitle.textContent=name;popupList.replaceChildren();(drops[name]||[]).forEach(function(d){const row=document.createElement('div');row.className='case-drop-row '+d[2];const dot=document.createElement('span');dot.className='case-drop-dot';dot.setAttribute('aria-hidden','true');const copy=document.createElement('span');copy.className='case-drop-copy';const title=document.createElement('span');title.className='case-drop-name';title.textContent=d[0];const rarity=document.createElement('span');rarity.className='case-drop-rarity';rarity.textContent=d[1];copy.append(title,rarity);row.append(dot,copy);popupList.append(row);});popup.hidden=false;popupTimer=setTimeout(closePopup,2000);}
   document.querySelector('.case-drop-close').addEventListener('click',closePopup);document.querySelectorAll('[data-case-info]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();showPopup(b.dataset.caseInfo);});});
-  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.showPageLoader(tab==='cases'?casesScreen:gamesScreen);window.scrollTo({top:0,behavior:'smooth'});});});
+  document.querySelectorAll('.nav-item').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('active');item.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');const tab=button.dataset.tab;closePopup();if(tab==='cases'){gamesScreen.hidden=true;casesScreen.hidden=false;casesScreen.querySelectorAll('.case-group').forEach(function(g){g.hidden=false;});window.showPageLoader(casesScreen,'cases');}else{gamesScreen.hidden=false;casesScreen.hidden=true;}window.scrollTo({top:0,behavior:'smooth'});});});
 })();
 </script>
 <script>
 (function(){
   const screen=document.getElementById('app-loading-screen');
-  const games=document.getElementById('gamesScreen');
-  if(!screen||!games)return;
+  const header=document.querySelector('.gifts-live');
+  const nav=document.querySelector('.bottom-nav');
+  if(!screen)return;
   let loadRun=0;
+  const loadedPages=new Set();
+  function positionLoader(){
+    const topAnchor=header||document.querySelector('.top-header');
+    const top=topAnchor?Math.ceil(topAnchor.getBoundingClientRect().bottom):120;
+    const bottomNav=nav?Math.ceil(window.innerHeight-nav.getBoundingClientRect().top):88;
+    screen.style.top=top+'px';
+    screen.style.bottom=Math.max(72,bottomNav)+'px';
+  }
   function waitForImage(image){
     image.loading='eager';
     if(image.complete)return Promise.resolve();
@@ -717,22 +726,19 @@ main{min-height:100vh;min-height:100dvh;padding:0 10px calc(110px + var(--safe-b
       if(image.complete)done();
     });
   }
-  window.showPageLoader=function(page){
+  window.addEventListener('resize',positionLoader,{passive:true});
+  window.showPageLoader=function(page,pageKey){
+    if(!page||!pageKey||loadedPages.has(pageKey))return;
     const run=++loadRun;
-    screen.classList.remove('is-leaving');
-    const commonImages=Array.from(document.querySelectorAll('.brand-logo-wrap img,.top-header img,.gifts-live-track img'));
-    const pageImages=page?Array.from(page.querySelectorAll('img')):[];
-    const images=Array.from(new Set(commonImages.concat(pageImages)));
+    positionLoader();
+    screen.classList.add('is-loading');
+    const images=Array.from(page.querySelectorAll('img'));
     Promise.all(images.map(waitForImage)).then(function(){
       if(run!==loadRun)return;
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          if(run===loadRun)screen.classList.add('is-leaving');
-        });
-      });
+      loadedPages.add(pageKey);
+      screen.classList.remove('is-loading');
     });
   };
-  window.showPageLoader(games);
 })();
 </script>
 </body>
