@@ -1637,7 +1637,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     playButton.addEventListener('click',function(){
       if(locked)return;
       const stake=currentStake();
-      if(stake<1||stake>bridge.getBalance()){resultLabel.className='upgrader-result loss';resultLabel.textContent=stake>starsBalance?'Недостаточно звёзд на балансе':'Минимальная ставка — 1 ⭐';refresh();return;}
+      if(stake<1||stake>bridge.getBalance()){resultLabel.className='upgrader-result loss';resultLabel.textContent=stake>bridge.getBalance()?'Недостаточно звёзд на балансе':'Минимальная ставка — 1 ⭐';refresh();return;}
       locked=true;
       const pickedChance=chance,mult=multiplier(),won=Math.random()<pickedChance/100;
       bridge.setBalance(bridge.getBalance()-stake);refresh();
