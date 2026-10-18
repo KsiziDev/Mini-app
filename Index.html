@@ -469,7 +469,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   <section class="rocket-stage rocket-glass" id="rocketStage" aria-label="Полёт ракеты">
     <div class="rocket-stage-top"><span class="rocket-live-pill"><i class="rocket-live-dot"></i><span id="rocketRoundLabel">НОВЫЙ РАУНД</span></span><span class="rocket-players-pill"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM17 11a4 4 0 0 0 0-8M17 15h1a4 4 0 0 1 4 4v2"/></svg><b id="rocketGameOnline">87</b></span></div>
     <div class="rocket-flight-area" id="rocketFlightArea"><div class="rocket-grid-lines"></div><div class="rocket-trail" id="rocketTrail"></div>
-      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><path id="rocketFlightPath" d="M0 157 Q60 148 105 124 T180 75 T320 8"/></svg></div>
+      <div class="rocket-flight-line"><svg viewBox="0 0 320 160" preserveAspectRatio="none"><defs><linearGradient id="rocketTrailGradient" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#59aaff"/><stop offset="48%" stop-color="#59aaff"/><stop offset="68%" stop-color="#ffd447"/><stop offset="100%" stop-color="#ffd447"/></linearGradient></defs><path id="rocketFlightPath" d="M82 102 Q130 100 175 78 T273 59"/></svg></div>
       <img class="rocket-sprite" id="rocketSprite" src="./assets/videos/chpic.su_-_StellarRocketRO_020-ezgif.com-tgs-to-webp-converter.webp" alt="Ракета">
       <div class="rocket-multiplier" id="rocketMultiplier">x1.00</div><div class="rocket-status" id="rocketStatus">Ставки через 10 секунд</div>
     </div>
@@ -988,7 +988,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function getRouletteCardIndexAtMarker(){if(!rouletteTrack.children.length)return -1;const markerX=rouletteWindow.getBoundingClientRect().left+rouletteWindow.clientWidth/2;let crossed=-1;for(let i=0;i<rouletteTrack.children.length;i++){const r=rouletteTrack.children[i].getBoundingClientRect();if(r.left+r.width/2<=markerX)crossed=i;else break;}return crossed;}
   function trackRouletteCardSounds(){if(!caseSpinning)return;const current=getRouletteCardIndexAtMarker();if(lastSoundCardIndex<0)lastSoundCardIndex=current;else if(current>lastSoundCardIndex){for(let i=lastSoundCardIndex+1;i<=current;i++)playCaseSound('spin');lastSoundCardIndex=current;}rouletteSoundFrame=requestAnimationFrame(trackRouletteCardSounds);}
   const balanceKey='ripiup_test_stars_v1',dailyKey='ripiup_daily_case_v1';
-  try{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.floor(Number(saved));else localStorage.setItem(balanceKey,'1000');}catch(e){}
+  try{const saved=localStorage.getItem(balanceKey);if(saved!==null&&Number.isFinite(Number(saved))&&Number(saved)>=0)starsBalance=Math.round(Number(saved)*10)/10;else localStorage.setItem(balanceKey,'1000');}catch(e){}
   function updateStarsBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;starsBalanceValue.textContent=starsBalance.toFixed(1);if(balanceArea)balanceArea.setAttribute('aria-label','Ваш баланс: '+starsBalance.toFixed(1)+' звёзд');try{localStorage.setItem(balanceKey,String(starsBalance));}catch(e){}}
   updateStarsBalance();
   const prizeCatalog=[
@@ -1191,17 +1191,18 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     'melanch0ly','Fun','Фхемасiк🗽','wataakae','.','FRYZU','☢️ TORNADO⚪','Fun','coward','Капибара','Цикада','Ꮋᴏᴛᴀция #Welcome','Fun','ᅠ.','FRYZU','¹Стэпчик¹','FRYZU','db','Ziroshka'
   ];
   const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
+  const rocketHistoryKey='ripiup_rocket_history_v1';
   let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false;
+  try{const savedHistory=JSON.parse(localStorage.getItem(rocketHistoryKey)||'null');if(Array.isArray(savedHistory))rocketPreviousHistory=savedHistory.filter(function(n){return Number.isFinite(Number(n))&&Number(n)>=1;}).slice(0,12);}catch(e){}
   function rocketRandom(min,max){return min+Math.random()*(max-min);}
   function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
   function rocketUpdateBalance(){starsBalance=Math.round((Number(starsBalance)||0)*10)/10;rocketBalance.textContent=starsBalance.toFixed(1);if(typeof updateStarsBalance==='function')updateStarsBalance();}
   function rocketSetTrail(multiplier){
-    let color='#59aaff';
-    if(multiplier>=50)color='#ff68d7';else if(multiplier>=20)color='#ffd24f';else if(multiplier>=10)color='#a875ff';else if(multiplier>=5)color='#ff657f';else if(multiplier>=3)color='#f4a83f';else if(multiplier>=2)color='#54e89a';
-    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background=color;rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke=color;rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
+    const color=multiplier>=2?'#ffd447':'#59aaff';
+    rocketStage.style.setProperty('--trail-color',color);rocketTrail.style.background='linear-gradient(90deg,#59aaff 0%,#59aaff 42%,#ffd447 62%,#ffd447 100%)';rocketTrail.style.color=color;rocketTrail.style.boxShadow='0 0 15px '+color;rocketFlightPath.style.stroke='url(#rocketTrailGradient)';rocketMultiplier.style.textShadow='0 0 22px '+color+'55';
   }
   function rocketFormat(n){return Number(n).toFixed(2).replace(/\.00$/,'');}
-  function rocketDisplayMultiplier(n){return 'x'+(n<2?Number(n).toFixed(3):Number(n).toFixed(2));}
+  function rocketDisplayMultiplier(n){return 'x'+Number(n).toFixed(2);}
   function rocketMakeAvatar(name,index){const d=document.createElement('span');d.className='rocket-bot-avatar';d.style.background='linear-gradient(145deg,'+rocketAvatarColors[index%rocketAvatarColors.length]+',#14243d)';d.textContent=(Array.from(name.trim())[0]||'?').toUpperCase();return d;}
   function rocketRenderBets(){
     rocketBetsList.innerHTML='';
@@ -1249,9 +1250,13 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   document.getElementById('rocketDoubleButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor((Number(rocketBetInput.value)||1)*2));});
   document.getElementById('rocketMaxButton').addEventListener('click',function(){rocketBetInput.value=Math.max(1,Math.floor(starsBalance));});
   function rocketAddHistory(multiplier){
-    rocketPreviousHistory.unshift(multiplier);rocketPreviousHistory=rocketPreviousHistory.slice(0,12);rocketHistory.innerHTML='';
+    rocketPreviousHistory.unshift(multiplier);rocketPreviousHistory=rocketPreviousHistory.slice(0,12);
+    try{localStorage.setItem(rocketHistoryKey,JSON.stringify(rocketPreviousHistory));}catch(e){}
+    rocketHistory.innerHTML='';
     rocketPreviousHistory.forEach(function(n){const chip=document.createElement('span');chip.className='rocket-history-chip '+(n<2?'low':n<10?'mid':'high');chip.textContent='x'+rocketFormat(n);rocketHistory.appendChild(chip);});
+    rocketHistory.scrollLeft=0;
   }
+  function rocketRenderHistory(){rocketHistory.innerHTML='';rocketPreviousHistory.forEach(function(n){const chip=document.createElement('span');chip.className='rocket-history-chip '+(n<2?'low':n<10?'mid':'high');chip.textContent='x'+rocketFormat(n);rocketHistory.appendChild(chip);});}
   function rocketSetActionState(){
     if(rocketPhase==='countdown'){
       rocketActionButton.disabled=!!rocketUserBet;rocketActionButton.classList.remove('cashout');rocketActionButton.textContent=rocketUserBet?'Ставка принята ✓':'Сделать ставку';
@@ -1290,7 +1295,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketStartRound(){
     clearInterval(rocketRoundTimer);cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
     rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent='x1.000';rocketSetTrail(1);
-    rocketSprite.style.left='13%';rocketSprite.style.bottom='8px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray='500';
+    rocketSprite.style.left='13%';rocketSprite.style.bottom='8px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
     rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
     rocketBetMessage.textContent='Можно изменить сумму перед ставкой';rocketSetActionState();rocketBuildRoundBets();
     rocketRoundTimer=setInterval(function(){
@@ -1315,8 +1320,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       const shown=Math.min(multiplier,rocketCrashAt);rocketLiveMultiplier=shown;
       rocketMultiplier.textContent=rocketDisplayMultiplier(shown);rocketSetTrail(shown);
       const progress=Math.min(1,Math.log(shown)/Math.max(.01,Math.log(Math.max(rocketCrashAt,1.01))));
-      rocketSprite.style.left=(13+progress*58)+'%';rocketSprite.style.bottom=(8+progress*43)+'px';
-      rocketFlightPath.style.strokeDashoffset=String(Math.max(0,500-progress*500));
+      rocketSprite.style.left=(13+progress*55)+'%';rocketSprite.style.bottom=(8+progress*43)+'px';
+      const pathLength=rocketFlightPath.getTotalLength();rocketFlightPath.style.strokeDasharray=String(pathLength);rocketFlightPath.style.strokeDashoffset=String(Math.max(0,pathLength*(1-progress)));
       rocketRoundBets.forEach(function(b){
         if(!b.isUser&&b.status==='active'&&b.autoCash&&shown>=b.autoCash&&shown<rocketCrashAt){b.status='cashed';b.payout=Math.round(b.amount*b.autoCash*10)/10;b.cashAt=b.autoCash;}
       });
@@ -1334,7 +1339,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketAddHistory(rocketCrashAt);rocketRenderBets();rocketSetActionState();
     rocketRoundTimer=setTimeout(rocketStartRound,2600);
   }
-  rocketUpdateBalance();rocketSetActionState();rocketRenderBets();
+  rocketUpdateBalance();rocketSetActionState();rocketRenderBets();rocketRenderHistory();
 
   // Show the loader on the initial home-screen load; the header and bottom navigation stay above it.
   showPageLoader();
