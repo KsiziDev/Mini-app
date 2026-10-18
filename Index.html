@@ -781,7 +781,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     const images=Array.from(section.querySelectorAll('img'));
     images.forEach(function(img){img.loading='eager';img.decoding='async';});
     return Promise.all(images.map(function(img){
-      if(img.complete&&img.naturalWidth>0)return Promise.resolve();
+      if(img.complete)return Promise.resolve();
       return new Promise(function(resolve){let done=false;const finish=function(){if(done)return;done=true;img.removeEventListener('load',finish);img.removeEventListener('error',finish);resolve();};img.addEventListener('load',finish,{once:true});img.addEventListener('error',finish,{once:true});setTimeout(finish,4000);});
     }));
   }
