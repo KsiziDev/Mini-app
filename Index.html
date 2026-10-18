@@ -1600,6 +1600,8 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       },850);
     });
     seedFeed();refresh();
+    // Demo bot activity in the feed; these are simulated players, not real accounts.
+    setInterval(function(){if(screen.hidden||locked)return;const ch=[10,25,50,75][Math.floor(Math.random()*4)],st=[5,10,15,20,35,60,100][Math.floor(Math.random()*7)],m=.95/(ch/100),won=Math.random()<ch/100;addFeed(names[Math.floor(Math.random()*names.length)],emojis[Math.floor(Math.random()*emojis.length)],st,won,ch,m);},4200);
     // Keep the displayed balance in sync with the shared balance renderer.
     const originalUpdate=updateStarsBalance;
     updateStarsBalance=function(){originalUpdate();refresh();};
