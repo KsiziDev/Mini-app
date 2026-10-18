@@ -963,7 +963,20 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function dailyAvailable(){return Date.now()-readDailyLast()>=24000;}
   function updateDailyGiftTimer(){const el=document.getElementById('dailyGiftTimer');if(!el)return;const remain=Math.max(0,24000-(Date.now()-readDailyLast()));const seconds=Math.ceil(remain/1000);el.textContent='00:00:'+String(seconds).padStart(2,'0');if(activeCase&&activeCase.name==='Ежедневный подарок'){el.hidden=false;}else{el.hidden=true;}}
   setInterval(updateDailyGiftTimer,250);
-  function prizeObjects(config){return config.prizes.map(function(p){return {name:p[0],value:p[1],tier:p[2],icon:p[3],weight:p[4],rarity:p[2]==='legendary'?'Легендарный':p[2]==='epic'?'Эпический':p[2]==='rare'?'Редкий':'Обычный'};});}
+  const nftCatalog=[
+    ['Candy Cane',15,'common','cake'],['Lol Pop',15,'common','heart'],['Star Notepad',20,'rare','stars'],['Magic Potion',25,'rare','diamond'],
+    ['Cookie Heart',25,'common','heart'],['Bunny Muffin',30,'common','bear'],['Jelly Bunny',35,'rare','bear'],['Eternal Rose',45,'legendary','bouquet'],
+    ['Scared Cat',25,'common','bear'],['Crystal Ball',40,'epic','diamond'],['Flying Broom',45,'epic','rocket'],['Electric Skull',55,'legendary','star'],
+    ['Precious Peach',50,'epic','heart'],['Durov’s Cap',65,'legendary','star'],['Plush Pepe',90,'legendary','bear'],['Hex Pot',30,'rare','diamond'],
+    ['Vintage Cigar',35,'rare','star'],['Swiss Watch',55,'epic','stars'],['Signet Ring',60,'epic','diamond'],['Diamond Ring',75,'legendary','diamond'],
+    ['Loot Bag',70,'legendary','stars'],['Astral Shard',40,'rare','star']
+  ];
+  function prizeObjects(config){
+    const prizes=config.prizes.map(function(p){return {name:p[0],value:p[1],tier:p[2],icon:p[3],weight:p[4],rarity:p[2]==='legendary'?'Легендарный':p[2]==='epic'?'Эпический':p[2]==='rare'?'Редкий':'Обычный',kind:'gift'};});
+    const caseNames=Object.keys(caseConfigs),idx=Math.max(0,caseNames.indexOf(activeCase&&activeCase.name)),count=6+(idx%8),offset=(idx*3)%nftCatalog.length;
+    for(let i=0;i<count;i++){const n=nftCatalog[(offset+i)%nftCatalog.length];prizes.push({name:'NFT · '+n[0],value:n[1],tier:n[2],icon:n[3],weight:1.4,rarity:'NFT · '+(n[2]==='legendary'?'Легендарный':n[2]==='epic'?'Эпический':n[2]==='rare'?'Редкий':'Обычный'),kind:'nft'});}
+    return prizes;
+  }
   function choosePrize(prizes){const total=prizes.reduce(function(s,p){return s+p.weight;},0);let n=Math.random()*total;for(const p of prizes){n-=p.weight;if(n<=0)return p;}return prizes[prizes.length-1];}
   function renderPrizeCard(p){const el=document.createElement('div');el.className='case-prize-card rarity-'+p.tier;const art=document.createElement('div');art.className='case-prize-art';art.innerHTML=giftArt(p.icon);const name=document.createElement('div');name.className='case-prize-name';name.textContent=p.name;const value=document.createElement('div');value.className='case-prize-value';value.innerHTML='<img src="./assets/images/stars-telegram.png" alt=""> '+p.value+' ⭐';const rarity=document.createElement('div');rarity.className='case-prize-rarity';rarity.textContent=p.rarity;el.append(art,name,value,rarity);return el;}
   function renderRoulette(prizes,selectedIndex){rouletteTrack.replaceChildren();const count=selectedIndex===undefined?14:38;for(let i=0;i<count;i++){const p=prizes[i%prizes.length];const item=document.createElement('div');item.className='roulette-item';item.innerHTML='<div class="roulette-gift-art">'+giftArt(p.icon)+'</div><div class="roulette-item-name"></div>';item.querySelector('.roulette-item-name').textContent=p.name;rouletteTrack.append(item);}rouletteTrack.style.transition='none';rouletteTrack.style.transform='translateX(0)';}
