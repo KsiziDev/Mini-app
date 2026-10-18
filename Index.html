@@ -481,7 +481,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     <button type="button" class="rocket-action-btn" id="rocketActionButton">Сделать ставку</button><div class="rocket-bet-message" id="rocketBetMessage">Ставки закроются с началом полёта</div>
   </section>
   <section class="rocket-bets-panel rocket-glass" aria-label="Ставки игроков">
-    <div class="rocket-bets-head"><h2>Ставки игроков</h2><span id="rocketBetCount">0 игроков</span></div>
+    <div class="rocket-bets-head"><h2>Последние ставки</h2><span id="rocketBetCount">0 игроков</span></div>
     <div class="rocket-bets-list" id="rocketBetsList"></div>
   </section>
 </section>
@@ -1192,7 +1192,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   ];
   const rocketAvatarColors=['#df658c','#6e8bff','#a66cf0','#18a8a0','#687b91','#eb9a43','#ef6576','#4eaf76','#bd79d9','#ba7b48','#4e9ad9','#d96b9e','#7d8ee8','#6c9b83','#ce8b4b','#55a8a0'];
   const rocketHistoryKey='ripiup_rocket_history_v1';
-  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false;
+  let rocketPhase='countdown',rocketCountdown=10,rocketRoundTimer=null,rocketCrashTimer=null,rocketBotTimers=[],rocketFrame=null,rocketRoundStart=0,rocketFlightDuration=12000,rocketCrashAt=2.4,rocketLiveMultiplier=1,rocketRoundId=0,rocketUserBet=null,rocketRoundBets=[],rocketRoundPlayers=0,rocketPreviousHistory=[2.14,1.20,66.08,1.10,3.42],rocketLastResult=1.10,rocketScreenWasOpen=false,rocketHasStarted=false;
   try{const savedHistory=JSON.parse(localStorage.getItem(rocketHistoryKey)||'null');if(Array.isArray(savedHistory))rocketPreviousHistory=savedHistory.filter(function(n){return Number.isFinite(Number(n))&&Number(n)>=1;}).slice(0,12);}catch(e){}
   function rocketRandom(min,max){return min+Math.random()*(max-min);}
   function rocketOnlineValue(){const el=document.getElementById('rocketOnlineCount');return el?el.textContent.trim():'87';}
@@ -1206,7 +1206,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   function rocketMakeAvatar(name,index){const d=document.createElement('span');d.className='rocket-bot-avatar';d.style.background='linear-gradient(145deg,'+rocketAvatarColors[index%rocketAvatarColors.length]+',#14243d)';d.textContent=(Array.from(name.trim())[0]||'?').toUpperCase();return d;}
   function rocketRenderBets(){
     rocketBetsList.innerHTML='';
-    const sorted=rocketRoundBets.slice().sort(function(a,b){return (a.status==='active'?0:1)-(b.status==='active'?0:1);});
+    const sorted=rocketRoundBets.slice().sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);}).slice(0,8);
     sorted.forEach(function(b){
       const row=document.createElement('div');row.className='rocket-bet-item '+(b.status==='cashed'?'cashed':b.status==='busted'?'busted':'active');row.dataset.betId=String(b.id);
       row.appendChild(rocketMakeAvatar(b.name,b.index));
@@ -1223,14 +1223,29 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketBetCount.textContent=rocketRoundBets.length+' '+(rocketRoundBets.length===1?'игрок':rocketRoundBets.length>=2&&rocketRoundBets.length<=4?'игрока':'игроков');
   }
   function rocketBuildRoundBets(){
+    rocketBotTimers.forEach(function(timer){clearTimeout(timer);});rocketBotTimers=[];
     rocketRoundBets=[];rocketRoundPlayers=60;
     const amounts=[1,10,22,7,5,53,75,52,70,3,8,12,18,25,34,46,6,15,29,41,2,9,20,63,11,17,38,4,57,14];
+    const usedNames=new Set();
     for(let index=0;index<59;index++){
-      const name=rocketBots[index%rocketBots.length];
+      let name=rocketBots[index%rocketBots.length];
+      if(usedNames.has(name))name=name+' · '+(index+1);
+      usedNames.add(name);
       const amount=amounts[Math.floor(Math.random()*amounts.length)];
-      rocketRoundBets.push({id:'b'+rocketRoundId+'-'+index,index:index,name:name,amount:amount,status:'active',isUser:false,autoCash:Math.random()<.66?rocketRandom(1.12,Math.random()<.72?3.2:8):null});
+      const bot={id:'b'+rocketRoundId+'-'+index,index:index,name:name,amount:amount,status:'active',isUser:false,autoCash:Math.random()<.66?rocketRandom(1.12,Math.random()<.72?3.2:8):null,createdAt:0};
+      // Bots enter gradually during the betting countdown and flight instead of appearing all at once.
+      const roundId=rocketRoundId,delay=rocketRandom(250,14500);
+      const timer=setTimeout(function(){
+        if(roundId!==rocketRoundId||(rocketPhase!=='countdown'&&rocketPhase!=='flight'))return;
+        bot.createdAt=Date.now();
+        if(rocketPhase==='flight'&&bot.autoCash&&rocketLiveMultiplier>=bot.autoCash){
+          if(rocketLiveMultiplier<rocketCrashAt){bot.status='cashed';bot.cashAt=bot.autoCash;bot.payout=Math.round(bot.amount*bot.autoCash*10)/10;}
+        }
+        rocketRoundBets.push(bot);rocketRenderBets();
+      },delay);
+      rocketBotTimers.push(timer);
     }
-    if(rocketUserBet){rocketUserBet.status='active';rocketUserBet.index=99;rocketRoundBets.unshift(rocketUserBet);}
+    if(rocketUserBet){rocketUserBet.status='active';rocketUserBet.index=99;rocketUserBet.createdAt=Date.now();rocketRoundBets.unshift(rocketUserBet);}
     rocketRenderBets();
   }
   function rocketOpenGame(){
@@ -1273,7 +1288,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     if(amount>starsBalance){rocketBetMessage.textContent='Недостаточно звёзд на балансе';return;}
     starsBalance-=amount;rocketUserBet={id:'user-'+rocketRoundId,index:99,name:(document.getElementById('headerName')?.textContent||'Ваш ник').trim()||'Ваш ник',amount:amount,status:'active',isUser:true,autoCash:null};
     rocketBetMessage.textContent='Ставка принята: '+amount+' ⭐. Удачи!';
-    rocketUpdateBalance();rocketRoundBets.unshift(rocketUserBet);rocketRenderBets();rocketSetActionState();
+    rocketUpdateBalance();rocketUserBet.createdAt=Date.now();rocketRoundBets.unshift(rocketUserBet);rocketRenderBets();rocketSetActionState();
   }
   let rocketCashoutPending=false;
   function rocketCashout(){
@@ -1288,7 +1303,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
   }
   rocketActionButton.addEventListener('click',function(){if(rocketPhase==='countdown')rocketPlaceBet();else if(rocketPhase==='flight')rocketCashout();});
   function rocketStartRound(){
-    clearInterval(rocketRoundTimer);clearTimeout(rocketCrashTimer);cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
+    clearInterval(rocketRoundTimer);clearTimeout(rocketCrashTimer);rocketBotTimers.forEach(function(timer){clearTimeout(timer);});rocketBotTimers=[];cancelAnimationFrame(rocketFrame);rocketRoundId++;rocketPhase='countdown';rocketCountdown=10;rocketUserBet=null;
     rocketStage.classList.remove('is-flight','is-crashed');rocketLiveMultiplier=1;rocketMultiplier.textContent=rocketPreviousHistory.length?'x'+rocketFormat(rocketPreviousHistory[0]):'x1.00';rocketSetTrail(1);
     rocketSprite.style.left='0%';rocketSprite.style.bottom='0px';rocketFlightPath.style.strokeDashoffset='0';rocketFlightPath.style.strokeDasharray=String(rocketFlightPath.getTotalLength());
     rocketRoundLabel.textContent='СТАВКИ ОТКРЫТЫ';rocketStatus.textContent='Ставки закрываются через '+rocketCountdown+' сек.';
@@ -1305,7 +1320,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     rocketStatus.textContent='Успей забрать выигрыш!';rocketBetMessage.textContent=rocketUserBet?'Нажми «Забрать», пока множитель растёт':'Ты не поставил в этом раунде';
     // Outcomes are independent of bets: 2% high (x10–x75), 8% x4.2–x8, 20% x2.5–x4.2, 30% x1.65–x2.5, 40% x1.05–x1.65.
     const r=Math.random();if(r<.40)rocketCrashAt=rocketRandom(1.05,1.65);else if(r<.70)rocketCrashAt=rocketRandom(1.65,2.5);else if(r<.90)rocketCrashAt=rocketRandom(2.5,4.2);else if(r<.98)rocketCrashAt=rocketRandom(4.2,8);else rocketCrashAt=rocketRandom(10,75);
-    rocketFlightDuration=rocketRandom(200,10000);
+    rocketFlightDuration=Math.max(100,Math.min(10000,Math.log(Math.max(rocketCrashAt,1.001))*1600));
     clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketFlightDuration);
     rocketSetActionState();
     function frame(now){
