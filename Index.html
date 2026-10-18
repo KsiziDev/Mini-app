@@ -1403,7 +1403,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
     if(rocketUserBet){if(r<.02)rocketCrashAt=rocketRandom(4.85,5);else if(r<.25)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.60)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     else{if(r<.10)rocketCrashAt=rocketRandom(5,15);else if(r<.25)rocketCrashAt=rocketRandom(3.5,4.8);else if(r<.55)rocketCrashAt=rocketRandom(2.5,3.5);else if(r<.80)rocketCrashAt=rocketRandom(1.7,2.5);else rocketCrashAt=rocketRandom(1.05,1.7);}
     // Длительность не привязана к множителю, поэтому скорость раундов различается.
-    rocketFlightDuration=rocketRandom(3500,12500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
+    rocketFlightDuration=rocketRandom(1000,3500);rocketSegmentStart=rocketRoundStart;rocketSegmentMultiplier=1;rocketSegmentDuration=rocketFlightDuration;
     clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketFlightDuration);
     rocketSetActionState();
     function frame(now){
