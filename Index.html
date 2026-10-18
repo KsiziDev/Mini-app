@@ -1379,7 +1379,7 @@ body.page-loading main,body.page-loading section,body.page-loading header{oversc
       // В 1 из 10 подходящих раундов после фиксации выигрыша полёт может продолжиться до x15.
       if(rocketLongFlightEligible&&rocketCrashAt<=5&&rocketLiveMultiplier<5){rocketSegmentMultiplier=rocketLiveMultiplier;rocketSegmentStart=performance.now();rocketCrashAt=rocketRandom(5.01,15);rocketSegmentDuration=rocketRandom(1800,6000);clearTimeout(rocketCrashTimer);rocketCrashTimer=setTimeout(function(){if(rocketPhase==='flight')rocketCrashRound();},rocketSegmentDuration);}
       starsBalance=Math.round((starsBalance+payout)*10)/10;
-      rocketBetMessage.textContent='Забрано на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐';
+      rocketBetMessage.textContent=rocketForcedLossRounds>0?'Победа на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐. Серия активирована: следующие '+rocketForcedLossRounds+' раунда(ов) со ставкой будут проигрышными.':'Забрано на x'+rocketFormat(multiplier)+' — начислено '+rocketFormat(payout)+' ⭐. Серия побед: '+rocketWinStreak+'/3.';
       rocketUpdateBalance();rocketRenderBets();rocketSetActionState();
     },300);
   }
